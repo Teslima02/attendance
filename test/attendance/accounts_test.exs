@@ -97,7 +97,7 @@ defmodule Attendance.AccountsTest do
   describe "change_admin_registration/2" do
     test "returns a changeset" do
       assert %Ecto.Changeset{} = changeset = Accounts.change_admin_registration(%Admin{})
-      assert changeset.required == [:password, :email]
+      assert changeset.required == [:password, :first_name, :last_name, :email,]
     end
 
     test "allows fields to be set" do
@@ -120,7 +120,7 @@ defmodule Attendance.AccountsTest do
   describe "change_admin_email/2" do
     test "returns a admin changeset" do
       assert %Ecto.Changeset{} = changeset = Accounts.change_admin_email(%Admin{})
-      assert changeset.required == [:email]
+      assert changeset.required == [:first_name, :last_name, :email]
     end
   end
 

@@ -4,11 +4,18 @@ defmodule Attendance.AccountsFixtures do
   entities via the `Attendance.Accounts` context.
   """
 
+  def unique_first_name, do: "admin#{System.unique_integer()}@example.com"
+  def unique_middle_name, do: "admin#{System.unique_integer()}@example.com"
+  def unique_last_name, do: "admin#{System.unique_integer()}@example.com"
   def unique_admin_email, do: "admin#{System.unique_integer()}@example.com"
-  def valid_admin_password, do: "hello world!"
+  def valid_admin_password, do: "Password@123"
 
   def valid_admin_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
+      first_name: unique_first_name(),
+      middle_name: unique_middle_name(),
+      last_name: unique_last_name(),
+      disabled: false,
       email: unique_admin_email(),
       password: valid_admin_password()
     })
