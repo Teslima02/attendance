@@ -18,6 +18,7 @@ defmodule AttendanceWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    live "/guess", WrongView
   end
 
   # Other scopes may use custom stacks.
