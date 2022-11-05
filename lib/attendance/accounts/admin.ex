@@ -2,6 +2,7 @@ defmodule Attendance.Accounts.Admin do
   use Ecto.Schema
   import Ecto.Changeset
 
+  # @primary_key {:id, :binary_id, autogenerate: true}
   schema "admins" do
     field :first_name, :string
     field :middle_name, :string

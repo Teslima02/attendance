@@ -18,10 +18,21 @@ defmodule AttendanceWeb.Router do
   end
 
   scope "/", AttendanceWeb do
-    pipe_through :browser
+    pipe_through [:browser]
 
     get "/", PageController, :index
     live "/guess", WrongView
+  end
+
+  scope "/", AttendanceWeb do
+    pipe_through [:browser, :require_authenticated_admin]
+
+    live "/programs", ProgramLive.Index, :index
+    live "/programs/new", ProgramLive.Index, :new
+    live "/programs/:id/edit", ProgramLive.Index, :edit
+
+    live "/programs/:id", ProgramLive.Show, :show
+    live "/programs/:id/show/edit", ProgramLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
