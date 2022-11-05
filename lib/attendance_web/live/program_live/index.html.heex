@@ -1,0 +1,44 @@
+<h1>Listing Programs</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.program_index_path(@socket, :index)}>
+    <.live_component
+      module={AttendanceWeb.ProgramLive.FormComponent}
+      id={@program.id || :new}
+      title={@page_title}
+      action={@live_action}
+      program={@program}
+      current_admin={@current_admin}
+      return_to={Routes.program_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Disabled</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="programs">
+    <%= for program <- @programs do %>
+      <tr id={"program-#{program.id}"}>
+        <td><%= program.name %></td>
+        <td><%= program.description %></td>
+        <td><%= program.disabled %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.program_show_path(@socket, :show, program) %></span>
+          <span><%= live_patch "Edit", to: Routes.program_index_path(@socket, :edit, program) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: program.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Program", to: Routes.program_index_path(@socket, :new) %></span>
