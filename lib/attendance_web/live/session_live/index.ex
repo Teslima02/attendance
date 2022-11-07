@@ -40,6 +40,18 @@ defmodule AttendanceWeb.SessionLive.Index do
     |> assign(:session, nil)
   end
 
+  defp apply_action(socket, :new_program, _params) do
+    socket
+    |> assign(:page_title, "New Session")
+    |> assign(:session, %Session{})
+  end
+
+  defp apply_action(socket, :edit_program, _params) do
+    socket
+    |> assign(:page_title, "Edit Sessions")
+    |> assign(:session, nil)
+  end
+
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     session = Catalog.get_session!(id)

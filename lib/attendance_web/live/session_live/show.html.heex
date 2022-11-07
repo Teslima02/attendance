@@ -13,6 +13,21 @@
   </.modal>
 <% end %>
 
+<%= if @live_action in [:new_program, :edit_program] do %>
+  <.modal return_to={Routes.session_show_path(@socket, :show, @session)}>
+    <.live_component
+      module={AttendanceWeb.SessionLive.ProgramFormComponent}
+      id={@session.id}
+      title={@page_title}
+      action={@live_action}
+      session={@session}
+      program={@program}
+      current_admin={@current_admin}
+      return_to={Routes.session_show_path(@socket, :show, @session)}
+    />
+  </.modal>
+<% end %>
+
 <ul>
 
   <li>
@@ -46,6 +61,8 @@
 <span><%= live_redirect "Back", to: Routes.session_index_path(@socket, :index) %></span>
 
 <h1>Listing Programs</h1>
+
+<span><%= live_patch "New Program", to: Routes.session_show_path(@socket, :new_program, @session) %></span>
 
 <table>
   <thead>

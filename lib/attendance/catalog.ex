@@ -49,10 +49,11 @@ defmodule Attendance.Catalog do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_program(admin, attrs \\ %{}) do
+  def create_program(admin, session, attrs \\ %{}) do
     %Program{}
     |> Program.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:admin, admin)
+    |> Ecto.Changeset.put_assoc(:session, session)
     |> Repo.insert()
   end
 
