@@ -1,0 +1,88 @@
+<h1>Show Session</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.session_show_path(@socket, :show, @session)}>
+    <.live_component
+      module={AttendanceWeb.SessionLive.FormComponent}
+      id={@session.id}
+      title={@page_title}
+      action={@live_action}
+      session={@session}
+      return_to={Routes.session_show_path(@socket, :show, @session)}
+    />
+  </.modal>
+<% end %>
+
+<%= if @live_action in [:new_program, :edit_program] do %>
+  <.modal return_to={Routes.session_show_path(@socket, :show, @session)}>
+    <.live_component
+      module={AttendanceWeb.SessionLive.ProgramFormComponent}
+      id={@session.id}
+      title={@page_title}
+      action={@live_action}
+      session={@session}
+      program={@program}
+      current_admin={@current_admin}
+      return_to={Routes.session_show_path(@socket, :show, @session)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @session.name %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @session.description %>
+  </li>
+
+  <li>
+    <strong>Start date:</strong>
+    <%= @session.start_date %>
+  </li>
+
+  <li>
+    <strong>End date:</strong>
+    <%= @session.end_date %>
+  </li>
+
+  <li>
+    <strong>Disabled:</strong>
+    <%= @session.disabled %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.session_show_path(@socket, :edit, @session), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.session_index_path(@socket, :index) %></span>
+
+<h1>Listing Programs</h1>
+
+<span><%= live_patch "New Program", to: Routes.session_show_path(@socket, :new_program, @session) %></span>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="programs">
+    <%= for program <- @programs do %>
+      <tr id={"program-#{program.id}"}>
+        <td><%= program.name %></td>
+        <td><%= program.description %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.program_show_path(@socket, :show, program) %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -25,6 +25,7 @@ defmodule AttendanceWeb.ProgramLive.Index do
 
   @impl true
   def handle_params(params, _url, socket) do
+    IO.inspect params
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 

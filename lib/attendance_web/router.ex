@@ -33,6 +33,16 @@ defmodule AttendanceWeb.Router do
 
     live "/programs/:id", ProgramLive.Show, :show
     live "/programs/:id/show/edit", ProgramLive.Show, :edit
+
+    live "/sessions", SessionLive.Index, :index
+    live "/sessions/new", SessionLive.Index, :new
+    live "/sessions/:id/edit", SessionLive.Index, :edit
+
+    live "/sessions/:id", SessionLive.Show, :show
+    live "/sessions/:id/show/edit", SessionLive.Show, :edit
+
+    live "/sessions/:id/show/program/new", SessionLive.Show, :new_program
+    live "/sessions/:id/show/program/edit", SessionLive.Show, :edit_program
   end
 
   # Other scopes may use custom stacks.

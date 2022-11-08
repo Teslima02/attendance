@@ -28,4 +28,22 @@ defmodule Attendance.CatalogFixtures do
 
     program
   end
+
+  @doc """
+  Generate a session.
+  """
+  def session_fixture(attrs \\ %{}) do
+    {:ok, session} =
+      attrs
+      |> Enum.into(%{
+        description: "some description",
+        disabled: true,
+        end_date: ~N[2022-11-04 16:25:00],
+        name: "some name",
+        start_date: ~N[2022-11-04 16:25:00]
+      })
+      |> Attendance.Catalog.create_session()
+
+    session
+  end
 end

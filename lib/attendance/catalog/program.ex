@@ -9,6 +9,7 @@ defmodule Attendance.Catalog.Program do
     field :disabled, :boolean, default: false
     field :name, :string
     belongs_to :admin, Attendance.Accounts.Admin
+    belongs_to :session, Attendance.Catalog.Session
 
     timestamps()
   end
