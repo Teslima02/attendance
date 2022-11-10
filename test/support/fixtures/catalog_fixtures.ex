@@ -46,4 +46,21 @@ defmodule Attendance.CatalogFixtures do
 
     session
   end
+
+  @doc """
+  Generate a semester.
+  """
+  def semester_fixture(attrs \\ %{}) do
+    {:ok, semester} =
+      attrs
+      |> Enum.into(%{
+        disabled: true,
+        end_date: ~D[2022-11-07],
+        name: "some name",
+        start_date: ~D[2022-11-07]
+      })
+      |> Attendance.Catalog.create_semester()
+
+    semester
+  end
 end

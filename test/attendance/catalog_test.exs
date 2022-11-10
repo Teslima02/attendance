@@ -130,4 +130,64 @@ defmodule Attendance.CatalogTest do
       assert %Ecto.Changeset{} = Catalog.change_session(session)
     end
   end
+
+  describe "semesters" do
+    alias Attendance.Catalog.Semester
+
+    import Attendance.CatalogFixtures
+
+    @invalid_attrs %{disabled: nil, end_date: nil, name: nil, start_date: nil}
+
+    test "list_semesters/0 returns all semesters" do
+      semester = semester_fixture()
+      assert Catalog.list_semesters() == [semester]
+    end
+
+    test "get_semester!/1 returns the semester with given id" do
+      semester = semester_fixture()
+      assert Catalog.get_semester!(semester.id) == semester
+    end
+
+    test "create_semester/1 with valid data creates a semester" do
+      valid_attrs = %{disabled: true, end_date: ~D[2022-11-07], name: "some name", start_date: ~D[2022-11-07]}
+
+      assert {:ok, %Semester{} = semester} = Catalog.create_semester(valid_attrs)
+      assert semester.disabled == true
+      assert semester.end_date == ~D[2022-11-07]
+      assert semester.name == "some name"
+      assert semester.start_date == ~D[2022-11-07]
+    end
+
+    test "create_semester/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Catalog.create_semester(@invalid_attrs)
+    end
+
+    test "update_semester/2 with valid data updates the semester" do
+      semester = semester_fixture()
+      update_attrs = %{disabled: false, end_date: ~D[2022-11-08], name: "some updated name", start_date: ~D[2022-11-08]}
+
+      assert {:ok, %Semester{} = semester} = Catalog.update_semester(semester, update_attrs)
+      assert semester.disabled == false
+      assert semester.end_date == ~D[2022-11-08]
+      assert semester.name == "some updated name"
+      assert semester.start_date == ~D[2022-11-08]
+    end
+
+    test "update_semester/2 with invalid data returns error changeset" do
+      semester = semester_fixture()
+      assert {:error, %Ecto.Changeset{}} = Catalog.update_semester(semester, @invalid_attrs)
+      assert semester == Catalog.get_semester!(semester.id)
+    end
+
+    test "delete_semester/1 deletes the semester" do
+      semester = semester_fixture()
+      assert {:ok, %Semester{}} = Catalog.delete_semester(semester)
+      assert_raise Ecto.NoResultsError, fn -> Catalog.get_semester!(semester.id) end
+    end
+
+    test "change_semester/1 returns a semester changeset" do
+      semester = semester_fixture()
+      assert %Ecto.Changeset{} = Catalog.change_semester(semester)
+    end
+  end
 end

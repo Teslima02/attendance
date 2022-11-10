@@ -2,20 +2,22 @@ defmodule AttendanceWeb.SessionLive.Show do
   use AttendanceWeb, :live_view
 
   alias Attendance.Catalog
-  alias Attendance.Catalog.Program
+  alias Attendance.Catalog.{Program, Semester}
   import AttendanceWeb.ProgramLive.Index
+  import AttendanceWeb.SemesterLive.Index
 
   @impl true
   def mount(_params, %{"admin_token" => token} = _session, socket) do
     {:ok, 
     socket
     |> assign_programs()
+    |> assign_semesters()
     |> assign_current_admin(token)
   }
   end
 
   @impl true
-  def handle_params(%{"id" => id} = params, _, socket) do
+  def handle_params(%{"id" => id} = _params, _, socket) do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
@@ -24,6 +26,16 @@ defmodule AttendanceWeb.SessionLive.Show do
     #  |> apply_action(socket.assigns.live_action, params)
   }
   end
+
+  def handle_params(%{"session_id" => session_id} = _params, _, socket) do
+    {:noreply,
+     socket
+     |> assign(:page_title, "New Semester")
+    |> assign(:semester, %Semester{session_id: session_id})
+    |> assign(:session, Catalog.get_session!(session_id))
+  }
+  end
+
 
   defp apply_action(socket, :edit_program, %{"id" => id}) do
     if socket.assigns.live_action do
