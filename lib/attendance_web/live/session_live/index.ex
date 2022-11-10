@@ -2,7 +2,7 @@ defmodule AttendanceWeb.SessionLive.Index do
   use AttendanceWeb, :live_view
 
   alias Attendance.Catalog
-  alias Attendance.Catalog.Session
+  alias Attendance.Catalog.{Session, Semester}
   import AttendanceWeb.ProgramLive.Index
 
   @impl true
