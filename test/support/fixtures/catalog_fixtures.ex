@@ -63,4 +63,19 @@ defmodule Attendance.CatalogFixtures do
 
     semester
   end
+
+  @doc """
+  Generate a class.
+  """
+  def class_fixture(attrs \\ %{}) do
+    {:ok, class} =
+      attrs
+      |> Enum.into(%{
+        disabled: true,
+        name: "some name"
+      })
+      |> Attendance.Catalog.create_class()
+
+    class
+  end
 end

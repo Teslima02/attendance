@@ -41,8 +41,14 @@ defmodule AttendanceWeb.Router do
     live "/sessions/:id", SessionLive.Show, :show
     live "/sessions/:id/show/edit", SessionLive.Show, :edit
 
+    live "/sessions/:id/show/program", SessionLive.ShowProgram, :show_program
+    live "/sessions/:id/show/program/edit", SessionLive.ShowProgram, :edit_program
+
     live "/sessions/:id/show/program/new", SessionLive.Show, :new_program
     live "/sessions/:id/show/program/edit", SessionLive.Show, :edit_program
+
+    live "/sessions/:session_id/program/class/new", SessionLive.ShowProgram, :new_class
+    live "/sessions/:session_id/program/class/edit", SessionLive.ShowProgram, :edit_class
 
     live "/sessions/:session_id/show/semester/new", SessionLive.Show, :new_semester
     live "/sessions/:session_id/show/semester/edit", SessionLive.Show, :edit_semester
@@ -54,8 +60,12 @@ defmodule AttendanceWeb.Router do
     live "/semesters/:id", SemesterLive.Show, :show
     live "/semesters/:id/show/edit", SemesterLive.Show, :edit
 
-    # live "/semesters/:session_id", SemesterLive.Index, :new
-    # live "/semesters/session/:session_id", SemesterLive.Index, :new
+    live "/classes", ClassLive.Index, :index
+    live "/classes/new", ClassLive.Index, :new
+    live "/classes/:id/edit", ClassLive.Index, :edit
+
+    live "/classes/:id", ClassLive.Show, :show
+    live "/classes/:id/show/edit", ClassLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

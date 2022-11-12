@@ -1,0 +1,54 @@
+<h1>Show Program</h1>
+
+<%= if @live_action in [:edit_program] do %>
+  <.modal return_to={Routes.session_show_program_path(@socket, :show_program, @program)}>
+    <.live_component
+      module={AttendanceWeb.SessionLive.ProgramFormComponent}
+      id={@program.id}
+      title={@page_title}
+      action={@live_action}
+      program={@program}
+      return_to={Routes.session_show_program_path(@socket, :show_program, @program)}
+    />
+  </.modal>
+<% end %>
+
+<%= if @live_action in [:new_class, :edit_class] do %>
+  <.modal return_to={Routes.session_show_program_path(@socket, :show_program, @program)}>
+    <.live_component
+      module={AttendanceWeb.SessionLive.ClassFormComponent}
+      id={@class.id || :new_class}
+      title={@page_title}
+      action={@live_action}
+      class={@class}
+      return_to={Routes.session_show_program_path(@socket, :show_program, @program)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @program.name %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @program.description %>
+  </li>
+
+  <li>
+    <strong>Disabled:</strong>
+    <%= @program.disabled %>
+  </li>
+
+</ul>
+
+
+<span><%= live_patch "Edit", to: Routes.session_show_program_path(@socket, :edit_program, @program), class: "button" %></span>
+
+<h1>New Class</h1>
+<span><%= live_patch "New Class", to: Routes.session_show_program_path(@socket, :new_class, @program, session_id: @session) %></span>
+
+
