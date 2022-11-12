@@ -53,8 +53,10 @@ defmodule AttendanceWeb.Router do
     live "/sessions/:session_id/program/:program_id/class/show/:class_id", SessionLive.ShowClass, :show_class
     live "/sessions/:session_id/program/:program_id/class/edit/:class_id", SessionLive.ShowClass, :edit_class
 
-    live "/sessions/:session_id/show/semester/new", SessionLive.Show, :new_semester
-    live "/sessions/:session_id/show/semester/edit", SessionLive.Show, :edit_semester
+    live "/sessions/:session_id/program/:program_id/class/:class_id/semester/new", SessionLive.ShowClass, :new_semester
+
+    live "/sessions/:session_id/program/:program_id/class/:class_id/semester/show/:semester_id", SessionLive.ShowSemester, :show_semester
+    live "/sessions/:session_id/program/:program_id/class/:class_id/semester/edit/:semester_id", SessionLive.ShowSemester, :edit_semester
 
     live "/semesters", SemesterLive.Index, :index
     live "/semesters/new", SemesterLive.Index, :new

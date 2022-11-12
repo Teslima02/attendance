@@ -28,21 +28,6 @@
   </.modal>
 <% end %>
 
-<%= if @live_action in [:new_semester, :edit_semester] do %>
-  <.modal return_to={Routes.session_show_path(@socket, :show, @session.id)}>
-    <.live_component
-      module={AttendanceWeb.SessionLive.SemesterFormComponent}
-      id={@semester.id || :new_semester}
-      title={@page_title}
-      action={@live_action}
-      semester={@semester}
-      session={@session}
-      current_admin={@current_admin}
-      return_to={Routes.session_show_path(@socket, :show, @session.id)}
-    />
-  </.modal>
-<% end %>
-
 <ul>
 
   <li>
@@ -97,36 +82,6 @@
         <td>
           <!-- <span><%= live_patch "Edit", to: Routes.session_show_path(@socket, :edit_program, program) %></span> -->
           <span><%= live_redirect "Show", to: Routes.session_show_program_path(@socket, :show_program, @session.id, program.id) %></span>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-
-<h1> Semester Listing</h1>
-<span><%= live_patch "New Semester", to: Routes.session_show_path(@socket, :new_semester, @session.id) %></span>
-
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Start date</th>
-      <th>End date</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="semesters">
-    <%= for semester <- @semesters do %>
-      <tr id={"semester-#{semester.id}"}>
-        <td><%= semester.name %></td>
-        <td><%= semester.start_date %></td>
-        <td><%= semester.end_date %></td>
-
-        <td>
-          <span><%= live_redirect "Show", to: Routes.semester_show_path(@socket, :show, semester) %></span>
         </td>
       </tr>
     <% end %>

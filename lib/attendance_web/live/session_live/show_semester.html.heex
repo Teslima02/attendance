@@ -1,0 +1,41 @@
+<h1>Show Semester</h1>
+
+<%= if @live_action in [:edit_semester] do %>
+  <.modal return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}>
+    <.live_component
+      module={AttendanceWeb.SemesterLive.FormComponent}
+      id={@semester.id}
+      title={@page_title}
+      action={@live_action}
+      semester={@semester}
+      return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @semester.name %>
+  </li>
+
+  <li>
+    <strong>Start date:</strong>
+    <%= @semester.start_date %>
+  </li>
+
+  <li>
+    <strong>End date:</strong>
+    <%= @semester.end_date %>
+  </li>
+
+  <li>
+    <strong>Disabled:</strong>
+    <%= @semester.disabled %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.session_show_semester_path(@socket, :edit_semester, @session, @program, @class, @semester), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.session_show_class_path(@socket, :show_class, @session, @program, @class) %></span>
