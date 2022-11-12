@@ -22,12 +22,6 @@ defmodule AttendanceWeb.SessionLive.Show do
      |> apply_action(socket.assigns.live_action, params)}
   end
 
-  def handle_params(params, _, socket) do
-    {:noreply,
-     socket
-     |> apply_action(socket.assigns.live_action, params)}
-  end
-
   defp apply_action(socket, :new_semester, %{"session_id" => session_id} = _params) do
     if socket.assigns.live_action do
       socket

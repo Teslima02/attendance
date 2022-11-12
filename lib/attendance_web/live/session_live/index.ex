@@ -3,7 +3,7 @@ defmodule AttendanceWeb.SessionLive.Index do
 
   alias Attendance.Accounts
   alias Attendance.Catalog
-  alias Attendance.Catalog.{Session, Semester}
+  alias Attendance.Catalog.Session
 
   @impl true
   def mount(_params, %{"admin_token" => token} = _session, socket) do

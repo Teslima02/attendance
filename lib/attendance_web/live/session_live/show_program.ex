@@ -35,7 +35,7 @@ defmodule AttendanceWeb.SessionLive.ShowProgram do
     end
   end
 
-  defp apply_action(socket, :edit_program, %{"program_id" => program_id} = params) do
+  defp apply_action(socket, :edit_program, %{"program_id" => program_id} = _params) do
     if socket.assigns.live_action do
       socket
       |> assign(:page_title, page_title(socket.assigns.live_action))
