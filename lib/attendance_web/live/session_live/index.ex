@@ -1,9 +1,9 @@
 defmodule AttendanceWeb.SessionLive.Index do
   use AttendanceWeb, :live_view
 
+  alias Attendance.Accounts
   alias Attendance.Catalog
   alias Attendance.Catalog.{Session, Semester}
-  import AttendanceWeb.ProgramLive.Index
 
   @impl true
   def mount(_params, %{"admin_token" => token} = _session, socket) do
@@ -11,6 +11,12 @@ defmodule AttendanceWeb.SessionLive.Index do
       |> assign_sessions()
       |> assign_current_admin(token)
     }
+  end
+
+  def assign_current_admin(socket, token) do
+    assign_new(socket, :current_admin, fn ->
+      Accounts.get_admin_by_session_token(token)
+    end)
   end
 
   def assign_sessions(socket) do

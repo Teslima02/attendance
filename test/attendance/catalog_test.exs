@@ -190,4 +190,60 @@ defmodule Attendance.CatalogTest do
       assert %Ecto.Changeset{} = Catalog.change_semester(semester)
     end
   end
+
+  describe "classes" do
+    alias Attendance.Catalog.Class
+
+    import Attendance.CatalogFixtures
+
+    @invalid_attrs %{disabled: nil, name: nil}
+
+    test "list_classes/0 returns all classes" do
+      class = class_fixture()
+      assert Catalog.list_classes() == [class]
+    end
+
+    test "get_class!/1 returns the class with given id" do
+      class = class_fixture()
+      assert Catalog.get_class!(class.id) == class
+    end
+
+    test "create_class/1 with valid data creates a class" do
+      valid_attrs = %{disabled: true, name: "some name"}
+
+      assert {:ok, %Class{} = class} = Catalog.create_class(valid_attrs)
+      assert class.disabled == true
+      assert class.name == "some name"
+    end
+
+    test "create_class/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Catalog.create_class(@invalid_attrs)
+    end
+
+    test "update_class/2 with valid data updates the class" do
+      class = class_fixture()
+      update_attrs = %{disabled: false, name: "some updated name"}
+
+      assert {:ok, %Class{} = class} = Catalog.update_class(class, update_attrs)
+      assert class.disabled == false
+      assert class.name == "some updated name"
+    end
+
+    test "update_class/2 with invalid data returns error changeset" do
+      class = class_fixture()
+      assert {:error, %Ecto.Changeset{}} = Catalog.update_class(class, @invalid_attrs)
+      assert class == Catalog.get_class!(class.id)
+    end
+
+    test "delete_class/1 deletes the class" do
+      class = class_fixture()
+      assert {:ok, %Class{}} = Catalog.delete_class(class)
+      assert_raise Ecto.NoResultsError, fn -> Catalog.get_class!(class.id) end
+    end
+
+    test "change_class/1 returns a class changeset" do
+      class = class_fixture()
+      assert %Ecto.Changeset{} = Catalog.change_class(class)
+    end
+  end
 end

@@ -1,0 +1,71 @@
+<h1>Show Class</h1>
+
+<%= if @live_action in [:edit_class] do %>
+  <.modal return_to={Routes.session_show_class_path(@socket, :show_class, @session, @program, @class)}>
+    <.live_component
+      module={AttendanceWeb.SessionLive.ClassFormComponent}
+      id={@class.id}
+      title={@page_title}
+      action={@live_action}
+      class={@class}
+      return_to={Routes.session_show_class_path(@socket, :show_class, @session, @program, @class)}
+    />
+  </.modal>
+<% end %>
+
+<%= if @live_action in [:new_semester, :edit_semester] do %>
+  <.modal return_to={Routes.session_show_class_path(@socket, :show_class, @session, @program, @class)}>
+    <.live_component
+      module={AttendanceWeb.SessionLive.SemesterFormComponent}
+      id={@semester.id || :new_semester}
+      title={@page_title}
+      action={@live_action}
+      semester={@semester}
+      session={@session}
+      current_admin={@current_admin}
+      return_to={Routes.session_show_class_path(@socket, :show_class, @session, @program, @class)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @class.name %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.session_show_class_path(@socket, :edit_class, @session, @program, @class), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.session_show_program_path(@socket, :show_program, @session, @program) %></span>
+
+
+<h1> Semester Listing</h1>
+<span><%= live_patch "New Semester", to: Routes.session_show_class_path(@socket, :new_semester, @session, @program, @class) %></span>
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Start date</th>
+      <th>End date</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="semesters">
+    <%= for semester <- @semesters do %>
+      <tr id={"semester-#{semester.id}"}>
+        <td><%= semester.name %></td>
+        <td><%= semester.start_date %></td>
+        <td><%= semester.end_date %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, semester) %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

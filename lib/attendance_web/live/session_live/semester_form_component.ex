@@ -42,9 +42,11 @@ defmodule AttendanceWeb.SessionLive.SemesterFormComponent do
   end
 
   defp save_semester(socket, :new_semester, semester_params) do
-    session = Catalog.get_session!(semester_params["session_id"])
-    # IO.inspect(socket.assigns.current_admin)
-    case Catalog.create_semester(socket.assigns.current_admin, session, semester_params) do
+    %{assigns: %{semester: %{session_id: session_id, program_id: program_id, class_id: class_id}}} = socket
+    session = Catalog.get_session!(session_id)
+    program = Catalog.get_program!(program_id)
+    class = Catalog.get_class!(class_id)
+    case Catalog.create_semester(socket.assigns.current_admin, session, program, class, semester_params) do
       {:ok, _semester} ->
         {:noreply,
          socket

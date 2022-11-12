@@ -28,7 +28,7 @@ defmodule AttendanceWeb.SemesterLive.FormComponent do
     save_semester(socket, socket.assigns.action, semester_params)
   end
 
-  defp save_semester(socket, :edit, semester_params) do
+  defp save_semester(socket, :edit_semester, semester_params) do
     case Catalog.update_semester(socket.assigns.semester, semester_params) do
       {:ok, _semester} ->
         {:noreply,

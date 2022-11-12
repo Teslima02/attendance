@@ -9,6 +9,8 @@ defmodule Attendance.Catalog.Semester do
     field :start_date, :date
     belongs_to :admin, Attendance.Accounts.Admin
     belongs_to :session, Attendance.Catalog.Session
+    belongs_to :program, Attendance.Catalog.Program
+    belongs_to :class, Attendance.Catalog.Class
 
     timestamps()
   end
