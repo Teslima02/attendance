@@ -1,0 +1,26 @@
+<h1>Show Class</h1>
+
+<%= if @live_action in [:edit_class] do %>
+  <.modal return_to={Routes.session_show_class_path(@socket, :show_class, @session, @program, @class)}>
+    <.live_component
+      module={AttendanceWeb.SessionLive.ClassFormComponent}
+      id={@class.id}
+      title={@page_title}
+      action={@live_action}
+      class={@class}
+      return_to={Routes.session_show_class_path(@socket, :show_class, @session, @program, @class)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @class.name %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.session_show_class_path(@socket, :edit_class, @session, @program, @class), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.session_show_program_path(@socket, :show_program, @session, @program) %></span>

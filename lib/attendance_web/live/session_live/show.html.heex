@@ -96,7 +96,7 @@
 
         <td>
           <!-- <span><%= live_patch "Edit", to: Routes.session_show_path(@socket, :edit_program, program) %></span> -->
-          <span><%= live_redirect "Show", to: Routes.session_show_program_path(@socket, :show_program, program.id, session_id: @session.id) %></span>
+          <span><%= live_redirect "Show", to: Routes.session_show_program_path(@socket, :show_program, @session.id, program.id) %></span>
         </td>
       </tr>
     <% end %>

@@ -41,8 +41,10 @@ defmodule AttendanceWeb.SessionLive.ClassFormComponent do
   end
 
   defp save_class(socket, :new_class, class_params) do
-    IO.inspect class_params
-    case Catalog.create_class(class_params) do
+    %{assigns: %{class: %{session_id: session_id, program_id: program_id}}} = socket
+    session = Catalog.get_session!(session_id)
+    program = Catalog.get_program!(program_id)
+    case Catalog.create_class(socket.assigns.current_admin, session, program, class_params) do
       {:ok, _class} ->
         {:noreply,
          socket

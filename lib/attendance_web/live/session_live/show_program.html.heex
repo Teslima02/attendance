@@ -1,27 +1,28 @@
 <h1>Show Program</h1>
 
 <%= if @live_action in [:edit_program] do %>
-  <.modal return_to={Routes.session_show_program_path(@socket, :show_program, @program)}>
+  <.modal return_to={Routes.session_show_program_path(@socket, :show_program, @session, @program)}>
     <.live_component
       module={AttendanceWeb.SessionLive.ProgramFormComponent}
       id={@program.id}
       title={@page_title}
       action={@live_action}
       program={@program}
-      return_to={Routes.session_show_program_path(@socket, :show_program, @program)}
+      return_to={Routes.session_show_program_path(@socket, :show_program, @session, @program)}
     />
   </.modal>
 <% end %>
 
 <%= if @live_action in [:new_class, :edit_class] do %>
-  <.modal return_to={Routes.session_show_program_path(@socket, :show_program, @program)}>
+  <.modal return_to={Routes.session_show_program_path(@socket, :show_program, @session, @program)}>
     <.live_component
       module={AttendanceWeb.SessionLive.ClassFormComponent}
       id={@class.id || :new_class}
       title={@page_title}
       action={@live_action}
       class={@class}
-      return_to={Routes.session_show_program_path(@socket, :show_program, @program)}
+      current_admin={@current_admin}
+      return_to={Routes.session_show_program_path(@socket, :show_program, @session, @program)}
     />
   </.modal>
 <% end %>
@@ -46,9 +47,29 @@
 </ul>
 
 
-<span><%= live_patch "Edit", to: Routes.session_show_program_path(@socket, :edit_program, @program), class: "button" %></span>
+<span><%= live_patch "Edit", to: Routes.session_show_program_path(@socket, :edit_program, @session, @program), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.session_show_path(@socket, :show, @session) %></span>
 
 <h1>New Class</h1>
-<span><%= live_patch "New Class", to: Routes.session_show_program_path(@socket, :new_class, @program, session_id: @session) %></span>
+<span><%= live_patch "New Class", to: Routes.session_show_program_path(@socket, :new_class, @session, @program) %></span>
 
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
 
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="classes">
+    <%= for class <- @classes do %>
+      <tr id={"class-#{class.id}"}>
+        <td><%= class.name %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.session_show_class_path(@socket, :show_class, @session, @program, class) %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

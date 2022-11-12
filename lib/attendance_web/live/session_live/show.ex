@@ -37,7 +37,7 @@ defmodule AttendanceWeb.SessionLive.Show do
     end
   end
 
-  defp apply_action(socket, :edit_program, %{"id" => _id, "program_id" => program_id}) do
+  defp apply_action(socket, :edit_program, %{"program_id" => program_id}) do
     if socket.assigns.live_action do
       socket
       |> assign(:page_title, "Edit Program")
@@ -45,12 +45,12 @@ defmodule AttendanceWeb.SessionLive.Show do
     end
   end
 
-  defp apply_action(socket, :new_program, %{"id" => id} = _params) do
+  defp apply_action(socket, :new_program, %{"session_id" => session_id} = _params) do
     if socket.assigns.live_action do
       socket
       |> assign(:page_title, "New Program")
-      |> assign(:program, %Program{session_id: id})
-      |> assign(:session, Catalog.get_session!(id))
+      |> assign(:program, %Program{session_id: session_id})
+      |> assign(:session, Catalog.get_session!(session_id))
     end
   end
 

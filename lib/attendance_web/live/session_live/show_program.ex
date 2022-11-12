@@ -4,11 +4,16 @@ defmodule AttendanceWeb.SessionLive.ShowProgram do
   alias Attendance.Catalog.Class
   alias Attendance.Catalog
 
+  import AttendanceWeb.SessionLive.Index
+  import AttendanceWeb.SessionLive.ShowClass
+
   @impl true
-  def mount(params, _session, socket) do
+  def mount(params, %{"admin_token" => token} = _session, socket) do
     {:ok,
      socket
      |> assign_session(params)
+     |> assign_current_admin(token)
+     |> assign_classes()
     }
   end
 
@@ -22,29 +27,28 @@ defmodule AttendanceWeb.SessionLive.ShowProgram do
     {:noreply, socket |> apply_action(socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :show_program, %{"id" => id}) do
+  defp apply_action(socket, :show_program, %{"program_id" => program_id}) do
     if socket.assigns.live_action do
       socket
       |> assign(:page_title, page_title(socket.assigns.live_action))
-      |> assign(:program, Catalog.get_program!(id))
+      |> assign(:program, Catalog.get_program!(program_id))
     end
   end
 
-  defp apply_action(socket, :edit_program, %{"id" => id}) do
+  defp apply_action(socket, :edit_program, %{"program_id" => program_id} = params) do
     if socket.assigns.live_action do
       socket
       |> assign(:page_title, page_title(socket.assigns.live_action))
-      |> assign(:program, Catalog.get_program!(id))
+      |> assign(:program, Catalog.get_program!(program_id))
     end
   end
 
-  defp apply_action(socket, :new_class, %{"session_id" => session_id}) do
-    # IO.inspect program_id
+  defp apply_action(socket, :new_class, %{"session_id" => session_id, "program_id" => program_id}) do
     if socket.assigns.live_action do
       socket
       |> assign(:page_title, page_title(socket.assigns.live_action))
-      |> assign(:program, Catalog.get_program!(session_id))
-      |> assign(:class, %Class{})
+      |> assign(:class, %Class{session_id: session_id, program_id: program_id})
+      |> assign(:program, Catalog.get_program!(program_id))
     end
   end
 

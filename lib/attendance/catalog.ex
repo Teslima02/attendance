@@ -342,9 +342,12 @@ defmodule Attendance.Catalog do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_class(attrs \\ %{}) do
+  def create_class(admin, session, program, attrs \\ %{}) do
     %Class{}
     |> Class.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:admin, admin)
+    |> Ecto.Changeset.put_assoc(:session, session)
+    |> Ecto.Changeset.put_assoc(:program, program)
     |> Repo.insert()
   end
 

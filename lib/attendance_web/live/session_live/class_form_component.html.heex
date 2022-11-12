@@ -12,6 +12,9 @@
     <%= label f, :name %>
     <%= text_input f, :name %>
     <%= error_tag f, :name %>
+
+    <% hidden_input f, :program_id %>
+    <% hidden_input f, :session_id %>
   
     <div>
       <%= submit "Save", phx_disable_with: "Saving..." %>

@@ -41,14 +41,17 @@ defmodule AttendanceWeb.Router do
     live "/sessions/:id", SessionLive.Show, :show
     live "/sessions/:id/show/edit", SessionLive.Show, :edit
 
-    live "/sessions/:id/show/program", SessionLive.ShowProgram, :show_program
-    live "/sessions/:id/show/program/edit", SessionLive.ShowProgram, :edit_program
+    live "/sessions/:session_id/show/program/:program_id", SessionLive.ShowProgram, :show_program
+    live "/sessions/:session_id/show/program/edit/:program_id", SessionLive.ShowProgram, :edit_program
 
-    live "/sessions/:id/show/program/new", SessionLive.Show, :new_program
-    live "/sessions/:id/show/program/edit", SessionLive.Show, :edit_program
+    live "/sessions/:session_id/show/program/new", SessionLive.Show, :new_program
+    live "/sessions/:session_id/show/program/edit", SessionLive.Show, :edit_program
 
-    live "/sessions/:session_id/program/class/new", SessionLive.ShowProgram, :new_class
-    live "/sessions/:session_id/program/class/edit", SessionLive.ShowProgram, :edit_class
+    live "/sessions/:session_id/program/:program_id/class/new", SessionLive.ShowProgram, :new_class
+    live "/sessions/:session_id/program/:program_id/class/edit", SessionLive.ShowProgram, :edit_class
+
+    live "/sessions/:session_id/program/:program_id/class/show/:class_id", SessionLive.ShowClass, :show_class
+    live "/sessions/:session_id/program/:program_id/class/edit/:class_id", SessionLive.ShowClass, :edit_class
 
     live "/sessions/:session_id/show/semester/new", SessionLive.Show, :new_semester
     live "/sessions/:session_id/show/semester/edit", SessionLive.Show, :edit_semester
