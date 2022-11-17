@@ -4,19 +4,21 @@
   <.form
     let={f}
     for={@changeset}
-    id="program-form"
+    id="courses-form"
     phx-target={@myself}
     phx-change="validate"
     phx-submit="save">
-  
+
     <%= label f, :name %>
     <%= text_input f, :name %>
     <%= error_tag f, :name %>
-  
-    <%= label f, :description %>
-    <%= text_input f, :description %>
-    <%= error_tag f, :description %>
-  
+
+
+
+    <div>
+      <%= live_file_input @uploads.csv_file %>
+    </div>
+
     <div>
       <%= submit "Save", phx_disable_with: "Saving..." %>
     </div>

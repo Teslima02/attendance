@@ -3,7 +3,7 @@ defmodule AttendanceWeb.SessionLive.Index do
 
   alias Attendance.Accounts
   alias Attendance.Catalog
-  alias Attendance.Catalog.{Session, Semester}
+  alias Attendance.Catalog.Session
 
   @impl true
   def mount(_params, %{"admin_token" => token} = _session, socket) do
@@ -21,6 +21,10 @@ defmodule AttendanceWeb.SessionLive.Index do
 
   def assign_sessions(socket) do
     assign(socket, :sessions, list_sessions())
+  end
+
+  def assign_programs(socket) do
+    assign(socket, :programs, list_programs())
   end
 
   @impl true
@@ -68,5 +72,9 @@ defmodule AttendanceWeb.SessionLive.Index do
 
   defp list_sessions do
     Catalog.list_sessions()
+  end
+
+  defp list_programs do
+    Catalog.list_programs()
   end
 end

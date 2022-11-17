@@ -5,7 +5,6 @@ defmodule AttendanceWeb.SessionLive.ShowProgram do
   alias Attendance.Catalog
 
   import AttendanceWeb.SessionLive.Index
-  import AttendanceWeb.SessionLive.ShowClass
 
   @impl true
   def mount(params, %{"admin_token" => token} = _session, socket) do
@@ -13,13 +12,18 @@ defmodule AttendanceWeb.SessionLive.ShowProgram do
      socket
      |> assign_session(params)
      |> assign_current_admin(token)
-     |> assign_classes()
+     |> assign_classes(params)
     }
   end
 
   def assign_session(socket, %{"session_id" => session_id}) do
       socket
       |> assign(:session, Catalog.get_session!(session_id))
+  end
+
+  def assign_classes(socket, params) do
+    socket
+    |> assign(classes: list_classes(params))
   end
 
   @impl true
@@ -35,7 +39,7 @@ defmodule AttendanceWeb.SessionLive.ShowProgram do
     end
   end
 
-  defp apply_action(socket, :edit_program, %{"program_id" => program_id} = params) do
+  defp apply_action(socket, :edit_program, %{"program_id" => program_id} = _params) do
     if socket.assigns.live_action do
       socket
       |> assign(:page_title, page_title(socket.assigns.live_action))
@@ -56,4 +60,8 @@ defmodule AttendanceWeb.SessionLive.ShowProgram do
   defp page_title(:edit_class), do: "Edit Class"
   defp page_title(:show_program), do: "Show Program"
   defp page_title(:edit_program), do: "Edit Program"
+
+  defp list_classes(params) do
+    Catalog.list_classes(params)
+  end
 end

@@ -17,7 +17,7 @@
   <.modal return_to={Routes.session_show_path(@socket, :show, @session)}>
     <.live_component
       module={AttendanceWeb.SessionLive.ProgramFormComponent}
-      id={@session.id}
+      id={@program.id || :new_program}
       title={@page_title}
       action={@live_action}
       session={@session}

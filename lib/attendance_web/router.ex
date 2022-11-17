@@ -27,12 +27,12 @@ defmodule AttendanceWeb.Router do
   scope "/", AttendanceWeb do
     pipe_through [:browser, :require_authenticated_admin]
 
-    live "/programs", ProgramLive.Index, :index
-    live "/programs/new", ProgramLive.Index, :new
-    live "/programs/:id/edit", ProgramLive.Index, :edit
+    # live "/programs", ProgramLive.Index, :index
+    # live "/programs/new", ProgramLive.Index, :new
+    # live "/programs/:id/edit", ProgramLive.Index, :edit
 
-    live "/programs/:id", ProgramLive.Show, :show
-    live "/programs/:id/show/edit", ProgramLive.Show, :edit
+    # live "/programs/:id", ProgramLive.Show, :show
+    # live "/programs/:id/show/edit", ProgramLive.Show, :edit
 
     live "/sessions", SessionLive.Index, :index
     live "/sessions/new", SessionLive.Index, :new
@@ -41,11 +41,11 @@ defmodule AttendanceWeb.Router do
     live "/sessions/:id", SessionLive.Show, :show
     live "/sessions/:id/show/edit", SessionLive.Show, :edit
 
-    live "/sessions/:session_id/show/program/:program_id", SessionLive.ShowProgram, :show_program
-    live "/sessions/:session_id/show/program/edit/:program_id", SessionLive.ShowProgram, :edit_program
-
     live "/sessions/:session_id/show/program/new", SessionLive.Show, :new_program
     live "/sessions/:session_id/show/program/edit", SessionLive.Show, :edit_program
+
+    live "/sessions/:session_id/show/program/:program_id", SessionLive.ShowProgram, :show_program
+    live "/sessions/:session_id/show/program/edit/:program_id", SessionLive.ShowProgram, :edit_program
 
     live "/sessions/:session_id/program/:program_id/class/new", SessionLive.ShowProgram, :new_class
     live "/sessions/:session_id/program/:program_id/class/edit", SessionLive.ShowProgram, :edit_class
@@ -58,19 +58,31 @@ defmodule AttendanceWeb.Router do
     live "/sessions/:session_id/program/:program_id/class/:class_id/semester/show/:semester_id", SessionLive.ShowSemester, :show_semester
     live "/sessions/:session_id/program/:program_id/class/:class_id/semester/edit/:semester_id", SessionLive.ShowSemester, :edit_semester
 
-    live "/semesters", SemesterLive.Index, :index
-    live "/semesters/new", SemesterLive.Index, :new
-    live "/semesters/:id/edit", SemesterLive.Index, :edit
+    live "/sessions/:session_id/program/:program_id/class/:class_id/semester/show/:semester_id", SessionLive.ShowSemester, :show_semester
+    live "/sessions/:session_id/program/:program_id/class/:class_id/semester/edit/:semester_id", SessionLive.ShowSemester, :edit_semester
 
-    live "/semesters/:id", SemesterLive.Show, :show
-    live "/semesters/:id/show/edit", SemesterLive.Show, :edit
+    live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/upload/course", SessionLive.ShowSemester, :upload_course
 
-    live "/classes", ClassLive.Index, :index
-    live "/classes/new", ClassLive.Index, :new
-    live "/classes/:id/edit", ClassLive.Index, :edit
+    # live "/semesters", SemesterLive.Index, :index
+    # live "/semesters/new", SemesterLive.Index, :new
+    # live "/semesters/:id/edit", SemesterLive.Index, :edit
 
-    live "/classes/:id", ClassLive.Show, :show
-    live "/classes/:id/show/edit", ClassLive.Show, :edit
+    # live "/semesters/:id", SemesterLive.Show, :show
+    # live "/semesters/:id/show/edit", SemesterLive.Show, :edit
+
+    # live "/classes", ClassLive.Index, :index
+    # live "/classes/new", ClassLive.Index, :new
+    # live "/classes/:id/edit", ClassLive.Index, :edit
+
+    # live "/classes/:id", ClassLive.Show, :show
+    # live "/classes/:id/show/edit", ClassLive.Show, :edit
+
+    # live "/course", CoursesLive.Index, :index
+    # live "/course/new", CoursesLive.Index, :new
+    # live "/course/:id/edit", CoursesLive.Index, :edit
+
+    # live "/course/:id", CoursesLive.Show, :show
+    # live "/course/:id/show/edit", CoursesLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
