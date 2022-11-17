@@ -3,16 +3,19 @@ defmodule AttendanceWeb.SessionLive.Show do
 
   alias Attendance.Catalog
   alias Attendance.Catalog.{Program, Semester}
-  import AttendanceWeb.ProgramLive.Index
-  import AttendanceWeb.SemesterLive.Index
+  import AttendanceWeb.SessionLive.Index
 
   @impl true
-  def mount(_params, %{"admin_token" => token} = _session, socket) do
+  def mount(params, %{"admin_token" => token} = _session, socket) do
+    IO.inspect params
     {:ok,
      socket
-     |> assign_programs()
-     |> assign_semesters()
+     |> assign_programs(params)
      |> assign_current_admin(token)}
+  end
+
+  def assign_programs(socket, params) do
+    assign(socket, :programs, list_programs(params))
   end
 
   @impl true
@@ -68,4 +71,8 @@ defmodule AttendanceWeb.SessionLive.Show do
   defp page_title(:edit_program), do: "Edit Program"
   defp page_title(:show), do: "Show Session"
   defp page_title(:edit), do: "Edit Session"
+
+  defp list_programs(params) do
+    Catalog.list_programs(params)
+  end
 end

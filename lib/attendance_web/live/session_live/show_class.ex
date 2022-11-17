@@ -5,21 +5,20 @@ defmodule AttendanceWeb.SessionLive.ShowClass do
   alias Attendance.Catalog.Semester
 
   import AttendanceWeb.SessionLive.Index
-  import AttendanceWeb.SessionLive.ShowSemester
+  # import AttendanceWeb.SessionLive.ShowSemester
 
   @impl true
-  def mount(_params, %{"admin_token" => token} = _session, socket) do
+  def mount(params, %{"admin_token" => token} = _session, socket) do
     {:ok,
      socket
-     |> assign_classes()
-     |> assign_semesters()
-     |> assign_current_admin(token)
-    }
+    #  |> assign_classes()
+     |> assign_semesters(params)
+     |> assign_current_admin(token)}
   end
 
-  def assign_classes(socket) do
+  def assign_semesters(socket, params) do
     socket
-    |> assign(classes: list_classes())
+    |> assign(semesters: list_semesters(params))
   end
 
   @impl true
@@ -78,7 +77,7 @@ defmodule AttendanceWeb.SessionLive.ShowClass do
   defp page_title(:show_class), do: "Show Class"
   defp page_title(:edit_class), do: "Edit Class"
 
-  defp list_classes do
-    Catalog.list_classes()
+  defp list_semesters(params) do
+    Catalog.list_semesters(params)
   end
 end

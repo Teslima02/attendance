@@ -1,0 +1,36 @@
+<h1>Show Courses</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.courses_show_path(@socket, :show, @courses)}>
+    <.live_component
+      module={AttendanceWeb.CoursesLive.FormComponent}
+      id={@courses.id}
+      title={@page_title}
+      action={@live_action}
+      courses={@courses}
+      return_to={Routes.courses_show_path(@socket, :show, @courses)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @courses.name %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @courses.description %>
+  </li>
+
+  <li>
+    <strong>Code:</strong>
+    <%= @courses.code %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.courses_show_path(@socket, :edit, @courses), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.courses_index_path(@socket, :index) %></span>

@@ -17,8 +17,9 @@ defmodule Attendance.Catalog do
       [%Program{}, ...]
 
   """
-  def list_programs do
-    Repo.all(Program) |> Repo.preload(:admin)
+  def list_programs(%{"id" => id} = _params) do
+    query = from p in Program, where: p.session_id == ^id
+    Repo.all(query) |> Repo.preload(:admin)
   end
 
   @doc """
@@ -212,8 +213,9 @@ defmodule Attendance.Catalog do
       [%Semester{}, ...]
 
   """
-  def list_semesters do
-    Repo.all(Semester)
+  def list_semesters(%{"class_id" => class_id, "program_id" => _program_id, "session_id" => _session_id} = _params) do
+    query = from s in Semester, where: s.class_id == ^class_id
+    Repo.all(query) |> Repo.preload(:admin)
   end
 
   @doc """
@@ -312,8 +314,9 @@ defmodule Attendance.Catalog do
       [%Class{}, ...]
 
   """
-  def list_classes do
-    Repo.all(Class)
+  def list_classes(%{"program_id" => program_id, "session_id" => _session_id} = _params) do
+    query = from c in Class, where: c.program_id == ^program_id
+    Repo.all(query)
   end
 
   @doc """
@@ -398,5 +401,107 @@ defmodule Attendance.Catalog do
   """
   def change_class(%Class{} = class, attrs \\ %{}) do
     Class.changeset(class, attrs)
+  end
+
+  alias Attendance.Catalog.Courses
+
+  @doc """
+  Returns the list of course.
+
+  ## Examples
+
+      iex> list_course()
+      [%Courses{}, ...]
+
+  """
+  def list_course(%{"semester_id" => semester_id} = _params) do
+    query = from c in Courses, where: c.semester_id == ^semester_id
+    Repo.all(query)
+  end
+
+  @doc """
+  Gets a single courses.
+
+  Raises `Ecto.NoResultsError` if the Courses does not exist.
+
+  ## Examples
+
+      iex> get_courses!(123)
+      %Courses{}
+
+      iex> get_courses!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_courses!(id), do: Repo.get!(Courses, id)
+
+  @doc """
+  Creates a courses.
+
+  ## Examples
+
+      iex> create_courses(%{field: value})
+      {:ok, %Courses{}}
+
+      iex> create_courses(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_courses(admin, session, program, class, semester, attrs \\ %{}) do
+      %Courses{}
+      |> Courses.changeset(attrs)
+      |> Ecto.Changeset.put_assoc(:admin, admin)
+      |> Ecto.Changeset.put_assoc(:session, session)
+      |> Ecto.Changeset.put_assoc(:program, program)
+      |> Ecto.Changeset.put_assoc(:class, class)
+      |> Ecto.Changeset.put_assoc(:semester, semester)
+      |> Repo.insert()
+  end
+
+  @doc """
+  Updates a courses.
+
+  ## Examples
+
+      iex> update_courses(courses, %{field: new_value})
+      {:ok, %Courses{}}
+
+      iex> update_courses(courses, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_courses(%Courses{} = courses, attrs) do
+    courses
+    |> Courses.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a courses.
+
+  ## Examples
+
+      iex> delete_courses(courses)
+      {:ok, %Courses{}}
+
+      iex> delete_courses(courses)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_courses(%Courses{} = courses) do
+    Repo.delete(courses)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking courses changes.
+
+  ## Examples
+
+      iex> change_courses(courses)
+      %Ecto.Changeset{data: %Courses{}}
+
+  """
+  def change_courses(%Courses{} = courses, attrs \\ %{}) do
+    Courses.changeset(courses, attrs)
   end
 end

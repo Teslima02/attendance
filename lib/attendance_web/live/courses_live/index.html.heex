@@ -1,0 +1,43 @@
+<h1>Listing Course</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.courses_index_path(@socket, :index)}>
+    <.live_component
+      module={AttendanceWeb.CoursesLive.FormComponent}
+      id={@courses.id || :new}
+      title={@page_title}
+      action={@live_action}
+      courses={@courses}
+      return_to={Routes.courses_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Code</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="course">
+    <%= for courses <- @course do %>
+      <tr id={"courses-#{courses.id}"}>
+        <td><%= courses.name %></td>
+        <td><%= courses.description %></td>
+        <td><%= courses.code %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.courses_show_path(@socket, :show, courses) %></span>
+          <span><%= live_patch "Edit", to: Routes.courses_index_path(@socket, :edit, courses) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: courses.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Courses", to: Routes.courses_index_path(@socket, :new) %></span>

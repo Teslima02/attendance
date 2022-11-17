@@ -23,6 +23,10 @@ defmodule AttendanceWeb.SessionLive.Index do
     assign(socket, :sessions, list_sessions())
   end
 
+  def assign_programs(socket) do
+    assign(socket, :programs, list_programs())
+  end
+
   @impl true
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
@@ -68,5 +72,9 @@ defmodule AttendanceWeb.SessionLive.Index do
 
   defp list_sessions do
     Catalog.list_sessions()
+  end
+
+  defp list_programs do
+    Catalog.list_programs()
   end
 end
