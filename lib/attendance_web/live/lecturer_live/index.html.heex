@@ -1,0 +1,60 @@
+<h1>Listing Lecturers</h1>
+
+<%= if @live_action in [:upload_lecturer] do %>
+  <.modal return_to={Routes.lecturer_index_path(@socket, :index)}>
+    <.live_component
+      module={AttendanceWeb.LecturerLive.UploadComponent}
+      id={@lecturer.id || :upload_lecturer}
+      title={@page_title}
+      action={@live_action}
+      lecturer={@lecturer}
+      current_admin={@current_admin}
+      return_to={Routes.lecturer_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.lecturer_index_path(@socket, :index)}>
+    <.live_component
+      module={AttendanceWeb.LecturerLive.FormComponent}
+      id={@lecturer.id || :upload_lecturer}
+      title={@page_title}
+      action={@live_action}
+      lecturer={@lecturer}
+      current_admin={@current_admin}
+      return_to={Routes.lecturer_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>First name</th>
+      <th>Middle name</th>
+      <th>Last name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="lecturers">
+    <%= for lecturer <- @lecturers do %>
+      <tr id={"lecturer-#{lecturer.id}"}>
+        <td><%= lecturer.email %></td>
+        <td><%= lecturer.first_name %></td>
+        <td><%= lecturer.middle_name %></td>
+        <td><%= lecturer.last_name %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.lecturer_show_path(@socket, :show, lecturer) %></span>
+          <span><%= live_patch "Edit", to: Routes.lecturer_index_path(@socket, :edit, lecturer) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: lecturer.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Lecturer", to: Routes.lecturer_index_path(@socket, :upload_lecturer) %></span>

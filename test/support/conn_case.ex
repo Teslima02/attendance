@@ -61,4 +61,30 @@ defmodule AttendanceWeb.ConnCase do
     |> Phoenix.ConnTest.init_test_session(%{})
     |> Plug.Conn.put_session(:admin_token, token)
   end
+
+  @doc """
+  Setup helper that registers and logs in lecturers.
+
+      setup :register_and_log_in_lecturer
+
+  It stores an updated connection and a registered lecturer in the
+  test context.
+  """
+  def register_and_log_in_lecturer(%{conn: conn}) do
+    lecturer = Attendance.LecturersFixtures.lecturer_fixture()
+    %{conn: log_in_lecturer(conn, lecturer), lecturer: lecturer}
+  end
+
+  @doc """
+  Logs the given `lecturer` into the `conn`.
+
+  It returns an updated `conn`.
+  """
+  def log_in_lecturer(conn, lecturer) do
+    token = Attendance.Lecturers.generate_lecturer_session_token(lecturer)
+
+    conn
+    |> Phoenix.ConnTest.init_test_session(%{})
+    |> Plug.Conn.put_session(:lecturer_token, token)
+  end
 end

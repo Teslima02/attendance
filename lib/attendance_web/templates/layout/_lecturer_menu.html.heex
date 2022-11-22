@@ -1,0 +1,10 @@
+<ul>
+<%= if @current_lecturer do %>
+  <li><%= @current_lecturer.email %></li>
+  <li><%= link "Settings", to: Routes.lecturer_settings_path(@conn, :edit) %></li>
+  <li><%= link "Log out", to: Routes.lecturer_session_path(@conn, :delete), method: :delete %></li>
+<% else %>
+  <li><%= link "Register", to: Routes.lecturer_registration_path(@conn, :new) %></li>
+  <li><%= link "Log in", to: Routes.lecturer_session_path(@conn, :new) %></li>
+<% end %>
+</ul>

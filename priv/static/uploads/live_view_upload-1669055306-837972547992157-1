@@ -1,0 +1,20 @@
+id,ident,type,name,latitude_deg,longitude_deg,elevation_ft,continent,iso_country,iso_region,municipality,scheduled_service,gps_code,iata_code,local_code,home_link,wikipedia_link,keywords
+16523@example.com,00A1,heliport,Total Rf Heliport,40.07080078125,-74.9336013793945,11,NA,US,US-PA,Bensalem,no,00A,,00A,,,
+2323361@example.com,00AA2,small_airport,Aero B Ranch Airport,38.704022,-101.473911,3435,NA,US,US-KS,Leoti,no,00AA,,00AA,,,
+336524@example.com,00AK3,small_airport,Lowell Field,59.947733,-151.692524,450,NA,US,US-AK,Anchor Point,no,00AK,,00AK,,,
+126525@example.com,00AL4,small_airport,Epps Airpark,34.8647994995117,-86.7703018188477,820,NA,US,US-AL,Harvest,no,00AL,,00AL,,,
+re6526@example.com,00AR5,closed,Newport Hospital & Clinic Heliport,35.6087,-91.254898,237,NA,US,US-AR,Newport,no,,,,,,00AR
+ds322127@example.com,00AS6,small_airport,Fulton Airport,34.9428028,-97.8180194,1100,NA,US,US-OK,Alex,no,00AS,,00AS,,,
+c6527@example.com,00AZ7,small_airport,Cordes Airport,34.3055992126465,-112.165000915527,3810,NA,US,US-AZ,Cordes,no,00AZ,,00AZ,,,
+v6528@example.com,00CA8,small_airport,Goldstone (GTS) Airport,35.35474,-116.885329,3038,NA,US,US-CA,Barstow,no,00CA,,00CA,,,
+44324424@example.com,00CL9,small_airport,Williams Ag Airport,39.427188,-121.763427,87,NA,US,US-CA,Biggs,no,00CL,,00CL,,,
+12s322658@example.com,00CN0,heliport,Kitchen Creek Helibase Heliport,32.7273736,-116.4597417,3350,NA,US,US-CA,Pine Valley,no,00CN,,00CN,,,
+vd6529@example.com,00CO11,closed,Cass Field,40.622202,-104.344002,4830,NA,US,US-CO,Briggsdale,no,,,,,,00CO
+sfd6531@example.com,00FA12,small_airport,Grass Patch Airport,28.6455001831055,-82.2190017700195,53,NA,US,US-FL,Bushnell,no,00FA,,00FA,,,
+zxcs6532@example.com,00FD13,heliport,Ringhaver Heliport,28.8465995788574,-82.3453979492188,25,NA,US,US-FL,Riverview,no,00FD,,00FD,,,
+hjkj6533@example.com,00FL14,small_airport,River Oak Airport,27.230899810791,-80.9692001342773,35,NA,US,US-FL,Okeechobee,no,00FL,,00FL,,,
+oioi6534@example.com,00GA15,small_airport,Lt World Airport,33.7675018310547,-84.0682983398438,700,NA,US,US-GA,Lithonia,no,00GA,,00GA,,,
+popolk6535@example.com,00GE16,heliport,Caffrey Heliport,33.887982,-84.736983,957,NA,US,US-GA,Hiram,no,00GE,,00GE,,,
+asc6536@example.com,00HI17,heliport,Kaupulehu Heliport,19.832881,-155.978347,43,OC,US,US-HI,Kailua-Kona,no,00HI,,00HI,,,
+ytgbbn6537@example.com,00ID18,small_airport,Delta Shores Airport,48.1453018188477,-116.213996887207,2064,NA,US,US-ID,Clark Fork,no,00ID,,00ID,,,
+aqwe322581@example.com,00IG19,small_airport,Goltl Airport,39.724028,-101.395994,3359,NA,US,US-KS,McDonald,no,00IG,,00IG,,,
