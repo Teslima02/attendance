@@ -1,6 +1,8 @@
 defmodule AttendanceWeb.Router do
   use AttendanceWeb, :router
 
+  import AttendanceWeb.LecturerAuth
+
   import AttendanceWeb.AdminAuth
 
   pipeline :browser do
@@ -10,6 +12,7 @@ defmodule AttendanceWeb.Router do
     plug :put_root_layout, {AttendanceWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_lecturer
     plug :fetch_current_admin
   end
 
@@ -26,13 +29,6 @@ defmodule AttendanceWeb.Router do
 
   scope "/", AttendanceWeb do
     pipe_through [:browser, :require_authenticated_admin]
-
-    # live "/programs", ProgramLive.Index, :index
-    # live "/programs/new", ProgramLive.Index, :new
-    # live "/programs/:id/edit", ProgramLive.Index, :edit
-
-    # live "/programs/:id", ProgramLive.Show, :show
-    # live "/programs/:id/show/edit", ProgramLive.Show, :edit
 
     live "/sessions", SessionLive.Index, :index
     live "/sessions/new", SessionLive.Index, :new
@@ -58,31 +54,14 @@ defmodule AttendanceWeb.Router do
     live "/sessions/:session_id/program/:program_id/class/:class_id/semester/show/:semester_id", SessionLive.ShowSemester, :show_semester
     live "/sessions/:session_id/program/:program_id/class/:class_id/semester/edit/:semester_id", SessionLive.ShowSemester, :edit_semester
 
-    live "/sessions/:session_id/program/:program_id/class/:class_id/semester/show/:semester_id", SessionLive.ShowSemester, :show_semester
-    live "/sessions/:session_id/program/:program_id/class/:class_id/semester/edit/:semester_id", SessionLive.ShowSemester, :edit_semester
-
     live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/upload/course", SessionLive.ShowSemester, :upload_course
 
-    # live "/semesters", SemesterLive.Index, :index
-    # live "/semesters/new", SemesterLive.Index, :new
-    # live "/semesters/:id/edit", SemesterLive.Index, :edit
+    live "/lecturers", LecturerLive.Index, :index
+    live "/lecturers/new", LecturerLive.Index, :upload_lecturer
+    live "/lecturers/:id/edit", LecturerLive.Index, :edit
 
-    # live "/semesters/:id", SemesterLive.Show, :show
-    # live "/semesters/:id/show/edit", SemesterLive.Show, :edit
-
-    # live "/classes", ClassLive.Index, :index
-    # live "/classes/new", ClassLive.Index, :new
-    # live "/classes/:id/edit", ClassLive.Index, :edit
-
-    # live "/classes/:id", ClassLive.Show, :show
-    # live "/classes/:id/show/edit", ClassLive.Show, :edit
-
-    # live "/course", CoursesLive.Index, :index
-    # live "/course/new", CoursesLive.Index, :new
-    # live "/course/:id/edit", CoursesLive.Index, :edit
-
-    # live "/course/:id", CoursesLive.Show, :show
-    # live "/course/:id/show/edit", CoursesLive.Show, :edit
+    live "/lecturers/:id", LecturerLive.Show, :show
+    live "/lecturers/:id/show/edit", LecturerLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
@@ -150,5 +129,38 @@ defmodule AttendanceWeb.Router do
     post "/admins/confirm", AdminConfirmationController, :create
     get "/admins/confirm/:token", AdminConfirmationController, :edit
     post "/admins/confirm/:token", AdminConfirmationController, :update
+  end
+
+  ## Authentication routes
+
+  scope "/", AttendanceWeb do
+    pipe_through [:browser, :redirect_if_lecturer_is_authenticated]
+
+    get "/lecturers/register", LecturerRegistrationController, :new
+    post "/lecturers/register", LecturerRegistrationController, :create
+    get "/lecturers/log_in", LecturerSessionController, :new
+    post "/lecturers/log_in", LecturerSessionController, :create
+    get "/lecturers/reset_password", LecturerResetPasswordController, :new
+    post "/lecturers/reset_password", LecturerResetPasswordController, :create
+    get "/lecturers/reset_password/:token", LecturerResetPasswordController, :edit
+    put "/lecturers/reset_password/:token", LecturerResetPasswordController, :update
+  end
+
+  scope "/", AttendanceWeb do
+    pipe_through [:browser, :require_authenticated_lecturer]
+
+    get "/lecturers/settings", LecturerSettingsController, :edit
+    put "/lecturers/settings", LecturerSettingsController, :update
+    get "/lecturers/settings/confirm_email/:token", LecturerSettingsController, :confirm_email
+  end
+
+  scope "/", AttendanceWeb do
+    pipe_through [:browser]
+
+    delete "/lecturers/log_out", LecturerSessionController, :delete
+    get "/lecturers/confirm", LecturerConfirmationController, :new
+    post "/lecturers/confirm", LecturerConfirmationController, :create
+    get "/lecturers/confirm/:token", LecturerConfirmationController, :edit
+    post "/lecturers/confirm/:token", LecturerConfirmationController, :update
   end
 end

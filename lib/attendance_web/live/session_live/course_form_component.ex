@@ -56,10 +56,9 @@ defmodule AttendanceWeb.SessionLive.CourseFormComponent do
     |> Enum.map(fn row ->
       # [row] = CSV.parse_string(row, skip_headers: false)
       %{
-        id: Enum.at(row, 0),
-        type: Enum.at(row, 2),
-        name: Enum.at(row, 3),
-        country: Enum.at(row, 8)
+        title: Enum.at(row, 0),
+        code: Enum.at(row, 1),
+        description: Enum.at(row, 2)
       }
     end)
   end
@@ -115,9 +114,9 @@ defmodule AttendanceWeb.SessionLive.CourseFormComponent do
              class,
              semester,
              %{
-               code: row.type,
-               name: row.name,
-               description: row.country
+               code: row.code,
+               name: row.title,
+               description: row.description
              }
            ) do
         {:ok, _courses} ->
