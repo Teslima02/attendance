@@ -12,6 +12,7 @@ defmodule Attendance.Lecturers.Lecturer do
     field :disabled, :boolean, default: false
     field :matric_number, :string
     belongs_to :admin, Attendance.Accounts.Admin
+    belongs_to :courses, Attendance.Catalog.Courses
 
     field :confirmed_at, :naive_datetime
 
@@ -143,5 +144,10 @@ defmodule Attendance.Lecturers.Lecturer do
     else
       add_error(changeset, :current_password, "is not valid")
     end
+  end
+
+  def assign_course_to_lecturer(lecturer, attrs \\ %{}) do
+    lecturer
+    |> cast(attrs, [])
   end
 end

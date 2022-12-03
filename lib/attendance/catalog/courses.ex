@@ -11,6 +11,7 @@ defmodule Attendance.Catalog.Courses do
     belongs_to :program, Attendance.Catalog.Program
     belongs_to :class, Attendance.Catalog.Class
     belongs_to :semester, Attendance.Catalog.Semester
+    has_many :lecturers, Attendance.Lecturers.Lecturer
 
     timestamps()
   end

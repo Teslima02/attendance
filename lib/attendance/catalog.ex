@@ -213,7 +213,10 @@ defmodule Attendance.Catalog do
       [%Semester{}, ...]
 
   """
-  def list_semesters(%{"class_id" => class_id, "program_id" => _program_id, "session_id" => _session_id} = _params) do
+  def list_semesters(
+        %{"class_id" => class_id, "program_id" => _program_id, "session_id" => _session_id} =
+          _params
+      ) do
     query = from s in Semester, where: s.class_id == ^class_id
     Repo.all(query) |> Repo.preload(:admin)
   end
@@ -416,7 +419,7 @@ defmodule Attendance.Catalog do
   """
   def list_course(%{"semester_id" => semester_id} = _params) do
     query = from c in Courses, where: c.semester_id == ^semester_id
-    Repo.all(query)
+    Repo.all(query) |> Repo.preload(:lecturers)
   end
 
   @doc """
@@ -433,7 +436,7 @@ defmodule Attendance.Catalog do
       ** (Ecto.NoResultsError)
 
   """
-  def get_courses!(id), do: Repo.get!(Courses, id)
+  def get_courses!(id), do: Repo.get!(Courses, id) |> Repo.preload(:lecturers)
 
   @doc """
   Creates a courses.
@@ -448,14 +451,14 @@ defmodule Attendance.Catalog do
 
   """
   def create_courses(admin, session, program, class, semester, attrs \\ %{}) do
-      %Courses{}
-      |> Courses.changeset(attrs)
-      |> Ecto.Changeset.put_assoc(:admin, admin)
-      |> Ecto.Changeset.put_assoc(:session, session)
-      |> Ecto.Changeset.put_assoc(:program, program)
-      |> Ecto.Changeset.put_assoc(:class, class)
-      |> Ecto.Changeset.put_assoc(:semester, semester)
-      |> Repo.insert()
+    %Courses{}
+    |> Courses.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:admin, admin)
+    |> Ecto.Changeset.put_assoc(:session, session)
+    |> Ecto.Changeset.put_assoc(:program, program)
+    |> Ecto.Changeset.put_assoc(:class, class)
+    |> Ecto.Changeset.put_assoc(:semester, semester)
+    |> Repo.insert()
   end
 
   @doc """

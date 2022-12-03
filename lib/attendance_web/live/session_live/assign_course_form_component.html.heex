@@ -4,16 +4,14 @@
   <.form
     let={f}
     for={@changeset}
-    id="lecturer-form"
+    id="assign-courses-form"
     phx-target={@myself}
     phx-change="validate"
     phx-submit="save">
 
-    <%= hidden_input f, :last_name %>
-
-    <div>
-      <%= live_file_input @uploads.csv_file %>
-    </div>
+    <label>
+      Select Lecturer: <%= select f, :lecturer_id, Enum.map(@lecturers, fn x -> {x.first_name <> " " <> x.last_name, x.id} end) %>
+    </label>
 
     <div>
       <%= submit "Save", phx_disable_with: "Saving..." %>

@@ -13,7 +13,21 @@
   </.modal>
 <% end %>
 
-<%= if @live_action in [:upload_course, :edit_course] do %>
+<%= if @live_action in [:upload_course] do %>
+  <.modal return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}>
+    <.live_component
+      module={AttendanceWeb.SessionLive.UploadCourseFormComponent}
+      id={@courses.id || :upload_course}
+      title={@page_title}
+      action={@live_action}
+      courses={@courses}
+      current_admin={@current_admin}
+      return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}
+    />
+  </.modal>
+<% end %>
+
+<%= if @live_action in [:edit_course] do %>
   <.modal return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}>
     <.live_component
       module={AttendanceWeb.SessionLive.CourseFormComponent}
@@ -22,6 +36,22 @@
       action={@live_action}
       courses={@courses}
       current_admin={@current_admin}
+      return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}
+    />
+  </.modal>
+<% end %>
+
+<%= if @live_action in [:assign_course] do %>
+  <.modal return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}>
+    <.live_component
+      module={AttendanceWeb.SessionLive.AssignCourseFormComponent}
+      id={@courses.id}
+      title={@page_title}
+      action={@live_action}
+      courses={@courses}
+      current_admin={@current_admin}
+      lecturers={@lecturers}
+      assign_course_to_lecturer={@assign_course_to_lecturer}
       return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}
     />
   </.modal>
@@ -79,8 +109,8 @@
         <td><%= courses.code %></td>
 
         <td>
-          <span><%= live_redirect "Assign to lecturer", to: Routes.session_show_semester_path(@socket, :upload_course, @session, @program, @class, @semester) %></span>
-          <span><%= live_patch "Edit", to: Routes.session_show_semester_path(@socket, :upload_course, @session, @program, @class, @semester) %></span>
+          <span><%= live_redirect "Assign to lecturer", to: Routes.session_show_semester_path(@socket, :assign_course, @session, @program, @class, @semester, courses) %></span>
+          <span><%= live_patch "Edit", to: Routes.session_show_semester_path(@socket, :edit_course, @session, @program, @class, @semester, courses) %></span>
           <span><%= link "Disable", to: "#", phx_click: "delete", phx_value_id: courses.id, data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>
