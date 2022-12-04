@@ -4,7 +4,6 @@ defmodule Attendance.Lecturers do
   """
 
   import Ecto.Query, warn: false
-  alias Attendance.Catalog.Courses
   alias Attendance.Repo
 
   alias Attendance.Lecturers.{Lecturer, LecturerToken, LecturerNotifier}
@@ -21,13 +20,8 @@ defmodule Attendance.Lecturers do
       [%Lecturer{}, ...]
 
   """
-  def list_lecturers_courses(course) do
-    from(l in Lecturer, where: [course_id: ^course.id], order_by: [asc: :id])
-    |> Repo.all()
-  end
-
   def list_lecturers do
-    Repo.all(Lecturer) |> Repo.preload(:courses)
+    Repo.all(Lecturer) |> Repo.preload(:course)
   end
 
   @doc """
@@ -48,32 +42,22 @@ defmodule Attendance.Lecturers do
     |> Repo.update()
   end
 
-  def change_assign_course_to_lecturer(%Courses{} = course, %Lecturer{} = lecturer) do
-    course
-    |> Repo.preload(:lecturers)
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_assoc(:lecturers, [lecturer | course.lecturers])
+  # has many relation
+
+  # def change_assign_course_to_lecturer(%Course{} = course, %Lecturer{} = lecturer) do
+  #   course
+  #   |> Repo.preload(:lecturer)
+  #   |> Ecto.Changeset.change()
+  #   |> Ecto.Changeset.put_assoc(:lecturer, [lecturer | course.lecturer])
+  #   |> Repo.update()
+  # end
+
+  def assign_course_to_lecturer(course, lecturer) do
+    lecturer
+    |> Repo.preload(:course)
+    |> Lecturer.assign_course_to_lecturer(course)
     |> Repo.update()
   end
-
-  # def change_assign_course_to_lecturer(%Courses{} = _course, lecturer) do
-  #   lecturer
-  #   |> Repo.preload(:course)
-  #   |> Lecturer.assign_course_to_lecturer()
-  #   |> Ecto.Changeset.change()
-  #   |> Ecto.Changeset.put_assoc(:course, [lecturers: lecturer])
-  #   |> Repo.update()
-  # end
-
-  # def change_assign_course_to_lecturer(%Courses{} = course, %Lecturer{} = lecturer) do
-  #   course = from(l in Lecturer, where: [course_id: ^course.id], order_by: [asc: l.course_id], select: {l.courses_id, l}) |> IO.inspect
-  #   course
-  #   |> Repo.preload(:lecturers)
-  #   |> Lecturer.assign_course_to_lecturer()
-  #   |> Ecto.Changeset.put_assoc(:lecturers, lecturer)
-  #   # |> Lecturer.assign_course_to_lecturer()
-  #   |> Repo.update()
-  # end
 
   @doc """
   Deletes a lecturer.
@@ -154,7 +138,7 @@ defmodule Attendance.Lecturers do
       ** (Ecto.NoResultsError)
 
   """
-  def get_lecturer!(id), do: Repo.get!(Lecturer, id)
+  def get_lecturer!(id), do: Repo.get!(Lecturer, id) |> Repo.preload(:course)
 
   def get_lecturer_with_course!(course, id), do: Repo.get!(Lecturer, course_id: course.id, id: id)
 

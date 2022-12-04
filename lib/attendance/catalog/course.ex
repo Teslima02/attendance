@@ -1,4 +1,4 @@
-defmodule Attendance.Catalog.Courses do
+defmodule Attendance.Catalog.Course do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -11,7 +11,7 @@ defmodule Attendance.Catalog.Courses do
     belongs_to :program, Attendance.Catalog.Program
     belongs_to :class, Attendance.Catalog.Class
     belongs_to :semester, Attendance.Catalog.Semester
-    has_many :lecturers, Attendance.Lecturers.Lecturer
+    many_to_many :lecturer, Attendance.Lecturers.Lecturer, join_through: Attendance.Catalog.LecturerCourses, on_replace: :delete
 
     timestamps()
   end

@@ -31,10 +31,10 @@
   <.modal return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}>
     <.live_component
       module={AttendanceWeb.SessionLive.CourseFormComponent}
-      id={@courses.id || :upload_course}
+      id={@course.id || :upload_course}
       title={@page_title}
       action={@live_action}
-      courses={@courses}
+      course={@course}
       current_admin={@current_admin}
       return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}
     />
@@ -45,10 +45,10 @@
   <.modal return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}>
     <.live_component
       module={AttendanceWeb.SessionLive.AssignCourseFormComponent}
-      id={@courses.id}
+      id={@course.id}
       title={@page_title}
       action={@live_action}
-      courses={@courses}
+      course={@course}
       current_admin={@current_admin}
       lecturers={@lecturers}
       assign_course_to_lecturer={@assign_course_to_lecturer}
@@ -101,17 +101,17 @@
     </tr>
   </thead>
   <tbody id="course">
-    <%= for courses <- @course do %>
-      <tr id={"courses-#{courses.id}"}>
-        <td><%= courses.id%></td>
-        <td><%= courses.name %></td>
-        <td><%= courses.description %></td>
-        <td><%= courses.code %></td>
+    <%= for course <- @courses do %>
+      <tr id={"courses-#{course.id}"}>
+        <td><%= course.id%></td>
+        <td><%= course.name %></td>
+        <td><%= course.description %></td>
+        <td><%= course.code %></td>
 
         <td>
-          <span><%= live_redirect "Assign to lecturer", to: Routes.session_show_semester_path(@socket, :assign_course, @session, @program, @class, @semester, courses) %></span>
-          <span><%= live_patch "Edit", to: Routes.session_show_semester_path(@socket, :edit_course, @session, @program, @class, @semester, courses) %></span>
-          <span><%= link "Disable", to: "#", phx_click: "delete", phx_value_id: courses.id, data: [confirm: "Are you sure?"] %></span>
+          <span><%= live_redirect "Assign to lecturer", to: Routes.session_show_semester_path(@socket, :assign_course, @session, @program, @class, @semester, course) %></span>
+          <span><%= live_patch "Edit", to: Routes.session_show_semester_path(@socket, :edit_course, @session, @program, @class, @semester, course) %></span>
+          <span><%= link "Disable", to: "#", phx_click: "delete", phx_value_id: course.id, data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>
     <% end %>

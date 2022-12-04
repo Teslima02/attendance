@@ -2,7 +2,7 @@ defmodule AttendanceWeb.SessionLive.ShowSemester do
   use AttendanceWeb, :live_view
 
   alias Attendance.Catalog
-  alias Attendance.Catalog.Courses
+  alias Attendance.Catalog.Course
   alias Attendance.Lecturers
 
   import AttendanceWeb.SessionLive.Index
@@ -17,7 +17,7 @@ defmodule AttendanceWeb.SessionLive.ShowSemester do
 
   def assign_courses(socket, params) do
     socket
-    |> assign(course: list_courses(params))
+    |> assign(courses: list_courses(params))
   end
 
   @impl true
@@ -66,7 +66,7 @@ defmodule AttendanceWeb.SessionLive.ShowSemester do
     if socket.assigns.live_action do
       socket
       |> assign(:page_title, page_title(socket.assigns.live_action))
-      |> assign(:courses, %Courses{
+      |> assign(:courses, %Course{
         session_id: session_id,
         program_id: program_id,
         class_id: class_id,
@@ -93,7 +93,7 @@ defmodule AttendanceWeb.SessionLive.ShowSemester do
       |> assign(:class, Catalog.get_class!(class_id))
       |> assign(:program, Catalog.get_program!(program_id))
       |> assign(:semester, Catalog.get_semester!(semester_id))
-      |> assign(:courses, Catalog.get_courses!(course_id))
+      |> assign(:course, Catalog.get_courses!(course_id))
     end
   end
 
@@ -111,10 +111,10 @@ defmodule AttendanceWeb.SessionLive.ShowSemester do
       |> assign(:class, Catalog.get_class!(class_id))
       |> assign(:program, Catalog.get_program!(program_id))
       |> assign(:semester, Catalog.get_semester!(semester_id))
-      |> assign(:courses, Catalog.get_courses!(course_id))
+      |> assign(:course, Catalog.get_courses!(course_id))
       |> assign(:lecturers, Lecturers.list_lecturers())
       |> assign(:assign_course_to_lecturer, %{
-        courses: course_id
+        course: course_id
       })
     end
   end

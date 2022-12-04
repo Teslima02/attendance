@@ -4,8 +4,8 @@ defmodule AttendanceWeb.SessionLive.CourseFormComponent do
   alias Attendance.Catalog
 
   @impl true
-  def update(%{courses: courses} = assigns, socket) do
-    changeset = Catalog.change_courses(courses)
+  def update(%{course: course} = assigns, socket) do
+    changeset = Catalog.change_courses(course)
 
     {:ok,
      socket
@@ -16,7 +16,7 @@ defmodule AttendanceWeb.SessionLive.CourseFormComponent do
   @impl true
   def handle_event("validate", %{"courses" => courses_params}, socket) do
     changeset =
-      socket.assigns.courses
+      socket.assigns.course
       |> Catalog.change_courses(courses_params)
       |> Map.put(:action, :validate)
 
@@ -28,7 +28,7 @@ defmodule AttendanceWeb.SessionLive.CourseFormComponent do
   end
 
   defp save_courses(socket, :edit_course, courses_params) do
-    case Catalog.update_courses(socket.assigns.courses, courses_params) do
+    case Catalog.update_courses(socket.assigns.course, courses_params) do
       {:ok, _courses} ->
         {:noreply,
          socket

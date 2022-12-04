@@ -12,7 +12,7 @@ defmodule Attendance.Lecturers.Lecturer do
     field :disabled, :boolean, default: false
     field :matric_number, :string
     belongs_to :admin, Attendance.Accounts.Admin
-    belongs_to :courses, Attendance.Catalog.Courses
+    many_to_many :course, Attendance.Catalog.Course, join_through: Attendance.Catalog.LecturerCourses, on_replace: :delete
 
     field :confirmed_at, :naive_datetime
 
@@ -146,8 +146,9 @@ defmodule Attendance.Lecturers.Lecturer do
     end
   end
 
-  def assign_course_to_lecturer(lecturer, attrs \\ %{}) do
+  def assign_course_to_lecturer(lecturer, course) do
     lecturer
-    |> cast(attrs, [])
+    |> cast(%{}, [])
+    |> put_assoc(:course, [course | lecturer.course])
   end
 end
