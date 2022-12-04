@@ -58,7 +58,6 @@ defmodule AttendanceWeb.Router do
     live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/course/:course_id/edit", SessionLive.ShowSemester, :edit_course
 
     live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/course/:course_id/assign", SessionLive.ShowSemester, :assign_course
-    # live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/course/:course_id/assign_course_lecturer", SessionLive.AssignCourseFormComponent, :assign_course
 
     live "/lecturers", LecturerLive.Index, :index
     live "/lecturers/new", LecturerLive.Index, :upload_lecturer

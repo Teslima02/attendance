@@ -3,6 +3,7 @@ defmodule Attendance.LecturersFixtures do
   This module defines test helpers for creating
   entities via the `Attendance.Lecturers` context.
   """
+  alias Attendance.AccountsFixtures
 
   def unique_lecturer_email, do: "lecturer#{System.unique_integer()}@example.com"
   def valid_lecturer_password, do: "hello world!"
@@ -15,10 +16,11 @@ defmodule Attendance.LecturersFixtures do
   end
 
   def lecturer_fixture(attrs \\ %{}) do
+    admin = AccountsFixtures.admin_fixture()
     {:ok, lecturer} =
       attrs
       |> valid_lecturer_attributes()
-      |> Attendance.Lecturers.register_lecturer()
+      |> Attendance.Lecturers.register_lecturer(admin)
 
     lecturer
   end
