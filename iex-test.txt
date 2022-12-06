@@ -1,0 +1,3 @@
+lecturer1 = Lecturers.get_lecturer!(1)
+course1 = Catalog.get_courses!(1)
+assign_course1 = Lecturers.assign_course_to_lecturer(course1, lecturer1)
