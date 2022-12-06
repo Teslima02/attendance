@@ -21,7 +21,7 @@ defmodule Attendance.Lecturers do
 
   """
   def list_lecturers do
-    Repo.all(Lecturer)
+    Repo.all(Lecturer) |> Repo.preload(:course)
   end
 
   @doc """
@@ -39,6 +39,23 @@ defmodule Attendance.Lecturers do
   def update_lecturer(%Lecturer{} = lecturer, attrs) do
     lecturer
     |> Lecturer.registration_changeset(attrs)
+    |> Repo.update()
+  end
+
+  # has many relation
+
+  # def change_assign_course_to_lecturer(%Course{} = course, %Lecturer{} = lecturer) do
+  #   course
+  #   |> Repo.preload(:lecturer)
+  #   |> Ecto.Changeset.change()
+  #   |> Ecto.Changeset.put_assoc(:lecturer, [lecturer | course.lecturer])
+  #   |> Repo.update()
+  # end
+
+  def assign_course_to_lecturer(course, lecturer) do
+    lecturer
+    |> Repo.preload(:course)
+    |> Lecturer.assign_course_to_lecturer(course)
     |> Repo.update()
   end
 
@@ -121,7 +138,9 @@ defmodule Attendance.Lecturers do
       ** (Ecto.NoResultsError)
 
   """
-  def get_lecturer!(id), do: Repo.get!(Lecturer, id)
+  def get_lecturer!(id), do: Repo.get!(Lecturer, id) |> Repo.preload(:course)
+
+  def get_lecturer_with_course!(course, id), do: Repo.get!(Lecturer, course_id: course.id, id: id)
 
   ## Lecturer registration
 

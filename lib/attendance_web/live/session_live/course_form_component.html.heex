@@ -13,11 +13,14 @@
     <%= text_input f, :name %>
     <%= error_tag f, :name %>
 
+    <%= label f, :code %>
+    <%= text_input f, :code %>
+    <%= error_tag f, :code %>
 
+    <%= label f, :description %>
+    <%= text_input f, :description %>
+    <%= error_tag f, :description %>
 
-    <div>
-      <%= live_file_input @uploads.csv_file %>
-    </div>
 
     <div>
       <%= submit "Save", phx_disable_with: "Saving..." %>

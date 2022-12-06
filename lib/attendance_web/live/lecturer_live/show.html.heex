@@ -39,3 +39,26 @@
 
 <span><%= live_patch "Edit", to: Routes.lecturer_show_path(@socket, :edit, @lecturer), class: "button" %></span> |
 <span><%= live_redirect "Back", to: Routes.lecturer_index_path(@socket, :index) %></span>
+
+
+<h1><%= @lecturer.first_name %> Assigned courses</h1>
+<table>
+  <thead>
+    <tr>
+      <th>S/N</th>
+      <th>Name</th>
+      <th>Code</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="course">
+    <%= for courses <- @lecturer.course do %>
+      <tr id={"courses-#{courses.id}"}>
+        <td><%= courses.id%></td>
+        <td><%= courses.name %></td>
+        <td><%= courses.code %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

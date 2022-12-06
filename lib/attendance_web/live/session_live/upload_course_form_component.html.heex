@@ -4,12 +4,12 @@
   <.form
     let={f}
     for={@changeset}
-    id="lecturer-form"
+    id="courses-form"
     phx-target={@myself}
     phx-change="validate"
     phx-submit="save">
 
-    <%= hidden_input f, :last_name %>
+    <%= hidden_input f, :name %>
 
     <div>
       <%= live_file_input @uploads.csv_file %>

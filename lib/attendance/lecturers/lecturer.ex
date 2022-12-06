@@ -12,6 +12,7 @@ defmodule Attendance.Lecturers.Lecturer do
     field :disabled, :boolean, default: false
     field :matric_number, :string
     belongs_to :admin, Attendance.Accounts.Admin
+    many_to_many :course, Attendance.Catalog.Course, join_through: Attendance.Catalog.LecturerCourses, on_replace: :delete
 
     field :confirmed_at, :naive_datetime
 
@@ -143,5 +144,11 @@ defmodule Attendance.Lecturers.Lecturer do
     else
       add_error(changeset, :current_password, "is not valid")
     end
+  end
+
+  def assign_course_to_lecturer(lecturer, course) do
+    lecturer
+    |> cast(%{}, [])
+    |> put_assoc(:course, [course | lecturer.course])
   end
 end
