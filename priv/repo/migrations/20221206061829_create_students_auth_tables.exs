@@ -14,10 +14,13 @@ defmodule Attendance.Repo.Migrations.CreateStudentsAuthTables do
       add :disabled, :boolean, default: false
       add :matric_number, :string, null: false
       add :admin_id, references(:admins, on_delete: :delete_all)
+      add :class_id, references(:classes, on_delete: :delete_all)
       timestamps()
     end
 
     create unique_index(:students, [:email, :matric_number])
+    create index(:students, [:admin_id])
+    create index(:students, [:class_id])
 
     create table(:students_tokens) do
       add :student_id, references(:students, on_delete: :delete_all), null: false

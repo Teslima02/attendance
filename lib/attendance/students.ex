@@ -74,9 +74,11 @@ defmodule Attendance.Students do
       {:error, %Ecto.Changeset{}}
 
   """
-  def register_student(attrs) do
+  def register_student(admin, class, attrs) do
     %Student{}
     |> Student.registration_changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:admin, admin)
+    |> Ecto.Changeset.put_assoc(:class, class)
     |> Repo.insert()
   end
 
@@ -349,5 +351,68 @@ defmodule Attendance.Students do
       {:ok, %{student: student}} -> {:ok, student}
       {:error, :student, changeset, _} -> {:error, changeset}
     end
+  end
+
+  alias Attendance.Students.Student
+
+  @doc """
+  Returns the list of students.
+
+  ## Examples
+
+      iex> list_students()
+      [%Student{}, ...]
+
+  """
+  def list_students(%{"class_id" => class_id} = _params) do
+    query = from s in Student, where: s.class_id == ^class_id
+    Repo.all(query)
+  end
+
+  @doc """
+  Updates a student.
+
+  ## Examples
+
+      iex> update_student(student, %{field: new_value})
+      {:ok, %Student{}}
+
+      iex> update_student(student, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_student(%Student{} = student, attrs) do
+    student
+    |> Student.registration_changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a student.
+
+  ## Examples
+
+      iex> delete_student(student)
+      {:ok, %Student{}}
+
+      iex> delete_student(student)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_student(%Student{} = student) do
+    Repo.delete(student)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking student changes.
+
+  ## Examples
+
+      iex> change_student(student)
+      %Ecto.Changeset{data: %Student{}}
+
+  """
+  def change_student(%Student{} = student, attrs \\ %{}) do
+    Student.registration_changeset(student, attrs)
   end
 end

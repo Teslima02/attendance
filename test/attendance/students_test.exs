@@ -505,4 +505,66 @@ defmodule Attendance.StudentsTest do
       refute inspect(%Student{password: "123456"}) =~ "password: \"123456\""
     end
   end
+
+  describe "students" do
+    alias Attendance.Students.Student
+
+    import Attendance.StudentsFixtures
+
+    @invalid_attrs %{disabled: nil, first_name: nil, last_name: nil, matric_number: nil, middle_name: nil}
+
+    test "list_students/0 returns all students" do
+      student = student_fixture()
+      assert Students.list_students() == [student]
+    end
+
+    test "get_student!/1 returns the student with given id" do
+      student = student_fixture()
+      assert Students.get_student!(student.id) == student
+    end
+
+    test "create_student/1 with valid data creates a student" do
+      valid_attrs = %{disabled: true, first_name: "some first_name", last_name: "some last_name", matric_number: "some matric_number", middle_name: "some middle_name"}
+
+      assert {:ok, %Student{} = student} = Students.create_student(valid_attrs)
+      assert student.disabled == true
+      assert student.first_name == "some first_name"
+      assert student.last_name == "some last_name"
+      assert student.matric_number == "some matric_number"
+      assert student.middle_name == "some middle_name"
+    end
+
+    test "create_student/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Students.create_student(@invalid_attrs)
+    end
+
+    test "update_student/2 with valid data updates the student" do
+      student = student_fixture()
+      update_attrs = %{disabled: false, first_name: "some updated first_name", last_name: "some updated last_name", matric_number: "some updated matric_number", middle_name: "some updated middle_name"}
+
+      assert {:ok, %Student{} = student} = Students.update_student(student, update_attrs)
+      assert student.disabled == false
+      assert student.first_name == "some updated first_name"
+      assert student.last_name == "some updated last_name"
+      assert student.matric_number == "some updated matric_number"
+      assert student.middle_name == "some updated middle_name"
+    end
+
+    test "update_student/2 with invalid data returns error changeset" do
+      student = student_fixture()
+      assert {:error, %Ecto.Changeset{}} = Students.update_student(student, @invalid_attrs)
+      assert student == Students.get_student!(student.id)
+    end
+
+    test "delete_student/1 deletes the student" do
+      student = student_fixture()
+      assert {:ok, %Student{}} = Students.delete_student(student)
+      assert_raise Ecto.NoResultsError, fn -> Students.get_student!(student.id) end
+    end
+
+    test "change_student/1 returns a student changeset" do
+      student = student_fixture()
+      assert %Ecto.Changeset{} = Students.change_student(student)
+    end
+  end
 end

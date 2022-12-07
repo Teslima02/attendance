@@ -28,4 +28,22 @@ defmodule Attendance.StudentsFixtures do
     [_, token | _] = String.split(captured_email.text_body, "[TOKEN]")
     token
   end
+
+  @doc """
+  Generate a student.
+  """
+  def student_fixture(attrs \\ %{}) do
+    {:ok, student} =
+      attrs
+      |> Enum.into(%{
+        disabled: true,
+        first_name: "some first_name",
+        last_name: "some last_name",
+        matric_number: "some matric_number",
+        middle_name: "some middle_name"
+      })
+      |> Attendance.Students.create_student()
+
+    student
+  end
 end

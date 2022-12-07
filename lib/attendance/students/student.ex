@@ -12,6 +12,7 @@ defmodule Attendance.Students.Student do
     field :disabled, :boolean, default: false
     field :matric_number, :string
     belongs_to :admin, Attendance.Accounts.Admin
+    belongs_to :class, Attendance.Catalog.Class
     field :confirmed_at, :naive_datetime
 
     timestamps()
@@ -43,7 +44,7 @@ defmodule Attendance.Students.Student do
 
   defp validate_email(changeset) do
     changeset
-    |> validate_required([:email])
+    # |> validate_required([:email])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
     |> validate_length(:email, max: 160)
     |> unsafe_validate_unique(:email, Attendance.Repo)
@@ -52,7 +53,7 @@ defmodule Attendance.Students.Student do
 
   defp validate_password(changeset, opts) do
     changeset
-    |> validate_required([:password])
+    # |> validate_required([:password])
     |> validate_length(:password, min: 12, max: 72)
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
