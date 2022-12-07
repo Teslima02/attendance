@@ -1,0 +1,36 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="student-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+  
+    <%= label f, :first_name %>
+    <%= text_input f, :first_name %>
+    <%= error_tag f, :first_name %>
+  
+    <%= label f, :middle_name %>
+    <%= text_input f, :middle_name %>
+    <%= error_tag f, :middle_name %>
+  
+    <%= label f, :last_name %>
+    <%= text_input f, :last_name %>
+    <%= error_tag f, :last_name %>
+  
+    <%= label f, :disabled %>
+    <%= checkbox f, :disabled %>
+    <%= error_tag f, :disabled %>
+  
+    <%= label f, :matric_number %>
+    <%= text_input f, :matric_number %>
+    <%= error_tag f, :matric_number %>
+  
+    <div>
+      <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
+  </.form>
+</div>
