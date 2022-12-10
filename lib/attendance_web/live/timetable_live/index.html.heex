@@ -1,0 +1,43 @@
+<h1>Listing Timetables</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.timetable_index_path(@socket, :index)}>
+    <.live_component
+      module={AttendanceWeb.TimetableLive.FormComponent}
+      id={@timetable.id || :new}
+      title={@page_title}
+      action={@live_action}
+      timetable={@timetable}
+      return_to={Routes.timetable_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Disabled</th>
+      <th>Start time</th>
+      <th>End time</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="timetables">
+    <%= for timetable <- @timetables do %>
+      <tr id={"timetable-#{timetable.id}"}>
+        <td><%= timetable.disabled %></td>
+        <td><%= timetable.start_time %></td>
+        <td><%= timetable.end_time %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.timetable_show_path(@socket, :show, timetable) %></span>
+          <span><%= live_patch "Edit", to: Routes.timetable_index_path(@socket, :edit, timetable) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: timetable.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Timetable", to: Routes.timetable_index_path(@socket, :new) %></span>

@@ -17,10 +17,10 @@
   <.modal return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}>
     <.live_component
       module={AttendanceWeb.SessionLive.UploadCourseFormComponent}
-      id={@courses.id || :upload_course}
+      id={@course.id || :upload_course}
       title={@page_title}
       action={@live_action}
-      courses={@courses}
+      course={@course}
       current_admin={@current_admin}
       return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}
     />
@@ -52,6 +52,24 @@
       current_admin={@current_admin}
       lecturers={@lecturers}
       assign_course_to_lecturer={@assign_course_to_lecturer}
+      return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}
+    />
+  </.modal>
+<% end %>
+
+<%= if @live_action in [:create_timetable] do %>
+  <.modal return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}>
+    <.live_component
+      module={AttendanceWeb.SessionLive.TimetableFormComponent}
+      id={@timetable.id || :create_timetable}
+      title={@page_title}
+      action={@live_action}
+      timetable={@timetable}
+      current_admin={@current_admin}
+      courses={@courses}
+      periods={@periods}
+      days={@days}
+      lecture_halls={@lecture_halls}
       return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}
     />
   </.modal>
@@ -115,5 +133,48 @@
         </td>
       </tr>
     <% end %>
+  </tbody>
+</table>
+
+<h1>TimeTable</h1>
+<h1>Create Timetable</h1>
+<div style="margin-bottom: 20px">
+  <span><%= live_patch "Create", to: Routes.session_show_semester_path(@socket, :create_timetable, @session, @program, @class, @semester) %></span>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>Days/Period</th>
+      <th>8:00 - 9:00AM</th>
+      <th>9:00 - 10:00AM</th>
+      <th>10:00 - 11:00AM</th>
+      <th>11:00 - 12:00PM</th>
+      <th>12:00 - 1:00PM</th>
+      <th>1:00 - 2:00PM</th>
+      <th>2:00 - 3:00PM</th>
+      <th>3:00 - 4:00PM</th>
+      <th>4:00 - 5:00PM</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody id="course">
+  <%= for course <- @courses do %>
+    <tr id={"courses-#{course.id}"}>
+      <td><%= course.id%></td>
+      <td><%= course.name %></td>
+      <td><%= course.description %></td>
+      <td><%= course.code %></td>
+      <td><%= course.id%></td>
+      <td><%= course.name %></td>
+      <td><%= course.description %></td>
+      <td><%= course.code %></td>
+      <td><%= course.description %></td>
+      <td><%= course.code %></td>
+
+      <td>
+        <span><%= live_patch "Edit", to: Routes.session_show_semester_path(@socket, :edit_course, @session, @program, @class, @semester, course) %></span>
+      </td>
+    </tr>
+  <% end %>
   </tbody>
 </table>

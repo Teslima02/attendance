@@ -504,7 +504,199 @@ defmodule Attendance.Catalog do
       %Ecto.Changeset{data: %Courses{}}
 
   """
-  def change_courses(%Course{} = courses, attrs \\ %{}) do
-    Course.changeset(courses, attrs)
+  def change_courses(%Course{} = course, attrs \\ %{}) do
+    Course.changeset(course, attrs)
+  end
+
+  alias Attendance.Catalog.Period
+
+  @doc """
+  Returns the list of periods.
+
+  ## Examples
+
+      iex> list_periods()
+      [%Period{}, ...]
+
+  """
+  def list_periods do
+    Repo.all(Period)
+  end
+
+  @doc """
+  Gets a single period.
+
+  Raises `Ecto.NoResultsError` if the Period does not exist.
+
+  ## Examples
+
+      iex> get_period!(123)
+      %Period{}
+
+      iex> get_period!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_period!(id), do: Repo.get!(Period, id)
+
+  @doc """
+  Creates a period.
+
+  ## Examples
+
+      iex> create_period(%{field: value})
+      {:ok, %Period{}}
+
+      iex> create_period(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_period(attrs \\ %{}) do
+    %Period{}
+    |> Period.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a period.
+
+  ## Examples
+
+      iex> update_period(period, %{field: new_value})
+      {:ok, %Period{}}
+
+      iex> update_period(period, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_period(%Period{} = period, attrs) do
+    period
+    |> Period.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a period.
+
+  ## Examples
+
+      iex> delete_period(period)
+      {:ok, %Period{}}
+
+      iex> delete_period(period)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_period(%Period{} = period) do
+    Repo.delete(period)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking period changes.
+
+  ## Examples
+
+      iex> change_period(period)
+      %Ecto.Changeset{data: %Period{}}
+
+  """
+  def change_period(%Period{} = period, attrs \\ %{}) do
+    Period.changeset(period, attrs)
+  end
+
+  alias Attendance.Catalog.Days_of_week
+
+  @doc """
+  Returns the list of days_of_weeks.
+
+  ## Examples
+
+      iex> list_days_of_weeks()
+      [%Days_of_week{}, ...]
+
+  """
+  def list_days_of_weeks do
+    Repo.all(Days_of_week)
+  end
+
+  @doc """
+  Gets a single days_of_week.
+
+  Raises `Ecto.NoResultsError` if the Days of week does not exist.
+
+  ## Examples
+
+      iex> get_days_of_week!(123)
+      %Days_of_week{}
+
+      iex> get_days_of_week!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_days_of_week!(id), do: Repo.get!(Days_of_week, id)
+
+  @doc """
+  Creates a days_of_week.
+
+  ## Examples
+
+      iex> create_days_of_week(%{field: value})
+      {:ok, %Days_of_week{}}
+
+      iex> create_days_of_week(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_days_of_week(attrs \\ %{}) do
+    %Days_of_week{}
+    |> Days_of_week.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a days_of_week.
+
+  ## Examples
+
+      iex> update_days_of_week(days_of_week, %{field: new_value})
+      {:ok, %Days_of_week{}}
+
+      iex> update_days_of_week(days_of_week, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_days_of_week(%Days_of_week{} = days_of_week, attrs) do
+    days_of_week
+    |> Days_of_week.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a days_of_week.
+
+  ## Examples
+
+      iex> delete_days_of_week(days_of_week)
+      {:ok, %Days_of_week{}}
+
+      iex> delete_days_of_week(days_of_week)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_days_of_week(%Days_of_week{} = days_of_week) do
+    Repo.delete(days_of_week)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking days_of_week changes.
+
+  ## Examples
+
+      iex> change_days_of_week(days_of_week)
+      %Ecto.Changeset{data: %Days_of_week{}}
+
+  """
+  def change_days_of_week(%Days_of_week{} = days_of_week, attrs \\ %{}) do
+    Days_of_week.changeset(days_of_week, attrs)
   end
 end

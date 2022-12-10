@@ -1,0 +1,36 @@
+<h1>Show Timetable</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.timetable_show_path(@socket, :show, @timetable)}>
+    <.live_component
+      module={AttendanceWeb.TimetableLive.FormComponent}
+      id={@timetable.id}
+      title={@page_title}
+      action={@live_action}
+      timetable={@timetable}
+      return_to={Routes.timetable_show_path(@socket, :show, @timetable)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Disabled:</strong>
+    <%= @timetable.disabled %>
+  </li>
+
+  <li>
+    <strong>Start time:</strong>
+    <%= @timetable.start_time %>
+  </li>
+
+  <li>
+    <strong>End time:</strong>
+    <%= @timetable.end_time %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.timetable_show_path(@socket, :edit, @timetable), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.timetable_index_path(@socket, :index) %></span>
