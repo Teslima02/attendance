@@ -4,8 +4,8 @@ defmodule Attendance.Timetables.Timetable do
 
   schema "timetables" do
     field :disabled, :boolean, default: false
-    field :end_time, :time
-    field :start_time, :time
+    belongs_to :start_time, Attendance.Catalog.Period
+    belongs_to :end_time, Attendance.Catalog.Period
     belongs_to :days_of_week, Attendance.Catalog.Days_of_week
     belongs_to :course, Attendance.Catalog.Course
     belongs_to :semester, Attendance.Catalog.Semester
@@ -17,7 +17,7 @@ defmodule Attendance.Timetables.Timetable do
   @doc false
   def changeset(timetable, attrs) do
     timetable
-    |> cast(attrs, [:disabled, :start_time, :end_time])
-    |> validate_required([:start_time, :end_time])
+    |> cast(attrs, [:disabled])
+    |> validate_required([])
   end
 end

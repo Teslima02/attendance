@@ -25,14 +25,6 @@
     <%= select f, :end_time_id, Enum.map(@periods, fn x -> {x.end_time, x.id} end) %>
     <%= error_tag f, :end_time_id %>
 
-    <%= label f, :start_time %>
-    <%= time_select f, :start_time %>
-    <%= error_tag f, :start_time %>
-
-    <%= label f, :end_time %>
-    <%= time_select f, :end_time %>
-    <%= error_tag f, :end_time %>
-
     <div>
       <%= submit "Save", phx_disable_with: "Saving..." %>
     </div>

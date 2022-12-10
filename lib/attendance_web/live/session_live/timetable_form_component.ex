@@ -41,29 +41,53 @@ defmodule AttendanceWeb.SessionLive.TimetableFormComponent do
   #   end
   # end
 
-  defp save_timetable(socket, :create_timetable, %{
-         "course_id" => course_id,
-         "day_id" => day_id,
-         "start_time_id" => start_time_id,
-         "end_time_id" => end_time_id,
-         "start_time" => start_time,
-         "end_time" => end_time,
-       } = params) do
-        course = Catalog.get_courses!(course_id)
-        day = Catalog.get_days_of_week!(day_id)
-        start_time = Catalog.get_period!(start_time_id)
-        end_time = Catalog.get_period!(end_time_id)
-        # semester = Catalog.get_semester!(timetable_params.get_semester_id)
-        IO.inspect params
-        # IO.inspect start_time.start_time
-        # IO.inspect end_time.end_time
+  # defp save_timetable(socket, :create_timetable, %{
+  #        "course_id" => course_id,
+  #        "day_id" => day_id,
+  #        "start_time_id" => start_time_id,
+  #        "end_time_id" => end_time_id,
+  #      } = params) do
+  #       course = Catalog.get_courses!(course_id)
+  #       day = Catalog.get_days_of_week!(day_id)
+  #       start_time = Catalog.get_period!(start_time_id)
+  #       end_time = Catalog.get_period!(end_time_id)
+  #       # semester = Catalog.get_semester!(timetable_params.get_semester_id)
+  #       IO.inspect params
+  #       IO.inspect start_time
+  #       IO.inspect end_time
 
-    case Timetables.create_timetable(socket.assigns.current_admin, course, day, %{
-           stat_time: Time.to_iso8601(start_time.start_time),
-           end_time: Time.to_iso8601(end_time.end_time)
-          #  stat_time: start_time,
-          #  end_time: end_time
-         }) do
+  #   case Timetables.create_timetable(socket.assigns.current_admin, course, day, start_time, end_time, %{}) do
+  #     {:ok, _timetable} ->
+  #       {:noreply,
+  #        socket
+  #        |> put_flash(:info, "Timetable created successfully")
+  #        |> push_redirect(to: socket.assigns.return_to)}
+
+  #     {:error, %Ecto.Changeset{} = changeset} ->
+  #       {:noreply, assign(socket, changeset: changeset)}
+  #   end
+  # end
+
+  defp save_timetable(
+         socket,
+         :create_timetable,
+         %{
+           "course_id" => course_id,
+           "day_id" => day_id,
+           "start_time_id" => start_time_id,
+           "end_time_id" => end_time_id
+         } = params
+       ) do
+    course = Catalog.get_courses!(course_id)
+    day = Catalog.get_days_of_week!(day_id)
+    start_time = Catalog.get_period!(start_time_id)
+    end_time = Catalog.get_period!(end_time_id)
+    # semester = Catalog.get_semester!(timetable_params.get_semester_id)
+    IO.inspect(params)
+    IO.inspect(start_time)
+    IO.inspect(end_time)
+
+    case Timetables.create_timetable(%{}) do
       {:ok, _timetable} ->
         {:noreply,
          socket
