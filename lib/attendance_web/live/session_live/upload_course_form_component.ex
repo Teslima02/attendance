@@ -5,8 +5,8 @@ defmodule AttendanceWeb.SessionLive.UploadCourseFormComponent do
   alias NimbleCSV.RFC4180, as: CSV
 
   @impl true
-  def update(%{courses: courses} = assigns, socket) do
-    changeset = Catalog.change_courses(courses)
+  def update(%{course: course} = assigns, socket) do
+    changeset = Catalog.change_courses(course)
 
     {:ok,
      socket
@@ -26,9 +26,9 @@ defmodule AttendanceWeb.SessionLive.UploadCourseFormComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"courses" => courses_params}, socket) do
+  def handle_event("validate", %{"course" => courses_params}, socket) do
     changeset =
-      socket.assigns.courses
+      socket.assigns.course
       |> Catalog.change_courses(courses_params)
       |> Map.put(:action, :validate)
 
@@ -39,7 +39,7 @@ defmodule AttendanceWeb.SessionLive.UploadCourseFormComponent do
     {:noreply, cancel_upload(socket, :csv_file, ref)}
   end
 
-  def handle_event("save", %{"courses" => courses_params}, socket) do
+  def handle_event("save", %{"course" => courses_params}, socket) do
     # File upload function
     expected_file = file_upload(socket, :csv_file)
 
@@ -93,7 +93,7 @@ defmodule AttendanceWeb.SessionLive.UploadCourseFormComponent do
   defp save_courses(socket, :upload_course, courses, _courses_params) do
     %{
       assigns: %{
-        courses: %{
+        course: %{
           session_id: session_id,
           program_id: program_id,
           class_id: class_id,

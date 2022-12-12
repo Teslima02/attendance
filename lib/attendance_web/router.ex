@@ -64,8 +64,11 @@ defmodule AttendanceWeb.Router do
 
     live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/upload/course", SessionLive.ShowSemester, :upload_course
     live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/course/:course_id/edit", SessionLive.ShowSemester, :edit_course
-
     live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/course/:course_id/assign", SessionLive.ShowSemester, :assign_course
+
+    live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/create/timetable", SessionLive.ShowSemester, :create_timetable
+    live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/timetable/:timetable_id/edit", SessionLive.ShowSemester, :edit_timetable
+    # live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/timetable/:timetable_id/show", SessionLive.ShowSemester, :show_timetable
 
     live "/lecturers", LecturerLive.Index, :index
     live "/lecturers/new", LecturerLive.Index, :upload_lecturer
@@ -80,6 +83,20 @@ defmodule AttendanceWeb.Router do
 
     live "/students/:id", StudentLive.Show, :show
     live "/students/:id/show/edit", StudentLive.Show, :edit
+
+    live "/lecturer_halls", Lecturer_hallLive.Index, :index
+    live "/lecturer_halls/new", Lecturer_hallLive.Index, :new
+    live "/lecturer_halls/:id/edit", Lecturer_hallLive.Index, :edit
+
+    live "/lecturer_halls/:id", Lecturer_hallLive.Show, :show
+    live "/lecturer_halls/:id/show/edit", Lecturer_hallLive.Show, :edit
+
+    live "/timetables", TimetableLive.Index, :index
+    live "/timetables/new", TimetableLive.Index, :new
+    live "/timetables/:id/edit", TimetableLive.Index, :edit
+
+    live "/timetables/:id", TimetableLive.Show, :show
+    live "/timetables/:id/show/edit", TimetableLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

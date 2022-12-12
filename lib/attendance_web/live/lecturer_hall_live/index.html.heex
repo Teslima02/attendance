@@ -1,0 +1,43 @@
+<h1>Listing Lecturer halls</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.lecturer_hall_index_path(@socket, :index)}>
+    <.live_component
+      module={AttendanceWeb.Lecturer_hallLive.FormComponent}
+      id={@lecturer_hall.id || :new}
+      title={@page_title}
+      action={@live_action}
+      lecturer_hall={@lecturer_hall}
+      return_to={Routes.lecturer_hall_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Hall number</th>
+      <th>Building name</th>
+      <th>Disabled</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="lecturer_halls">
+    <%= for lecturer_hall <- @lecturer_halls do %>
+      <tr id={"lecturer_hall-#{lecturer_hall.id}"}>
+        <td><%= lecturer_hall.hall_number %></td>
+        <td><%= lecturer_hall.building_name %></td>
+        <td><%= lecturer_hall.disabled %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.lecturer_hall_show_path(@socket, :show, lecturer_hall) %></span>
+          <span><%= live_patch "Edit", to: Routes.lecturer_hall_index_path(@socket, :edit, lecturer_hall) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: lecturer_hall.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Lecturer hall", to: Routes.lecturer_hall_index_path(@socket, :new) %></span>

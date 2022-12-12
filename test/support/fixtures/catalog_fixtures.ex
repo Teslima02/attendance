@@ -78,4 +78,35 @@ defmodule Attendance.CatalogFixtures do
 
     class
   end
+
+  @doc """
+  Generate a period.
+  """
+  def period_fixture(attrs \\ %{}) do
+    {:ok, period} =
+      attrs
+      |> Enum.into(%{
+        disabled: true,
+        end_time: ~T[14:00:00],
+        start_time: ~T[14:00:00]
+      })
+      |> Attendance.Catalog.create_period()
+
+    period
+  end
+
+  @doc """
+  Generate a days_of_week.
+  """
+  def days_of_week_fixture(attrs \\ %{}) do
+    {:ok, days_of_week} =
+      attrs
+      |> Enum.into(%{
+        disabled: true,
+        name: "some name"
+      })
+      |> Attendance.Catalog.create_days_of_week()
+
+    days_of_week
+  end
 end
