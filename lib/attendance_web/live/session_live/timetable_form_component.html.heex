@@ -17,6 +17,10 @@
     <%= select f, :course_id, Enum.map(@courses, fn x -> {x.name, x.id} end) %>
     <%= error_tag f, :course_id %>
 
+    <%= label f, :lecture_hall_id %>
+    <%= select f, :lecture_hall_id, Enum.map(@lecture_halls, fn x -> {x.building_name <> " " <> x.hall_number, x.id} end) %>
+    <%= error_tag f, :lecture_hall_id %>
+
     <%= label f, :start_time_id %>
     <%= select f, :start_time_id, Enum.map(@periods, fn x -> {x.start_time, x.id} end) %>
     <%= error_tag f, :start_time_id %>

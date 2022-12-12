@@ -68,7 +68,7 @@ defmodule AttendanceWeb.Router do
 
     live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/create/timetable", SessionLive.ShowSemester, :create_timetable
     live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/timetable/:timetable_id/edit", SessionLive.ShowSemester, :edit_timetable
-    live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/timetable/:timetable_id/show", SessionLive.ShowSemester, :show_timetable
+    # live "/sessions/:session_id/program/:program_id/class/:class_id/semester/:semester_id/timetable/:timetable_id/show", SessionLive.ShowSemester, :show_timetable
 
     live "/lecturers", LecturerLive.Index, :index
     live "/lecturers/new", LecturerLive.Index, :upload_lecturer

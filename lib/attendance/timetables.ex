@@ -17,8 +17,10 @@ defmodule Attendance.Timetables do
       [%Timetable{}, ...]
 
   """
-  def list_timetables do
-    Repo.all(Timetable)
+  def list_timetables(%{"semester_id" => semester_id} = _params) do
+    query = from(t in Timetable, where: t.semester_id == ^semester_id)
+    Repo.all(query)
+    |> Repo.preload([:start_time, :end_time, :course, :lecture_hall, :semester, :admin, :days_of_week])
   end
 
   @doc """
@@ -49,31 +51,16 @@ defmodule Attendance.Timetables do
       {:error, %Ecto.Changeset{}}
 
   """
-  # def create_timetable(admin, course, day, start_time, end_time, attrs \\ %{}) do
-  #   IO.inspect "Yes is here"
-  #   IO.inspect attrs
-  #   %Timetable{}
-  #   |> Timetable.changeset(attrs)
-  #   |> Ecto.Changeset.put_assoc(:admin, admin)
-  #   |> Ecto.Changeset.put_assoc(:course, course)
-  #   |> Ecto.Changeset.put_assoc(:days_of_week, day)
-  #   |> Ecto.Changeset.put_assoc(:start_time, start_time)
-  #   |> Ecto.Changeset.put_assoc(:end_time, end_time)
-  #   # |> Ecto.Changeset.put_assoc(:semester, semester)
-  #   |> Repo.insert()
-  # end
-
-  def create_timetable(attrs \\ %{}) do
-    IO.inspect "Yes is here"
-    IO.inspect attrs
+  def create_timetable(admin, course, day, lecture_hall, start_time, end_time, semester, attrs \\ %{}) do
     %Timetable{}
     |> Timetable.changeset(attrs)
-    # |> Ecto.Changeset.put_assoc(:admin, admin)
-    # |> Ecto.Changeset.put_assoc(:course, course)
-    # |> Ecto.Changeset.put_assoc(:days_of_week, day)
-    # |> Ecto.Changeset.put_assoc(:start_time, start_time)
-    # |> Ecto.Changeset.put_assoc(:end_time, end_time)
-    # |> Ecto.Changeset.put_assoc(:semester, semester)
+    |> Ecto.Changeset.put_assoc(:admin, admin)
+    |> Ecto.Changeset.put_assoc(:course, course)
+    |> Ecto.Changeset.put_assoc(:days_of_week, day)
+    |> Ecto.Changeset.put_assoc(:start_time, start_time)
+    |> Ecto.Changeset.put_assoc(:end_time, end_time)
+    |> Ecto.Changeset.put_assoc(:lecture_hall, lecture_hall)
+    |> Ecto.Changeset.put_assoc(:semester, semester)
     |> Repo.insert()
   end
 
@@ -89,9 +76,14 @@ defmodule Attendance.Timetables do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_timetable(%Timetable{} = timetable, attrs) do
+  def update_timetable(%Timetable{} = timetable, course, day, lecture_hall, start_time, end_time, attrs) do
     timetable
     |> Timetable.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:course, course)
+    |> Ecto.Changeset.put_assoc(:days_of_week, day)
+    |> Ecto.Changeset.put_assoc(:start_time, start_time)
+    |> Ecto.Changeset.put_assoc(:end_time, end_time)
+    |> Ecto.Changeset.put_assoc(:lecture_hall, lecture_hall)
     |> Repo.update()
   end
 

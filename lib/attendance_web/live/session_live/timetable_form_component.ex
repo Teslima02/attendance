@@ -2,6 +2,7 @@ defmodule AttendanceWeb.SessionLive.TimetableFormComponent do
   use AttendanceWeb, :live_component
 
   alias Attendance.Catalog
+  alias Attendance.Lecturer_halls
   alias Attendance.Timetables
 
   @impl true
@@ -28,66 +29,46 @@ defmodule AttendanceWeb.SessionLive.TimetableFormComponent do
     save_timetable(socket, socket.assigns.action, timetable_params)
   end
 
-  # defp save_timetable(socket, :edit_timetable, timetable_params) do
-  #   case Timetables.update_timetable(socket.assigns.timetable, timetable_params) do
-  #     {:ok, _timetable} ->
-  #       {:noreply,
-  #        socket
-  #        |> put_flash(:info, "Timetable updated successfully")
-  #        |> push_redirect(to: socket.assigns.return_to)}
+  defp save_timetable(socket, :edit_timetable, %{
+    "course_id" => course_id,
+    "day_id" => day_id,
+    "start_time_id" => start_time_id,
+    "end_time_id" => end_time_id,
+    "lecture_hall_id" => lecture_hall_id,
+  }) do
+   course = Catalog.get_courses!(course_id)
+   day = Catalog.get_days_of_week!(day_id)
+   lecture_hall = Lecturer_halls.get_lecturer_hall!(lecture_hall_id)
+   start_time = Catalog.get_period!(start_time_id)
+   end_time = Catalog.get_period!(end_time_id)
 
-  #     {:error, %Ecto.Changeset{} = changeset} ->
-  #       {:noreply, assign(socket, :changeset, changeset)}
-  #   end
-  # end
+case Timetables.update_timetable(socket.assigns.timetable, course, day, lecture_hall, start_time, end_time, %{}) do
+ {:ok, _timetable} ->
+   {:noreply,
+    socket
+    |> put_flash(:info, "Timetable updated successfully")
+    |> push_redirect(to: socket.assigns.return_to)}
 
-  # defp save_timetable(socket, :create_timetable, %{
-  #        "course_id" => course_id,
-  #        "day_id" => day_id,
-  #        "start_time_id" => start_time_id,
-  #        "end_time_id" => end_time_id,
-  #      } = params) do
-  #       course = Catalog.get_courses!(course_id)
-  #       day = Catalog.get_days_of_week!(day_id)
-  #       start_time = Catalog.get_period!(start_time_id)
-  #       end_time = Catalog.get_period!(end_time_id)
-  #       # semester = Catalog.get_semester!(timetable_params.get_semester_id)
-  #       IO.inspect params
-  #       IO.inspect start_time
-  #       IO.inspect end_time
+ {:error, %Ecto.Changeset{} = changeset} ->
+   {:noreply, assign(socket, changeset: changeset)}
+end
+end
 
-  #   case Timetables.create_timetable(socket.assigns.current_admin, course, day, start_time, end_time, %{}) do
-  #     {:ok, _timetable} ->
-  #       {:noreply,
-  #        socket
-  #        |> put_flash(:info, "Timetable created successfully")
-  #        |> push_redirect(to: socket.assigns.return_to)}
+  defp save_timetable(socket, :create_timetable, %{
+         "course_id" => course_id,
+         "day_id" => day_id,
+         "start_time_id" => start_time_id,
+         "end_time_id" => end_time_id,
+         "lecture_hall_id" => lecture_hall_id,
+       }) do
+        course = Catalog.get_courses!(course_id)
+        day = Catalog.get_days_of_week!(day_id)
+        lecture_hall = Lecturer_halls.get_lecturer_hall!(lecture_hall_id)
+        start_time = Catalog.get_period!(start_time_id)
+        end_time = Catalog.get_period!(end_time_id)
+        semester = Catalog.get_semester!(socket.assigns.semester.id)
 
-  #     {:error, %Ecto.Changeset{} = changeset} ->
-  #       {:noreply, assign(socket, changeset: changeset)}
-  #   end
-  # end
-
-  defp save_timetable(
-         socket,
-         :create_timetable,
-         %{
-           "course_id" => course_id,
-           "day_id" => day_id,
-           "start_time_id" => start_time_id,
-           "end_time_id" => end_time_id
-         } = params
-       ) do
-    course = Catalog.get_courses!(course_id)
-    day = Catalog.get_days_of_week!(day_id)
-    start_time = Catalog.get_period!(start_time_id)
-    end_time = Catalog.get_period!(end_time_id)
-    # semester = Catalog.get_semester!(timetable_params.get_semester_id)
-    IO.inspect(params)
-    IO.inspect(start_time)
-    IO.inspect(end_time)
-
-    case Timetables.create_timetable(%{}) do
+    case Timetables.create_timetable(socket.assigns.current_admin, course, day, lecture_hall, start_time, end_time, semester, %{}) do
       {:ok, _timetable} ->
         {:noreply,
          socket

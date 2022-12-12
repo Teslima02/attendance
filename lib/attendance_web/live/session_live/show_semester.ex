@@ -2,6 +2,7 @@ defmodule AttendanceWeb.SessionLive.ShowSemester do
   use AttendanceWeb, :live_view
 
   alias Attendance.Timetables.Timetable
+  alias Attendance.Timetables
   alias Attendance.Catalog
   alias Attendance.Catalog.Course
   alias Attendance.Lecturers
@@ -15,12 +16,18 @@ defmodule AttendanceWeb.SessionLive.ShowSemester do
      socket
      |> assign_courses(params)
      |> assign_current_admin(token)
-     |> get_days_of_the_week()}
+     |> get_days_of_the_week()
+     |> assign_timetables(params)}
   end
 
   def assign_courses(socket, params) do
     socket
     |> assign(courses: list_courses(params))
+  end
+
+  def assign_timetables(socket, params) do
+    socket
+    |> assign(timetables: list_timetables(params))
   end
 
   def get_days_of_the_week(socket) do
@@ -140,9 +147,7 @@ defmodule AttendanceWeb.SessionLive.ShowSemester do
     if socket.assigns.live_action do
       socket
       |> assign(:page_title, page_title(socket.assigns.live_action))
-      |> assign(:timetable, %Timetable{
-        semester_id: semester_id
-      })
+      |> assign(:timetable, %Timetable{})
       |> assign(:session, Catalog.get_session!(session_id))
       |> assign(:class, Catalog.get_class!(class_id))
       |> assign(:program, Catalog.get_program!(program_id))
@@ -154,21 +159,25 @@ defmodule AttendanceWeb.SessionLive.ShowSemester do
     end
   end
 
-  defp apply_action(socket, :edit_timetable, %{
-         "session_id" => session_id,
-         "program_id" => program_id,
-         "class_id" => class_id,
-         "semester_id" => semester_id,
-         "course_id" => course_id
-       }) do
+  defp apply_action(
+         socket,
+         :edit_timetable,
+         %{
+           "semester_id" => semester_id,
+           "course_id" => course_id,
+           "timetable_id" => timetable_id,
+
+           "session_id" => _session_id,
+           "program_id" => _program_id,
+           "class_id" => _class_id,
+         }
+       ) do
     if socket.assigns.live_action do
       socket
       |> assign(:page_title, page_title(socket.assigns.live_action))
-      |> assign(:session, Catalog.get_session!(session_id))
-      |> assign(:class, Catalog.get_class!(class_id))
-      |> assign(:program, Catalog.get_program!(program_id))
       |> assign(:semester, Catalog.get_semester!(semester_id))
       |> assign(:course, Catalog.get_courses!(course_id))
+      |> assign(:timetable, Timetables.get_timetable!(timetable_id))
     end
   end
 
@@ -204,5 +213,9 @@ defmodule AttendanceWeb.SessionLive.ShowSemester do
 
   defp list_days_0f_the_week() do
     Catalog.list_days_of_weeks()
+  end
+
+  defp list_timetables(params) do
+    Timetables.list_timetables(params)
   end
 end
