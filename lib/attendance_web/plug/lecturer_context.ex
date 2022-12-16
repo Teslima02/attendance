@@ -16,9 +16,9 @@ defmodule AttendanceWeb.Plug.LecturerContext do
   end
 
   defp build_context(conn) do
-    with ["" <> token] <- get_req_header(conn, "authorization"), tok <- Base.url_decode64(token, padding: false),
-         lecturer <- Attendance.Lecturers.LecturerToken.verify_session_token_query(token = elem(tok, 1)) do
-
+    with ["" <> token] <- get_req_header(conn, "authorization"),
+         tok <- Base.url_decode64(token, padding: false),
+         lecturer <- Attendance.Lecturers.get_lecturer_by_session_token(elem(tok, 1)) do
       {:ok, %{current_lecturer: lecturer}}
     end
   end
