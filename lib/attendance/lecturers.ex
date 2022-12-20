@@ -107,6 +107,24 @@ defmodule Attendance.Lecturers do
   end
 
   @doc """
+  Gets a lecturer by matric_number and password.
+
+  ## Examples
+
+      iex> get_lecturer_by_email_and_password("foo@example.com", "correct_password")
+      %Lecturer{}
+
+      iex> get_lecturer_by_email_and_password("foo@example.com", "invalid_password")
+      nil
+
+  """
+  def get_lecturer_by_matric_number_and_password(matric_number, password)
+      when is_binary(matric_number) and is_binary(password) do
+    lecturer = Repo.get_by(Lecturer, matric_number: matric_number)
+    if Lecturer.valid_password?(lecturer, password), do: lecturer
+  end
+
+  @doc """
   Gets a lecturer by email and password.
 
   ## Examples

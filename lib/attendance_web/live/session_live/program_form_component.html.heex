@@ -8,17 +8,21 @@
     phx-target={@myself}
     phx-change="validate"
     phx-submit="save">
-  
+
     <%= label f, :name %>
     <%= text_input f, :name %>
     <%= error_tag f, :name %>
-  
+
     <%= label f, :description %>
     <%= text_input f, :description %>
     <%= error_tag f, :description %>
 
+    <label>
+      Select Type: <%= select(f, :program_type, ["Full time": "full_time", "Part time": "part_time"], prompt: "Choose program type") %>
+    </label>
+
     <%= hidden_input f, :session_id %>
-  
+
     <div>
       <%= submit "Save", phx_disable_with: "Saving..." %>
     </div>

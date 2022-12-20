@@ -9,7 +9,7 @@ defmodule AttendanceWeb.SessionLive.ShowClass do
   import AttendanceWeb.SessionLive.Index
 
   @impl true
-  def mount(params, %{"admin_token" => token} = session, socket) do
+  def mount(params, %{"admin_token" => token} = _session, socket) do
     {:ok,
      socket
      |> assign_semesters(params)
