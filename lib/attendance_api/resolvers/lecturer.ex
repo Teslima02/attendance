@@ -16,13 +16,11 @@ defmodule AttendanceApi.Resolvers.Lecturer do
     end
   end
 
-  # def list_lecturers(_args, _context) do
-  #   # IO.inspect current_lecturer
-  #   {:ok, Lecturers.list_lecturers()}
-  # end
-
   def list_lecturers(_args, %{context: %{current_lecturer: current_lecturer}}) do
-    IO.inspect current_lecturer
     {:ok, Lecturers.list_lecturers()}
+  end
+
+  def get_current_lecturer(_arg, %{context: %{current_lecturer: current_lecturer}}) do
+    {:ok, current_lecturer}
   end
 end

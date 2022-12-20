@@ -8,6 +8,55 @@ defmodule Attendance.Catalog do
 
   alias Attendance.Catalog.Program
 
+  @pagination [page_size: 15]
+  @pagination_distance 5
+
+  def paginate_programs(params \\ %{}) do
+    params =
+      params
+      |> Map.put_new("sort_direction", "desc")
+      |> Map.put_new("sort_field", "inserted_at")
+
+    {:ok, sort_direction} = Map.fetch(params, "sort_direction")
+    {:ok, sort_field} = Map.fetch(params, "sort_field")
+
+    with {:ok, filter} <-
+           Filtrex.parse_params(
+             filter_config(:programs),
+             stringify_map_key(params[:program]) || %{}
+           ),
+         %Scrivener.Page{} = page <- do_paginate_programs(filter, params) do
+      {:ok,
+       %{
+         programs: page.entries,
+         page_number: page.page_number,
+         page_size: page.page_size,
+         total_pages: page.total_pages,
+         total_entries: page.total_entries,
+         distance: @pagination_distance,
+         sort_field: sort_field,
+         sort_direction: sort_direction
+       }}
+    else
+      {:error, error} -> {:error, error}
+      error -> {:error, error}
+    end
+  end
+
+  defp do_paginate_programs(filter, params) do
+    Program
+    |> Filtrex.query(filter)
+    |> order_by(^sort(params))
+    |> paginate(Repo, params, @pagination)
+  end
+
+  defp filter_config(:programs) do
+    defconfig do
+      text(:name)
+      text(:program_type)
+    end
+  end
+
   @doc """
   Returns the list of programs.
 

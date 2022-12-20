@@ -1,6 +1,7 @@
 defmodule AttendanceApi.Types.Lecturer do
   use Absinthe.Schema.Notation
 
+  alias Hex.Resolver
   alias AttendanceApi.Resolvers
 
   @desc "Lecturer login input"
@@ -41,7 +42,16 @@ defmodule AttendanceApi.Types.Lecturer do
     Get list of lecturers.
     """
     field :list_lecturers, list_of(:lecturer) do
+      middleware(AttendanceApi.Middleware.LecturerAuth)
       resolve(&Resolvers.Lecturer.list_lecturers/2)
+    end
+
+    @desc """
+    Current lecturer details
+    """
+    field :current_lecturer, :lecturer do
+      middleware(AttendanceApi.Middleware.LecturerAuth)
+      resolve(&Resolvers.Lecturer.get_current_lecturer/2)
     end
   end
 end
