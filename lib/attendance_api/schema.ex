@@ -3,7 +3,9 @@ defmodule AttendanceApi.Schema do
 
   alias AttendanceApi.Types
 
+  import_types(Absinthe.Type.Custom)
   import_types(Types.Lecturer)
+  import_types(Types.Catalog)
 
   mutation do
     import_fields(:lecturer_mutation)
@@ -11,5 +13,7 @@ defmodule AttendanceApi.Schema do
 
   query do
     import_fields(:lecturer_queries)
+    import_fields(:program_queries)
+    import_fields(:session_queries)
   end
 end

@@ -9,3 +9,4 @@ alias Attendance.Catalog.{Session, Program, Class, Semester, Courses}
 alias Attendance.{Accounts, Catalog, Lecturers}
 
 alias AttendanceApi.Resolvers.Lecturer
+alias AttendanceApi.Resolvers.Catalog

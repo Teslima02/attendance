@@ -6,6 +6,9 @@ defmodule Attendance.Catalog do
   import Ecto.Query, warn: false
   alias Attendance.Repo
 
+  import Saas.Helpers, only: [sort: 1, paginate: 4, stringify_map_key: 1]
+  import Filtrex.Type.Config
+
   alias Attendance.Catalog.Program
 
   @pagination [page_size: 15]
@@ -54,6 +57,8 @@ defmodule Attendance.Catalog do
     defconfig do
       text(:name)
       text(:program_type)
+      text(:session_id)
+      boolean(:disabled)
     end
   end
 
@@ -184,6 +189,12 @@ defmodule Attendance.Catalog do
 
   """
   def get_session!(id), do: Repo.get!(Session, id)
+
+
+  def get_current_session! do
+    query = from s in Session, where: s.disabled == false
+    Repo.one(query)
+  end
 
   @doc """
   Creates a session.
