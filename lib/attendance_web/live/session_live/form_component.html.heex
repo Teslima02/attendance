@@ -8,23 +8,30 @@
     phx-target={@myself}
     phx-change="validate"
     phx-submit="save">
-  
+
     <%= label f, :name %>
     <%= text_input f, :name %>
     <%= error_tag f, :name %>
-  
+
     <%= label f, :description %>
     <%= textarea f, :description %>
     <%= error_tag f, :description %>
-  
+
     <%= label f, :start_date %>
     <%= date_select f, :start_date %>
     <%= error_tag f, :start_date %>
-  
+
     <%= label f, :end_date %>
     <%= date_select f, :end_date %>
     <%= error_tag f, :end_date %>
-  
+
+    <%= if @action == :edit do %>
+      <label>
+        Activate session: <%= select(f, :disabled, ["Activate session": false, "Deactivate session": true], prompt: "Session Status") %>
+        <%= error_tag f, :disabled %>
+      </label>
+    <% end %>
+
     <div>
       <%= submit "Save", phx_disable_with: "Saving..." %>
     </div>

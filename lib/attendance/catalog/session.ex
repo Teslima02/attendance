@@ -4,7 +4,7 @@ defmodule Attendance.Catalog.Session do
 
   schema "sessions" do
     field :description, :string
-    field :disabled, :boolean, default: false
+    field :disabled, :boolean, default: true
     field :end_date, :date
     field :name, :string
     field :start_date, :date
