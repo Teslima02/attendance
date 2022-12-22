@@ -7,6 +7,10 @@
 # General application configuration
 import Config
 
+# config :attendance, Attend_config,
+#     uploads_dir: "/app/uploads",
+#     environment: :prod
+
 config :attendance,
   ecto_repos: [Attendance.Repo]
 

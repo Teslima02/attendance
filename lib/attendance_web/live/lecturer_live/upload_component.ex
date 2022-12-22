@@ -63,12 +63,14 @@ defmodule AttendanceWeb.LecturerLive.UploadComponent do
     end)
   end
 
-  # defp uploads_root, do: Application.get_env(:attendance, :uploads_dir)
+  defp attend_config, do: Application.get_env(:attendance, Attend_config)
 
   def file_upload(socket, :csv_file) do
     uploaded_files =
       consume_uploaded_entries(socket, :csv_file, fn %{path: path}, _entry ->
-        if Mix.env() == :dev do
+        # IO.inspect attend_config[:uploads_dir]
+        # IO.inspect attend_config[:environment]
+        if attend_config[:environment] == :dev do
           dest = Path.join("priv/static/uploads", Path.basename(path))
           File.cp!(path, dest)
           static_path = Routes.static_path(socket, "/#{Path.basename(dest)}")
