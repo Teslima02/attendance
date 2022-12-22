@@ -29,13 +29,18 @@ defmodule AttendanceWeb.Router do
 
   scope "/api" do
     pipe_through :graphql
-
-    forward "/", Absinthe.Plug, schema: AttendanceApi.Schema
+    forward "/", Absinthe.Plug.GraphiQL, schema: AttendanceApi.Schema
   end
 
-  if Mix.env == :dev do
-    forward "/graphiql", Absinthe.Plug.GraphiQL, schema: AttendanceApi.Schema
-  end
+  # scope "/api" do
+  #   pipe_through :graphql
+
+  #   forward "/", Absinthe.Plug, schema: AttendanceApi.Schema
+  # end
+
+  # if Mix.env == :dev do
+  #   forward "/graphiql", Absinthe.Plug.GraphiQL, schema: AttendanceApi.Schema
+  # end
 
   scope "/", AttendanceWeb do
     pipe_through [:browser]
