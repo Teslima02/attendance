@@ -71,7 +71,10 @@ defmodule AttendanceWeb.LecturerLive.UploadComponent do
         if attend_config[:environment] == :prod do
           dest = Path.join("/app/uploads", Path.basename(path))
           File.cp!(path, dest)
-          static_path = "app/uploads/#{Path.basename(dest)}"
+          static_path = "/app/uploads/#{Path.basename(dest)}"
+          IO.inspect path
+          IO.inspect dest
+          IO.inspect static_path
           {:ok, static_path}
         else
           dest = Path.join("priv/static/uploads", Path.basename(path))
