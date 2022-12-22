@@ -73,15 +73,26 @@ defmodule AttendanceWeb.SessionLive.UploadStudentFormComponent do
   def file_upload(socket, :csv_file) do
     uploaded_files =
       consume_uploaded_entries(socket, :csv_file, fn %{path: path}, _entry ->
-        dest = Path.join("priv/static/uploads", Path.basename(path))
-        File.cp!(path, dest)
-        static_path = Routes.static_path(socket, "/#{Path.basename(dest)}")
-        {:ok, static_path}
+        if attend_config[:environment] == :prod do
+          dest = Path.join("/app/uploads", Path.basename(path))
+          File.cp!(path, dest)
+          static_path = "/app/uploads/#{Path.basename(dest)}"
+          {:ok, static_path}
+        else
+          dest = Path.join("priv/static/uploads", Path.basename(path))
+          File.cp!(path, dest)
+          static_path = Routes.static_path(socket, "/#{Path.basename(dest)}")
+          {:ok, static_path}
+        end
       end)
 
     update(socket, :uploaded_files, &(&1 ++ uploaded_files))
 
-    student_csv(uploaded_files)
+    if attend_config[:environment] == :prod do
+      uploaded_files
+    else
+      student_csv(uploaded_files)
+    end
   end
 
   defp save_student(socket, :edit_student, _, student_params) do

@@ -66,15 +66,26 @@ defmodule AttendanceWeb.SessionLive.UploadCourseFormComponent do
   def file_upload(socket, :csv_file) do
     uploaded_files =
       consume_uploaded_entries(socket, :csv_file, fn %{path: path}, _entry ->
-        dest = Path.join("priv/static/uploads", Path.basename(path))
-        File.cp!(path, dest)
-        static_path = Routes.static_path(socket, "/#{Path.basename(dest)}")
-        {:ok, static_path}
+        if attend_config[:environment] == :prod do
+          dest = Path.join("/app/uploads", Path.basename(path))
+          File.cp!(path, dest)
+          static_path = "/app/uploads/#{Path.basename(dest)}"
+          {:ok, static_path}
+        else
+          dest = Path.join("priv/static/uploads", Path.basename(path))
+          File.cp!(path, dest)
+          static_path = Routes.static_path(socket, "/#{Path.basename(dest)}")
+          {:ok, static_path}
+        end
       end)
 
     update(socket, :uploaded_files, &(&1 ++ uploaded_files))
 
-    courses_csv(uploaded_files)
+    if attend_config[:environment] == :prod do
+      uploaded_files
+    else
+      courses_csv(uploaded_files)
+    end
   end
 
   defp save_courses(socket, :edit_course, _courses, courses_params) do
@@ -106,6 +117,7 @@ defmodule AttendanceWeb.SessionLive.UploadCourseFormComponent do
     program = Catalog.get_program!(program_id)
     class = Catalog.get_class!(class_id)
     semester = Catalog.get_semester!(semester_id)
+
     Enum.each(courses, fn row ->
       case Catalog.create_courses(
              socket.assigns.current_admin,
@@ -129,9 +141,10 @@ defmodule AttendanceWeb.SessionLive.UploadCourseFormComponent do
           {:noreply, assign(socket, changeset: changeset)}
       end
     end)
+
     {:noreply,
-           socket
-           |> put_flash(:info, "Courses created successfully")
-           |> push_redirect(to: socket.assigns.return_to)}
+     socket
+     |> put_flash(:info, "Courses created successfully")
+     |> push_redirect(to: socket.assigns.return_to)}
   end
 end
