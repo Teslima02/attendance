@@ -38,7 +38,7 @@ defmodule AttendanceWeb.LecturerLive.UploadComponent do
 
   def handle_event("save", %{"lecturer" => lecturer_params}, socket) do
     # File upload function
-    expected_file = file_upload(socket, :csv_file)
+    expected_file = file_upload(socket, :csv_file) |> IO.inspect
 
     # Reading CSV File upload function
     lecturer = read_csv_file(expected_file)
@@ -72,7 +72,7 @@ defmodule AttendanceWeb.LecturerLive.UploadComponent do
         if attend_config[:environment] == :prod do
           dest = Path.join("/app/uploads", Path.basename(path))
           File.cp!(path, dest)
-          static_path = Routes.static_path(socket, "/#{Path.basename(dest)}")
+          static_path = Routes.static_path(socket, "/#{Path.basename(dest)}") |> IO.inspect
           {:ok, static_path}
         else
           dest = Path.join("priv/static/uploads", Path.basename(path))
