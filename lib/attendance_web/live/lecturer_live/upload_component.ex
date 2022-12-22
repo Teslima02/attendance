@@ -63,28 +63,22 @@ defmodule AttendanceWeb.LecturerLive.UploadComponent do
     end)
   end
 
-  defp uploads_root, do: Application.get_env(:attendance, :uploads_dir)
-  defp prod_env, do: Application.get_env(:attendance, :environment)
+  # defp uploads_root, do: Application.get_env(:attendance, :uploads_dir)
 
   def file_upload(socket, :csv_file) do
     uploaded_files =
       consume_uploaded_entries(socket, :csv_file, fn %{path: path}, _entry ->
-        # dest = Path.join("priv/static/uploads", Path.basename(path))
-        if prod_env == :prod do
-          dest = Path.join(uploads_root, Path.basename(path))
-          File.cp!(path, dest)
-          static_path = Routes.static_path(socket, "/#{Path.basename(dest)}")
-          {:ok, static_path}
-        else
+        if Mix.env() == :dev do
           dest = Path.join("priv/static/uploads", Path.basename(path))
           File.cp!(path, dest)
           static_path = Routes.static_path(socket, "/#{Path.basename(dest)}")
           {:ok, static_path}
+        else
+          dest = Path.join("/app/uploads", Path.basename(path))
+          File.cp!(path, dest)
+          static_path = Routes.static_path(socket, "/#{Path.basename(dest)}")
+          {:ok, static_path}
         end
-
-        # File.cp!(path, dest)
-        # static_path = Routes.static_path(socket, "/#{Path.basename(dest)}")
-        # {:ok, static_path}
       end)
 
     update(socket, :uploaded_files, &(&1 ++ uploaded_files))

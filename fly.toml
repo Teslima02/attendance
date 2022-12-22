@@ -16,6 +16,10 @@ processes = []
   allowed_public_ports = []
   auto_rollback = true
 
+[mounts]
+  source="data"
+  destination="/app/uploads"
+
 [[services]]
   http_checks = []
   internal_port = 8080
