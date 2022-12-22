@@ -30,6 +30,11 @@ if config_env() == :prod do
 
   maybe_ipv6 = if System.get_env("ECTO_IPV6"), do: [:inet6], else: []
 
+  # file upload
+  config :attendance,
+    uploads_dir: "/app/uploads",
+    environment: :prod
+
   config :attendance, Attendance.Repo,
     # ssl: true,
     url: database_url,
