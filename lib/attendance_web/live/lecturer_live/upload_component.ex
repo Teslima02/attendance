@@ -86,7 +86,11 @@ defmodule AttendanceWeb.LecturerLive.UploadComponent do
 
     update(socket, :uploaded_files, &(&1 ++ uploaded_files))
 
-    lecturer_csv(uploaded_files)
+    if attend_config[:environment] == :prod do
+      uploaded_files
+    else
+      lecturer_csv(uploaded_files)
+    end
   end
 
   defp save_lecturer(socket, :edit, _, lecturer_params) do
