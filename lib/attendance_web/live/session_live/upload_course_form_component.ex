@@ -25,6 +25,8 @@ defmodule AttendanceWeb.SessionLive.UploadCourseFormComponent do
     Application.app_dir(:attendance, "/priv/static/uploads#{file}")
   end
 
+  defp attend_config, do: Application.get_env(:attendance, Attend_config)
+
   @impl true
   def handle_event("validate", %{"course" => courses_params}, socket) do
     changeset =
