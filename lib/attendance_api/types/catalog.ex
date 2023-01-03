@@ -13,10 +13,24 @@ defmodule AttendanceApi.Types.Catalog do
     field :disabled, :boolean
   end
 
+  @desc "Semester object"
+  object :semester do
+    field :id, non_null(:string)
+    field :name, :string
+    field :start_date, :date
+    field :end_date, :date
+    field :disabled, :boolean
+  end
+
   @desc "Program type"
   enum :program_type do
     value(:full_time)
     value(:part_time)
+  end
+
+  @desc "Semester filter input Object"
+  input_object :semester_filter_input do
+    field :program_type, :program_type
   end
 
   @desc "Program filter input Object"
@@ -24,7 +38,6 @@ defmodule AttendanceApi.Types.Catalog do
     field :name_contains, :string
     field :disabled, :boolean
     field :program_type, :string
-    # field :program_type, :program_type
     field :session_id, :string
   end
 
@@ -56,34 +69,25 @@ defmodule AttendanceApi.Types.Catalog do
     field :sort_direction, :string
   end
 
-  # object :lecturer_mutation do
-
-  #   @desc """
-  #   Lecturer login.
-  #   """
-  #   field :lecturer_login, :lecturer_login_object do
-  #     arg(:input, non_null(:lecturer_login))
-  #     resolve(&Resolvers.Lecturer.lecturer_login/2)
-  #   end
-  # end
-
   object :session_queries do
 
     @desc """
     Get current session.
     """
     field :get_current_session, :session do
-      middleware(AttendanceApi.Middleware.LecturerAuth)
       resolve(&Resolvers.Catalog.current_session/2)
     end
+  end
 
-    # @desc """
-    # Get a program.
-    # """
-    # field :list_lecturers, list_of(:lecturer) do
-    #   middleware(AttendanceApi.Middleware.LecturerAuth)
-    #   resolve(&Resolvers.Catalog.list_programs/2)
-    # end
+  object :semester_queries do
+
+    @desc """
+    Get current semester.
+    """
+    field :get_current_semester, :semester do
+      arg(:input, non_null(:semester_filter_input))
+      resolve(&Resolvers.Catalog.get_current_semester/2)
+    end
   end
 
   object :program_queries do

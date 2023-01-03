@@ -16,11 +16,24 @@ defmodule AttendanceApi.Resolvers.Lecturer do
     end
   end
 
-  def list_lecturers(_args, %{context: %{current_lecturer: current_lecturer}}) do
+  def list_lecturers(_args, %{context: %{current_lecturer: _current_lecturer}}) do
     {:ok, Lecturers.list_lecturers()}
   end
 
   def get_current_lecturer(_arg, %{context: %{current_lecturer: current_lecturer}}) do
     {:ok, current_lecturer}
+  end
+
+  def get_lecturer_courses(%{input: _input_params}, %{
+        context: %{current_lecturer: current_lecturer}
+      }) do
+    with [courses] <- Attendance.Lecturers.lecturer_courses(current_lecturer) do
+      {:ok, courses}
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error,
+         message: "An error occurred while getting lecturer courses",
+         details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
+    end
   end
 end

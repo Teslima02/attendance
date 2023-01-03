@@ -2,7 +2,7 @@ defmodule AttendanceApi.Resolvers.Catalog do
   alias Attendance.Catalog
 
   def current_session(_arg, %{
-        context: %{current_lecturer: current_lecturer}
+        context: %{current_lecturer: _current_lecturer}
       }) do
     case Attendance.Catalog.get_current_session!() do
       nil ->
@@ -14,7 +14,7 @@ defmodule AttendanceApi.Resolvers.Catalog do
   end
 
   def list_programs(%{input: input_params}, %{
-        context: %{current_lecturer: current_lecturer}
+        context: %{current_lecturer: _current_lecturer}
       }) do
     with {:ok, page} <- Attendance.Catalog.paginate_programs(input_params) do
       {:ok, page}
@@ -23,6 +23,16 @@ defmodule AttendanceApi.Resolvers.Catalog do
         {:error,
          message: "An error occurred while getting programs",
          details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
+    end
+  end
+
+  def get_current_semester(%{input: input_params}, _) do
+    case Attendance.Catalog.get_current_semester!(input_params) do
+      nil ->
+        {:error, "Semester is not available"}
+
+      semester ->
+        {:ok, semester}
     end
   end
 end

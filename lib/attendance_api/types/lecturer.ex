@@ -4,6 +4,22 @@ defmodule AttendanceApi.Types.Lecturer do
   alias Hex.Resolver
   alias AttendanceApi.Resolvers
 
+  @desc "course filter input"
+  input_object :lecturer_courses_filter_input do
+    field :session_id, :string
+    field :program_id, :string
+    field :class_id, :string
+    field :semester_id, :string
+  end
+
+  @desc "course object"
+  object :lecturer_courses do
+    field :id, :id
+    field :code, :string
+    field :description, :string
+    field :name, :string
+  end
+
   @desc "Lecturer login input"
   input_object :lecturer_login do
     field :matric_number, non_null(:string)
@@ -52,6 +68,15 @@ defmodule AttendanceApi.Types.Lecturer do
     field :current_lecturer, :lecturer do
       middleware(AttendanceApi.Middleware.LecturerAuth)
       resolve(&Resolvers.Lecturer.get_current_lecturer/2)
+    end
+
+    @desc """
+    Get lecturer courses
+    """
+    field :lecturer_courses, list_of(:lecturer_courses) do
+      arg(:input, :lecturer_courses_filter_input)
+      middleware(AttendanceApi.Middleware.LecturerAuth)
+      resolve(&Resolvers.Lecturer.get_lecturer_courses/2)
     end
   end
 end

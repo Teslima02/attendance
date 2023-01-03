@@ -67,7 +67,7 @@ defmodule Saas.Helpers do
       # => %{"email_contains" => "info@qaltrak.com"}
   """
   def stringify_map_key(map \\ %{}) do
-    map |> IO.inspect
+    map
     |> Enum.map(fn {k, v} -> {Atom.to_string(k), v} end)
     |> Enum.into(%{})
   end

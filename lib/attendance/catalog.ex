@@ -190,7 +190,6 @@ defmodule Attendance.Catalog do
   """
   def get_session!(id), do: Repo.get!(Session, id)
 
-
   def get_current_session! do
     query = from s in Session, where: s.disabled == false
     Repo.one(query)
@@ -296,6 +295,15 @@ defmodule Attendance.Catalog do
 
   """
   def get_semester!(id), do: Repo.get!(Semester, id)
+
+  def get_current_semester!(input_params) do
+    query =
+      from s in Semester,
+        join: p in Program, on: [id: s.program_id, session_id: ^get_current_session!().id, program_type: ^input_params.program_type],
+        where: [disabled: false]
+
+    Repo.one(query)
+  end
 
   @doc """
   Creates a semester.

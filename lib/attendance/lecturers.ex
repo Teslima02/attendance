@@ -4,6 +4,8 @@ defmodule Attendance.Lecturers do
   """
 
   import Ecto.Query, warn: false
+  alias Attendance.Catalog.LecturerCourses
+  alias Attendance.Catalog.Course
   alias Attendance.Repo
 
   alias Attendance.Lecturers.{Lecturer, LecturerToken, LecturerNotifier}
@@ -175,7 +177,6 @@ defmodule Attendance.Lecturers do
 
   """
   def register_lecturer(admin, attrs) do
-    # IO.inspect attrs
     %Lecturer{}
     |> Lecturer.registration_changeset(attrs)
     |> Ecto.Changeset.put_assoc(:admin, admin)
@@ -474,5 +475,13 @@ defmodule Attendance.Lecturers do
       {:ok, %{lecturer: lecturer}} -> {:ok, lecturer}
       {:error, :lecturer, changeset, _} -> {:error, changeset}
     end
+  end
+
+  def lecturer_courses(current_lecturer) do
+    query = from c in Course,
+    join: lc in LecturerCourses, on: lc.course_id == c.id,
+    join: l in Lecturer, on: lc.lecturer_id == l.id and l.id == ^current_lecturer.id
+
+    Repo.all(query)
   end
 end

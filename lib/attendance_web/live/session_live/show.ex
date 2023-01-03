@@ -7,7 +7,6 @@ defmodule AttendanceWeb.SessionLive.Show do
 
   @impl true
   def mount(params, %{"admin_token" => token} = _session, socket) do
-    IO.inspect params
     {:ok,
      socket
      |> assign_programs(params)
