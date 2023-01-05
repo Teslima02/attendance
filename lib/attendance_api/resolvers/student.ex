@@ -1,4 +1,4 @@
-defmodule AttendanceApi.Resolvers.Lecturer do
+defmodule AttendanceApi.Resolvers.Student do
   alias AttendanceApi.Resolvers.Lecturer
   alias Attendance.Lecturers.Lecturer
   alias Attendance.Lecturers

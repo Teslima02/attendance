@@ -10,6 +10,7 @@ defmodule AttendanceApi.Schema do
 
   mutation do
     import_fields(:lecturer_mutation)
+    import_fields(:lecturer_attendance_mutation)
   end
 
   query do
