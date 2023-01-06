@@ -1,33 +1,31 @@
 defmodule AttendanceApi.Resolvers.Student do
   alias AttendanceApi.Resolvers.Lecturer
   alias Attendance.Lecturers.Lecturer
+  alias Attendance.Students.Student
+  alias Attendance.Students
   alias Attendance.Lecturers
 
-  def lecturer_login(%{input: %{matric_number: matric_number, password: password}}, _context) do
-    with %Lecturers.Lecturer{} = lecturer <-
-           Attendance.Lecturers.get_lecturer_by_matric_number_and_password(
+  def student_login(%{input: %{matric_number: matric_number, password: password}}, _context) do
+    with %Student{} = student <-
+           Students.get_student_by_matric_number_and_password(
              matric_number,
              password
            ),
-         token <- Lecturers.generate_lecturer_session_token(lecturer) do
-      {:ok, %{token: Base.url_encode64(token, padding: false), lecturer: lecturer}}
+         token <- Students.generate_student_session_token(student) do
+      {:ok, %{token: Base.url_encode64(token, padding: false), student: student}}
     else
       _ -> {:error, "Incorrect matric number or password"}
     end
   end
 
-  def list_lecturers(_args, %{context: %{current_lecturer: _current_lecturer}}) do
-    {:ok, Lecturers.list_lecturers()}
+  def get_current_student(_arg, %{context: %{current_student: current_student}}) do
+    {:ok, current_student}
   end
 
-  def get_current_lecturer(_arg, %{context: %{current_lecturer: current_lecturer}}) do
-    {:ok, current_lecturer}
-  end
-
-  def get_lecturer_courses(%{input: _input_params}, %{
-        context: %{current_lecturer: current_lecturer}
+  def get_student_courses(_input_params, %{
+        context: %{current_student: current_student}
       }) do
-    with [courses] <- Attendance.Lecturers.lecturer_courses(current_lecturer) do
+    with courses <- Students.student_courses(current_student) do
       {:ok, courses}
     else
       {:error, %Ecto.Changeset{} = changeset} ->

@@ -25,6 +25,7 @@ defmodule AttendanceWeb.Router do
 
   pipeline :graphql do
     plug AttendanceWeb.Plug.LecturerContext
+    plug AttendanceWeb.Plug.StudentContext
   end
 
   scope "/api" do

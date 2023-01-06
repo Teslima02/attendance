@@ -7,9 +7,11 @@ defmodule AttendanceApi.Schema do
   import_types(Absinthe.Type.Custom)
   import_types(Types.Lecturer)
   import_types(Types.Catalog)
+  import_types(Types.Student)
 
   mutation do
     import_fields(:lecturer_mutation)
+    import_fields(:student_mutation)
     import_fields(:lecturer_attendance_mutation)
   end
 
@@ -18,6 +20,8 @@ defmodule AttendanceApi.Schema do
     import_fields(:program_queries)
     import_fields(:session_queries)
     import_fields(:semester_queries)
+
+    import_fields(:student_queries)
   end
 
   def context(ctx) do

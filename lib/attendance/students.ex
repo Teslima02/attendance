@@ -2,8 +2,11 @@ defmodule Attendance.Students do
   @moduledoc """
   The Students context.
   """
-
   import Ecto.Query, warn: false
+  alias Attendance.Catalog.LecturerCourses
+  alias Attendance.Students.Student
+  alias Attendance.Catalog.Course
+  alias Attendance.Catalog
   alias Attendance.Repo
 
   alias Attendance.Students.{Student, StudentToken, StudentNotifier}
@@ -38,9 +41,9 @@ defmodule Attendance.Students do
       nil
 
   """
-  def get_student_by_email_and_password(email, password)
-      when is_binary(email) and is_binary(password) do
-    student = Repo.get_by(Student, email: email)
+  def get_student_by_matric_number_and_password(matric_number, password)
+      when is_binary(matric_number) and is_binary(password) do
+    student = Repo.get_by(Student, matric_number: matric_number)
     if Student.valid_password?(student, password), do: student
   end
 
@@ -170,10 +173,15 @@ defmodule Attendance.Students do
   """
   def deliver_update_email_instructions(%Student{} = student, current_email, update_email_url_fun)
       when is_function(update_email_url_fun, 1) do
-    {encoded_token, student_token} = StudentToken.build_email_token(student, "change:#{current_email}")
+    {encoded_token, student_token} =
+      StudentToken.build_email_token(student, "change:#{current_email}")
 
     Repo.insert!(student_token)
-    StudentNotifier.deliver_update_email_instructions(student, update_email_url_fun.(encoded_token))
+
+    StudentNotifier.deliver_update_email_instructions(
+      student,
+      update_email_url_fun.(encoded_token)
+    )
   end
 
   @doc """
@@ -265,7 +273,11 @@ defmodule Attendance.Students do
     else
       {encoded_token, student_token} = StudentToken.build_email_token(student, "confirm")
       Repo.insert!(student_token)
-      StudentNotifier.deliver_confirmation_instructions(student, confirmation_url_fun.(encoded_token))
+
+      StudentNotifier.deliver_confirmation_instructions(
+        student,
+        confirmation_url_fun.(encoded_token)
+      )
     end
   end
 
@@ -288,7 +300,10 @@ defmodule Attendance.Students do
   defp confirm_student_multi(student) do
     Ecto.Multi.new()
     |> Ecto.Multi.update(:student, Student.confirm_changeset(student))
-    |> Ecto.Multi.delete_all(:tokens, StudentToken.student_and_contexts_query(student, ["confirm"]))
+    |> Ecto.Multi.delete_all(
+      :tokens,
+      StudentToken.student_and_contexts_query(student, ["confirm"])
+    )
   end
 
   ## Reset password
@@ -306,7 +321,11 @@ defmodule Attendance.Students do
       when is_function(reset_password_url_fun, 1) do
     {encoded_token, student_token} = StudentToken.build_email_token(student, "reset_password")
     Repo.insert!(student_token)
-    StudentNotifier.deliver_reset_password_instructions(student, reset_password_url_fun.(encoded_token))
+
+    StudentNotifier.deliver_reset_password_instructions(
+      student,
+      reset_password_url_fun.(encoded_token)
+    )
   end
 
   @doc """
@@ -414,5 +433,15 @@ defmodule Attendance.Students do
   """
   def change_student(%Student{} = student, attrs \\ %{}) do
     Student.registration_changeset(student, attrs)
+  end
+
+  def student_courses(current_student) do
+    query =
+      from c in Course,
+        where:
+          c.semester_id == ^Catalog.get_current_session!().id and
+            c.class_id == ^current_student.class_id
+
+    Repo.all(query)
   end
 end
