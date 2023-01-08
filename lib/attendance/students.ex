@@ -3,6 +3,7 @@ defmodule Attendance.Students do
   The Students context.
   """
   import Ecto.Query, warn: false
+  alias Attendance.Lecturer_attendances.Student_attendance
   alias Attendance.Catalog.LecturerCourses
   alias Attendance.Students.Student
   alias Attendance.Catalog.Course
@@ -443,5 +444,24 @@ defmodule Attendance.Students do
             c.class_id == ^current_student.class_id
 
     Repo.all(query)
+  end
+
+  def mark_attendance(course, lecturer_attendance, current_student, attrs) do
+    %Student_attendance{}
+    |> Student_attendance.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:course, course)
+    |> Ecto.Changeset.put_assoc(:student, current_student)
+    |> Ecto.Changeset.put_assoc(:lecturer_attendance, lecturer_attendance)
+    |> Repo.insert()
+  end
+
+  def check_if_attendance_already_marked_for_the_student!(current_student, attrs) do
+    query =
+      from s in Student_attendance,
+        where:
+          s.lecturer_attendance_id == ^attrs.lecturer_attendance_id and
+            s.student_id == ^current_student.id
+
+    Repo.one(query)
   end
 end

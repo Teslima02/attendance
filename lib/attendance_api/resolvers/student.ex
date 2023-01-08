@@ -35,26 +35,30 @@ defmodule AttendanceApi.Resolvers.Student do
     end
   end
 
-  def create_lecturer_attendance(%{input: input_params}, %{
-        context: %{current_lecturer: current_lecturer}
+  def mark_attendance(%{input: input_params}, %{
+        context: %{current_student: current_student}
       }) do
-
-    with semester <- Attendance.Catalog.get_semester!(input_params.semester_id),
-         class <- Attendance.Catalog.get_class!(input_params.class_id),
-         program <- Attendance.Catalog.get_program!(input_params.program_id),
-         course <- Attendance.Catalog.get_courses!(input_params.course_id),
-         {:ok, attendance} <-
-           Attendance.Lecturer_attendances.create_lecturer_attendance(
-             semester,
-             class,
-             program,
-             course,
-             current_lecturer,
-            input_params
-           ) do
-      {:ok, attendance}
+    if Attendance.Students.check_if_attendance_already_marked_for_the_student(
+         current_student,
+         input_params
+       ) do
+      {:error, "You already mark attendance"}
     else
-      _ -> {:error, "Error initiating attendance"}
+      with lecturer_attendance <-
+             Attendance.Lecturers.get_lecturer_attendance!(input_params.lecturer_attendance_id),
+           course <- Attendance.Catalog.get_courses!(input_params.course_id) do
+        {:ok, attendance} =
+          Attendance.Students.mark_attendance(
+            course,
+            lecturer_attendance,
+            current_student,
+            input_params
+          )
+
+        {:ok, attendance}
+      else
+        _ -> {:error, "Error occur while marking attendance"}
+      end
     end
   end
 end

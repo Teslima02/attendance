@@ -4,6 +4,7 @@ defmodule Attendance.Lecturer_attendances.Student_attendance do
 
   schema "student_attendances" do
     field :status, :boolean, default: false
+    field :attendance_time, :naive_datetime
     belongs_to :student, Attendance.Students.Student
     belongs_to :course, Attendance.Catalog.Course
     belongs_to :lecturer_attendance_id, Attendance.Lecturer_attendances.Lecturer_attendance
@@ -14,7 +15,7 @@ defmodule Attendance.Lecturer_attendances.Student_attendance do
   @doc false
   def changeset(lecturer_attendance, attrs) do
     lecturer_attendance
-    |> cast(attrs, [:status, :start_date, :end_date])
-    |> validate_required([:status, :start_date, :end_date])
+    |> cast(attrs, [:status, :attendance_time])
+    |> validate_required([:status, :attendance_time])
   end
 end

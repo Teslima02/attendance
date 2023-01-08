@@ -54,7 +54,9 @@ defmodule Attendance.MixProject do
       {:absinthe_plug, "~> 1.5.8"},
       {:dataloader, "~> 1.0.0"},
       {:filtrex, "~> 0.4.3"},
-      {:scrivener_ecto, "~> 2.0"}
+      {:scrivener_ecto, "~> 2.0"},
+      {:plug, "~> 1.0"},
+      {:corsica, "~> 1.0"}
     ]
   end
 

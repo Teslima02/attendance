@@ -50,7 +50,6 @@ defmodule Attendance.Lecturer_attendances do
 
   """
   def create_lecturer_attendance(semester, class, program, course, lecturer, attrs \\ %{}) do
-    IO.inspect attrs
     %Lecturer_attendance{}
     |> Lecturer_attendance.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:semester, semester)

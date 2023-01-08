@@ -1,37 +1,22 @@
 defmodule AttendanceApi.Types.Student do
   use Absinthe.Schema.Notation
 
-  alias Hex.Resolver
   alias AttendanceApi.Resolvers
 
-  # @desc "attendance input"
-  # input_object :lecturer_attendance_input do
-  #   field :semester_id, :string
-  #   field :class_id, :string
-  #   field :program_id, :string
-  #   field :course_id, :string
-  #   field :start_date, :datetime
-  #   field :end_date, :datetime
-  # end
+  @desc "student mark attendance input"
+  input_object :student_mark_attendance_input do
+    field :status, :boolean
+    field :attendance_time, :datetime
+    field :course_id, :string
+    field :lecturer_attendance_id, :string
+  end
 
-  # @desc "attendance input"
-  # object :lecturer_attendance do
-  #   field :semester, :semester
-  #   field :class, :class
-  #   field :program, :program
-  #   field :course, :lecturer_courses
-  #   field :start_date, :datetime
-  #   field :end_date, :datetime
-  #   field :active, :boolean
-  #   field :id, :id
-  # end
-
-  # @desc "class object"
-  # object :class do
-  #   field :id, :id
-  #   field :name, :string
-  #   field :disabled, :boolean
-  # end
+  @desc "student attendance object"
+  object :student_attendance do
+    field :id, :id
+    field :status, :boolean
+    field :attendance_time, :datetime
+  end
 
   @desc "course object"
   object :student_courses do
@@ -63,7 +48,6 @@ defmodule AttendanceApi.Types.Student do
   end
 
   object :student_mutation do
-
     @desc """
     Student login.
     """
@@ -71,30 +55,18 @@ defmodule AttendanceApi.Types.Student do
       arg(:input, non_null(:student_login_input))
       resolve(&Resolvers.Student.student_login/2)
     end
+
+    @desc """
+    Student mark attendance.
+    """
+    field :student_mark_attendance, :student_attendance do
+      middleware(AttendanceApi.Middleware.StudentAuth)
+      arg(:input, non_null(:student_mark_attendance_input))
+      resolve(&Resolvers.Student.mark_attendance/2)
+    end
   end
 
-  # object :lecturer_attendance_mutation do
-
-  #   @desc """
-  #   Lecturer attendance.
-  #   """
-  #   field :lecturer_attendance, :lecturer_attendance do
-  #     middleware(AttendanceApi.Middleware.LecturerAuth)
-  #     arg(:input, non_null(:lecturer_attendance_input))
-  #     resolve(&Resolvers.Lecturer.create_lecturer_attendance/2)
-  #   end
-  # end
-
   object :student_queries do
-
-  #   @desc """
-  #   Get list of lecturers.
-  #   """
-  #   field :list_lecturers, list_of(:lecturer) do
-  #     middleware(AttendanceApi.Middleware.LecturerAuth)
-  #     resolve(&Resolvers.Lecturer.list_lecturers/2)
-  #   end
-
     @desc """
     Current student details
     """
