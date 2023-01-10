@@ -4,12 +4,12 @@ defmodule Attendance.Lecturer_attendances.Student_attendance do
 
   schema "student_attendances" do
     field :status, :boolean, default: false
-    field :attendance_time, :naive_datetime
+    field :attendance_time, :utc_datetime
     belongs_to :student, Attendance.Students.Student
     belongs_to :course, Attendance.Catalog.Course
-    belongs_to :lecturer_attendance_id, Attendance.Lecturer_attendances.Lecturer_attendance
+    belongs_to :lecturer_attendance, Attendance.Lecturer_attendances.Lecturer_attendance
 
-    timestamps()
+    timestamps(type: :timestamptz)
   end
 
   @doc false

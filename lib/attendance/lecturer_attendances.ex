@@ -106,4 +106,36 @@ defmodule Attendance.Lecturer_attendances do
   def change_lecturer_attendance(%Lecturer_attendance{} = lecturer_attendance, attrs \\ %{}) do
     Lecturer_attendance.changeset(lecturer_attendance, attrs)
   end
+
+  # This will return nil if the end_time has not reach
+  def check_if_attendance_time_expire!(attendance_id) do
+    attendee = get_lecturer_attendance!(attendance_id)
+
+    IO.inspect DateTime.utc_now()
+    IO.inspect NaiveDateTime.utc_now()
+    IO.inspect attendee.end_date
+    if attendee.active == true and attendee.end_date < NaiveDateTime.utc_now() do
+      attendee
+    else
+      check_and_update_if_attendance_time_expire!(attendee.id)
+
+      get_lecturer_attendance!(attendee.id) |> IO.inspect()
+    end
+  end
+
+  # This will return nil if the end_time has not reach
+  def check_and_update_if_attendance_time_expire!(attendance_id) do
+    query =
+      from l in Lecturer_attendance,
+        where: l.id == ^attendance_id and l.end_date < ^NaiveDateTime.utc_now()
+
+    attendee = Repo.one(query)
+
+    # This update the attendance status
+    if attendee != nil do
+      attendee
+      |> Lecturer_attendance.changeset(%{active: false})
+      |> Repo.update()
+    end
+  end
 end

@@ -3,8 +3,8 @@ defmodule Attendance.Lecturer_attendances.Lecturer_attendance do
   import Ecto.Changeset
 
   schema "lecturer_attendances" do
-    field :end_date, :naive_datetime
-    field :start_date, :naive_datetime
+    field :end_date, :utc_datetime
+    field :start_date, :utc_datetime
     field :active, :boolean, default: true
     belongs_to :semester, Attendance.Catalog.Semester
     belongs_to :class, Attendance.Catalog.Class
@@ -12,7 +12,7 @@ defmodule Attendance.Lecturer_attendances.Lecturer_attendance do
     belongs_to :course, Attendance.Catalog.Course
     belongs_to :lecturer, Attendance.Lecturers.Lecturer
 
-    timestamps()
+    timestamps(type: :timestamptz)
   end
 
   @doc false

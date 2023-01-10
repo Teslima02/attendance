@@ -2,8 +2,10 @@ defmodule AttendanceApi.Resolvers.Student do
   alias AttendanceApi.Resolvers.Lecturer
   alias Attendance.Lecturers.Lecturer
   alias Attendance.Students.Student
+  alias Attendance.Lecturer_attendances
   alias Attendance.Students
   alias Attendance.Lecturers
+  alias Attendance.Catalog
 
   def student_login(%{input: %{matric_number: matric_number, password: password}}, _context) do
     with %Student{} = student <-
@@ -38,27 +40,37 @@ defmodule AttendanceApi.Resolvers.Student do
   def mark_attendance(%{input: input_params}, %{
         context: %{current_student: current_student}
       }) do
-    if Attendance.Students.check_if_attendance_already_marked_for_the_student(
-         current_student,
-         input_params
-       ) do
-      {:error, "You already mark attendance"}
-    else
-      with lecturer_attendance <-
-             Attendance.Lecturers.get_lecturer_attendance!(input_params.lecturer_attendance_id),
-           course <- Attendance.Catalog.get_courses!(input_params.course_id) do
-        {:ok, attendance} =
-          Attendance.Students.mark_attendance(
-            course,
-            lecturer_attendance,
-            current_student,
-            input_params
-          )
+    cond do
+      Students.check_if_attendance_already_marked_for_the_student!(
+        current_student,
+        input_params
+      ) != nil ->
+        {:error, "You already mark attendance"}
 
-        {:ok, attendance}
-      else
-        _ -> {:error, "Error occur while marking attendance"}
-      end
+      Lecturer_attendances.check_if_attendance_time_expire!(input_params.lecturer_attendance_id).active ==
+          false ->
+        {:error, "Attendance expired"}
+
+      Lecturer_attendances.check_if_attendance_time_expire!(input_params.lecturer_attendance_id).active ==
+          true ->
+        Students.mark_attendance(
+          Catalog.get_courses!(input_params.course_id),
+          Lecturer_attendances.get_lecturer_attendance!(input_params.lecturer_attendance_id),
+          current_student,
+          input_params
+        )
     end
+  end
+
+  def algo do
+    [head | tail] = [5, 1, 4, -43, -8, 7, -7, 3, 4, 8, 9, 3, 5]
+
+    tail
+    |> Enum.filter(fn x -> x < head end)
+    |> Enum.each(fn x -> IO.inspect(x) end)
+  end
+
+  def num(_n) do
+    IO.read(:all) |> String.split() |> Enum.map(&String.to_integer/1)
   end
 end

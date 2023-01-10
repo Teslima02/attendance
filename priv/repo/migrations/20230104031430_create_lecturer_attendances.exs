@@ -4,15 +4,15 @@ defmodule Attendance.Repo.Migrations.CreateLecturerAttendances do
   def change do
     create table(:lecturer_attendances) do
       add :active, :boolean, default: false, null: true
-      add :start_date, :naive_datetime
-      add :end_date, :naive_datetime
+      add :start_date, :timestamptz
+      add :end_date, :timestamptz
       add :semester_id, references(:semesters, on_delete: :nothing)
       add :class_id, references(:classes, on_delete: :nothing)
       add :program_id, references(:programs, on_delete: :nothing)
       add :lecturer_id, references(:lecturers, on_delete: :nothing)
       add :course_id, references(:courses, on_delete: :nothing)
 
-      timestamps()
+      timestamps(type: :timestamptz)
     end
 
     create index(:lecturer_attendances, [:semester_id])
