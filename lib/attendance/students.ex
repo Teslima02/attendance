@@ -448,7 +448,7 @@ defmodule Attendance.Students do
 
   def mark_attendance(course, lecturer_attendance, current_student, attrs) do
     %Student_attendance{}
-    |> Student_attendance.changeset(attrs)
+    |> Student_attendance.changeset(Enum.into(attrs, %{status: true}))
     |> Ecto.Changeset.put_assoc(:course, course)
     |> Ecto.Changeset.put_assoc(:student, current_student)
     |> Ecto.Changeset.put_assoc(:lecturer_attendance, lecturer_attendance)

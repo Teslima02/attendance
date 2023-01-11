@@ -5,7 +5,6 @@ defmodule AttendanceApi.Types.Student do
 
   @desc "student mark attendance input"
   input_object :student_mark_attendance_input do
-    field :status, :boolean
     field :attendance_time, :datetime
     field :course_id, :string
     field :lecturer_attendance_id, :string

@@ -41,6 +41,7 @@ defmodule AttendanceApi.Resolvers.Lecturer do
         context: %{current_lecturer: current_lecturer}
       }) do
 
+        #TODO: Check if lecturer already initiate attendance for the same period
     with semester <- Attendance.Catalog.get_semester!(input_params.semester_id),
          class <- Attendance.Catalog.get_class!(input_params.class_id),
          program <- Attendance.Catalog.get_program!(input_params.program_id),

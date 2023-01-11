@@ -2,6 +2,7 @@ defmodule Attendance.Lecturer_attendances.Student_attendance do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @timestamps_opts [type: :utc_datetime]
   schema "student_attendances" do
     field :status, :boolean, default: false
     field :attendance_time, :utc_datetime
@@ -9,7 +10,7 @@ defmodule Attendance.Lecturer_attendances.Student_attendance do
     belongs_to :course, Attendance.Catalog.Course
     belongs_to :lecturer_attendance, Attendance.Lecturer_attendances.Lecturer_attendance
 
-    timestamps(type: :timestamptz)
+    timestamps()
   end
 
   @doc false

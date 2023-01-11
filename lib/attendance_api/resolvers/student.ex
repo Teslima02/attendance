@@ -40,6 +40,8 @@ defmodule AttendanceApi.Resolvers.Student do
   def mark_attendance(%{input: input_params}, %{
         context: %{current_student: current_student}
       }) do
+
+    #TODO: decouple this later
     cond do
       Students.check_if_attendance_already_marked_for_the_student!(
         current_student,
@@ -47,11 +49,29 @@ defmodule AttendanceApi.Resolvers.Student do
       ) != nil ->
         {:error, "You already mark attendance"}
 
-      Lecturer_attendances.check_if_attendance_time_expire!(input_params.lecturer_attendance_id).active ==
+      Lecturer_attendances.check_and_update_if_attendance_time_expire!(
+        input_params.lecturer_attendance_id
+      ).active ==
           false ->
-        {:error, "Attendance expired"}
+        {:error, "Attendance time expired"}
 
-      Lecturer_attendances.check_if_attendance_time_expire!(input_params.lecturer_attendance_id).active ==
+      Lecturer_attendances.check_and_update_if_attendance_time_expire!(
+        input_params.lecturer_attendance_id
+      ).active ==
+        true and
+        DateTime.truncate(input_params.attendance_time, :second) <
+          Lecturer_attendances.check_and_update_if_attendance_time_expire!(
+            input_params.lecturer_attendance_id
+          ).start_date or
+          DateTime.truncate(input_params.attendance_time, :second) >
+            Lecturer_attendances.check_and_update_if_attendance_time_expire!(
+              input_params.lecturer_attendance_id
+            ).end_date ->
+        {:error, "Attendance is not open yet"}
+
+      Lecturer_attendances.check_and_update_if_attendance_time_expire!(
+        input_params.lecturer_attendance_id
+      ).active ==
           true ->
         Students.mark_attendance(
           Catalog.get_courses!(input_params.course_id),
