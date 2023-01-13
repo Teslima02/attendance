@@ -3,6 +3,33 @@ defmodule AttendanceApi.Types.Student do
 
   alias AttendanceApi.Resolvers
 
+  @desc "Attendance object"
+  object :attendance do
+    field :id, :id
+    field :active, :boolean
+    field :start_time, :datetime
+    field :end_time, :datetime
+    field :class, :class
+    field :course, :lecturer_courses
+    field :lecturer, :lecturer
+  end
+
+  @desc "Program filter input Object"
+  input_object :attendance_filter_input do
+    field :class_id, non_null(:string)
+    field :active, :boolean, default_value: :true
+    field :program_id, non_null(:string)
+  end
+
+  @desc "Attendance input object"
+  input_object :get_current_attendance_input do
+    field :page, :integer, default_value: 1
+    field :page_size, :integer, default_value: 15
+    field :sort_field, :string, default_value: "inserted_at"
+    field :sort_direction, :string, default_value: "desc"
+    field :attendance, :attendance_filter_input, default_value: %{}
+  end
+
   @desc "student mark attendance input"
   input_object :student_mark_attendance_input do
     field :attendance_time, :datetime
@@ -80,6 +107,15 @@ defmodule AttendanceApi.Types.Student do
     field :student_courses, list_of(:student_courses) do
       middleware(AttendanceApi.Middleware.StudentAuth)
       resolve(&Resolvers.Student.get_student_courses/2)
+    end
+
+    @desc """
+    Get all current attendances
+    """
+    field :current_attendances, list_of(:attendance) do
+      middleware(AttendanceApi.Middleware.StudentAuth)
+      arg(:input, non_null(:get_current_attendance_input))
+      resolve(&Resolvers.Student.get_current_attendances/2)
     end
   end
 end

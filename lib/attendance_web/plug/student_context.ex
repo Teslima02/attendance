@@ -16,7 +16,6 @@ defmodule AttendanceWeb.Plug.StudentContext do
   end
 
   defp build_context(conn) do
-    IO.inspect conn
     with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
          tok <- Base.url_decode64(token, padding: false),
          student <- Attendance.Students.get_student_by_session_token(elem(tok, 1)) do

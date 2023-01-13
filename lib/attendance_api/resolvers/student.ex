@@ -40,8 +40,7 @@ defmodule AttendanceApi.Resolvers.Student do
   def mark_attendance(%{input: input_params}, %{
         context: %{current_student: current_student}
       }) do
-
-    #TODO: decouple this later
+    # TODO: decouple this later
     cond do
       Students.check_if_attendance_already_marked_for_the_student!(
         current_student,
@@ -55,14 +54,14 @@ defmodule AttendanceApi.Resolvers.Student do
           false ->
         {:error, "Attendance time expired"}
 
-      Lecturer_attendances.check_and_update_if_attendance_time_expire!(
-        input_params.lecturer_attendance_id
-      ).active ==
-        true and
-        DateTime.truncate(input_params.attendance_time, :second) <
-          Lecturer_attendances.check_and_update_if_attendance_time_expire!(
-            input_params.lecturer_attendance_id
-          ).start_date or
+      (Lecturer_attendances.check_and_update_if_attendance_time_expire!(
+         input_params.lecturer_attendance_id
+       ).active ==
+         true and
+         DateTime.truncate(input_params.attendance_time, :second) <
+           Lecturer_attendances.check_and_update_if_attendance_time_expire!(
+             input_params.lecturer_attendance_id
+           ).start_date) or
           DateTime.truncate(input_params.attendance_time, :second) >
             Lecturer_attendances.check_and_update_if_attendance_time_expire!(
               input_params.lecturer_attendance_id
@@ -82,15 +81,16 @@ defmodule AttendanceApi.Resolvers.Student do
     end
   end
 
-  def algo do
-    [head | tail] = [5, 1, 4, -43, -8, 7, -7, 3, 4, 8, 9, 3, 5]
-
-    tail
-    |> Enum.filter(fn x -> x < head end)
-    |> Enum.each(fn x -> IO.inspect(x) end)
-  end
-
-  def num(_n) do
-    IO.read(:all) |> String.split() |> Enum.map(&String.to_integer/1)
+  def get_current_attendances(%{input: input_params}, %{
+        context: %{current_student: _current_student}
+      }) do
+    with attenda  nce <- Students.paginate_current_attendance(input_params) do
+      attendance
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error,
+         message: "An error occurred while getting current attendances",
+         details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
+    end
   end
 end

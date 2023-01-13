@@ -47,12 +47,14 @@ defmodule AttendanceWeb.Router do
   scope "/", AttendanceWeb do
     pipe_through [:browser]
 
-    get "/", PageController, :index
+    get "/login", AdminSessionController, :new
     live "/guess", WrongView
   end
 
   scope "/", AttendanceWeb do
     pipe_through [:browser, :require_authenticated_admin]
+
+    get "/", PageController, :index
 
     live "/sessions", SessionLive.Index, :index
     live "/sessions/new", SessionLive.Index, :new
