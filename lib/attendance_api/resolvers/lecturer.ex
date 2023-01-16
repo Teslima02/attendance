@@ -2,6 +2,7 @@ defmodule AttendanceApi.Resolvers.Lecturer do
   alias AttendanceApi.Resolvers.Lecturer
   alias Attendance.Lecturers.Lecturer
   alias Attendance.Lecturers
+  alias AttendanceApi.Topics.Topics
 
   def lecturer_login(%{input: %{matric_number: matric_number, password: password}}, _context) do
     with %Lecturers.Lecturer{} = lecturer <-
@@ -40,8 +41,7 @@ defmodule AttendanceApi.Resolvers.Lecturer do
   def create_lecturer_attendance(%{input: input_params}, %{
         context: %{current_lecturer: current_lecturer}
       }) do
-
-        #TODO: Check if is time for the attendance (start_date , end_date) and the period
+    # TODO: Check if is time for the attendance (start_date , end_date) and the period
     with semester <- Attendance.Catalog.get_semester!(input_params.semester_id),
          class <- Attendance.Catalog.get_class!(input_params.class_id),
          program <- Attendance.Catalog.get_program!(input_params.program_id),
@@ -53,8 +53,13 @@ defmodule AttendanceApi.Resolvers.Lecturer do
              program,
              course,
              current_lecturer,
-            input_params
+             input_params
            ) do
+
+      Absinthe.Subscription.publish(AttendanceWeb.Endpoint, attendance,
+        lecturer_open_attendance: "#{Topics.lecturer_open_attendance()}:#{attendance.class_id}"
+      )
+
       {:ok, attendance}
     else
       _ -> {:error, "Error initiating attendance"}

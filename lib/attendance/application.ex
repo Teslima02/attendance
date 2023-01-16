@@ -15,7 +15,8 @@ defmodule Attendance.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Attendance.PubSub},
       # Start the Endpoint (http/https)
-      AttendanceWeb.Endpoint
+      AttendanceWeb.Endpoint,
+      {Absinthe.Subscription, AttendanceWeb.Endpoint}
       # Start a worker by calling: Attendance.Worker.start_link(arg)
       # {Attendance.Worker, arg}
     ]

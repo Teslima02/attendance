@@ -24,6 +24,10 @@ defmodule AttendanceApi.Schema do
     import_fields(:student_queries)
   end
 
+  subscription do
+    import_fields(:lecturer_attendance_subscription)
+  end
+
   def context(ctx) do
     source = Dataloader.Ecto.new(Attendance.Repo)
 

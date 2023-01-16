@@ -11,6 +11,7 @@ defmodule Attendance.Students.Student do
     field :last_name, :string
     field :disabled, :boolean, default: false
     field :matric_number, :string
+    field :account_type, :string, default: "student"
     belongs_to :admin, Attendance.Accounts.Admin
     belongs_to :class, Attendance.Catalog.Class
     field :confirmed_at, :naive_datetime

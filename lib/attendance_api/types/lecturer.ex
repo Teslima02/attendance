@@ -3,6 +3,12 @@ defmodule AttendanceApi.Types.Lecturer do
 
   alias Hex.Resolver
   alias AttendanceApi.Resolvers
+  alias AttendanceApi.Topics.Topics
+
+  @desc "Class input"
+  input_object :class_input do
+    field :class_id, :string
+  end
 
   @desc "attendance input"
   input_object :lecturer_attendance_input do
@@ -90,6 +96,31 @@ defmodule AttendanceApi.Types.Lecturer do
       middleware(AttendanceApi.Middleware.LecturerAuth)
       arg(:input, non_null(:lecturer_attendance_input))
       resolve(&Resolvers.Lecturer.create_lecturer_attendance/2)
+    end
+  end
+
+  object :lecturer_attendance_subscription do
+    @desc """
+    Lecturer open attendance.
+    """
+    field :lecturer_open_attendance, :lecturer_attendance do
+      middleware(AttendanceApi.Middleware.LecturerAuth)
+      arg(:input, non_null(:class_input))
+
+      config fn %{input: input}, _info ->
+        {:ok, topic: "#{Topics.lecturer_open_attendance()}:#{input.class_id}"}
+      end
+
+      # trigger [:create_lecturer_attendance], topic: fn lecturer_open_attendance ->
+      #   IO.inspect "trigger create lecturer open attendance"
+      #   IO.inspect lecturer_open_attendance
+      #   # "#{lecturer_open_attendance.class_id}:#{Topics.lecturer_open_attendance()}"
+      #   _ -> []
+      # end
+
+      resolve fn open_attendance, _, _ ->
+        {:ok, open_attendance}
+      end
     end
   end
 

@@ -51,6 +51,7 @@ defmodule Attendance.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:nimble_csv, "~> 1.2"},
       {:absinthe, "~> 1.7.0"},
+      {:absinthe_phoenix, "~> 2.0.0"},
       {:absinthe_plug, "~> 1.5.8"},
       {:dataloader, "~> 1.0.0"},
       {:filtrex, "~> 0.4.3"},

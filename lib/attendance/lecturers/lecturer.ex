@@ -11,6 +11,7 @@ defmodule Attendance.Lecturers.Lecturer do
     field :last_name, :string
     field :disabled, :boolean, default: false
     field :matric_number, :string
+    field :account_type, :string, default: "lecturer"
     belongs_to :admin, Attendance.Accounts.Admin
     many_to_many :course, Attendance.Catalog.Course, join_through: Attendance.Catalog.LecturerCourses, on_replace: :delete
 

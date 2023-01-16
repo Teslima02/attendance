@@ -24,14 +24,14 @@ defmodule AttendanceWeb.Router do
   end
 
   pipeline :graphql do
-    plug AttendanceWeb.Plug.LecturerContext
     plug AttendanceWeb.Plug.StudentContext
-    plug Corsica, origins: "*", allow_headers: :all
+    plug AttendanceWeb.Plug.LecturerContext
+    # plug Corsica, origins: "*", allow_headers: :all
   end
 
   scope "/graphql" do
     pipe_through :graphql
-    forward "/", Absinthe.Plug.GraphiQL, schema: AttendanceApi.Schema
+    forward "/", Absinthe.Plug.GraphiQL, schema: AttendanceApi.Schema, socket: AttendanceWeb.UserSocket
   end
 
   # scope "/api" do
