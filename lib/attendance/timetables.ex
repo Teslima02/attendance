@@ -7,6 +7,8 @@ defmodule Attendance.Timetables do
   alias Attendance.Repo
 
   alias Attendance.Timetables.Timetable
+  alias Attendance.Catalog.{Period, Course, Days_of_week}
+  alias Attendance.Lecturers
 
   @doc """
   Returns the list of timetables.
@@ -19,8 +21,17 @@ defmodule Attendance.Timetables do
   """
   def list_timetables(%{"semester_id" => semester_id} = _params) do
     query = from(t in Timetable, where: t.semester_id == ^semester_id)
+
     Repo.all(query)
-    |> Repo.preload([:start_time, :end_time, :course, :lecture_hall, :semester, :admin, :days_of_week])
+    |> Repo.preload([
+      :start_time,
+      :end_time,
+      :course,
+      :lecture_hall,
+      :semester,
+      :admin,
+      :days_of_week
+    ])
   end
 
   @doc """
@@ -51,7 +62,16 @@ defmodule Attendance.Timetables do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_timetable(admin, course, day, lecture_hall, start_time, end_time, semester, attrs \\ %{}) do
+  def create_timetable(
+        admin,
+        course,
+        day,
+        lecture_hall,
+        start_time,
+        end_time,
+        semester,
+        attrs \\ %{}
+      ) do
     %Timetable{}
     |> Timetable.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:admin, admin)
@@ -76,7 +96,15 @@ defmodule Attendance.Timetables do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_timetable(%Timetable{} = timetable, course, day, lecture_hall, start_time, end_time, attrs) do
+  def update_timetable(
+        %Timetable{} = timetable,
+        course,
+        day,
+        lecture_hall,
+        start_time,
+        end_time,
+        attrs
+      ) do
     timetable
     |> Timetable.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:course, course)
@@ -114,5 +142,112 @@ defmodule Attendance.Timetables do
   """
   def change_timetable(%Timetable{} = timetable, attrs \\ %{}) do
     Timetable.changeset(timetable, attrs)
+  end
+
+  def lecturer_current_period(current_lecturer) do
+    now = Time.utc_now()
+    day_of_week = Calendar.strftime(DateTime.utc_now(), "%A") |> String.downcase()
+
+    # get lecturer courses and get it [ids]
+    course_ids =
+      Lecturers.lecturer_courses(current_lecturer)
+      |> Enum.map(fn x -> x.id end)
+
+    week_day_query = Repo.one(from d in Days_of_week, where: d.name == ^day_of_week)
+    period_query = Repo.one(from p in Period, where: p.start_time <= ^now and p.end_time >= ^now)
+
+    # get timetable of the courses
+    if period_query != nil do
+      query =
+        from t in Timetable,
+          where:
+            t.start_time_id == ^period_query.id and t.days_of_week_id == ^week_day_query.id and
+              t.course_id in ^course_ids
+
+      Repo.one(query)
+      |> Repo.preload([
+        :start_time,
+        :end_time,
+        :course,
+        :lecture_hall,
+        :semester,
+        :days_of_week
+      ])
+
+      # Repo.all(query)
+    else
+      {:error, "No current period"}
+    end
+  end
+
+  def lecturer_daily_period(current_lecturer) do
+    now = Time.utc_now()
+    day_of_week = Calendar.strftime(DateTime.utc_now(), "%A") |> String.downcase()
+
+    # get lecturer courses and get it [ids]
+    course_ids =
+      Lecturers.lecturer_courses(current_lecturer)
+      |> Enum.map(fn x -> x.id end)
+
+    week_day_query = Repo.one(from d in Days_of_week, where: d.name == ^day_of_week)
+    period_query = Repo.one(from p in Period, where: p.start_time <= ^now and p.end_time >= ^now)
+
+    # get timetable of the courses
+    if period_query != nil do
+      query =
+        from t in Timetable,
+          where: t.days_of_week_id == ^week_day_query.id and t.course_id in ^course_ids
+
+      Repo.all(query)
+      |> Repo.preload([
+        :start_time,
+        :end_time,
+        :course,
+        :lecture_hall,
+        :semester,
+        :days_of_week
+      ])
+    else
+      {:error, "No current period"}
+    end
+  end
+
+  def lecturer_next_period(current_lecturer) do
+    next_now = Time.utc_now() |> Time.add(2, :hour)
+
+    day_of_week = Calendar.strftime(DateTime.utc_now(), "%A") |> String.downcase()
+
+    # get lecturer courses and get it [ids]
+    course_ids =
+      Lecturers.lecturer_courses(current_lecturer)
+      |> Enum.map(fn x -> x.id end)
+
+    week_day_query = Repo.one(from d in Days_of_week, where: d.name == ^day_of_week)
+    # TODO:: check this later rework timetable for proper timetable with period
+    period_query =
+      Repo.one(from p in Period, where: p.start_time <= ^next_now and ^next_now <= p.end_time)
+
+    # get timetable of the courses
+    if period_query != nil do
+      query =
+        from t in Timetable,
+          where:
+            t.start_time_id == ^period_query.id and t.days_of_week_id == ^week_day_query.id and
+              t.course_id in ^course_ids
+
+      Repo.one(query)
+      |> Repo.preload([
+        :start_time,
+        :end_time,
+        :course,
+        :lecture_hall,
+        :semester,
+        :days_of_week
+      ])
+
+      # Repo.all(query) |> IO.inspect()
+    else
+      {:error, "No current period"}
+    end
   end
 end

@@ -6,7 +6,7 @@ alias Attendance.Accounts.Admin
 alias Attendance.Lecturers.Lecturer
 alias Attendance.Catalog.{Session, Program, Class, Semester, Courses}
 
-alias Attendance.{Accounts, Catalog, Lecturers}
+alias Attendance.{Accounts, Catalog, Lecturers, Timetables}
 
 alias AttendanceApi.Resolvers.Lecturer
 alias AttendanceApi.Resolvers.Catalog

@@ -5,6 +5,30 @@ defmodule AttendanceApi.Types.Lecturer do
   alias AttendanceApi.Resolvers
   alias AttendanceApi.Topics.Topics
 
+  @desc "period object"
+  object :period do
+    field :id, :id
+    field :start_time, :time
+    field :end_time, :time
+  end
+
+  @desc "Days of the week object"
+  object :days_of_week do
+    field :id, :id
+    field :name, :string
+  end
+
+  @desc "Timetable period object"
+  object :lecturer_timetable do
+    field :id, :id
+    field :start_time, :period
+    field :end_time, :period
+    field :days_of_week, :days_of_week
+    field :course, :lecturer_courses
+    field :lecture_hall, :string
+    field :semester, :semester
+  end
+
   @desc "Class input"
   input_object :class_input do
     field :class_id, :string
@@ -20,7 +44,7 @@ defmodule AttendanceApi.Types.Lecturer do
     field :end_date, :datetime
   end
 
-  @desc "attendance input"
+  @desc "attendance object"
   object :lecturer_attendance do
     field :semester, :semester
     field :class, :class
@@ -77,7 +101,6 @@ defmodule AttendanceApi.Types.Lecturer do
   end
 
   object :lecturer_mutation do
-
     @desc """
     Lecturer login.
     """
@@ -88,7 +111,6 @@ defmodule AttendanceApi.Types.Lecturer do
   end
 
   object :lecturer_attendance_mutation do
-
     @desc """
     Lecturer attendance.
     """
@@ -107,9 +129,9 @@ defmodule AttendanceApi.Types.Lecturer do
       middleware(AttendanceApi.Middleware.LecturerAuth)
       arg(:input, non_null(:class_input))
 
-      config fn %{input: input}, _info ->
+      config(fn %{input: input}, _info ->
         {:ok, topic: "#{Topics.lecturer_open_attendance()}:#{input.class_id}"}
-      end
+      end)
 
       # trigger [:create_lecturer_attendance], topic: fn lecturer_open_attendance ->
       #   IO.inspect "trigger create lecturer open attendance"
@@ -118,13 +140,36 @@ defmodule AttendanceApi.Types.Lecturer do
       #   _ -> []
       # end
 
-      resolve fn open_attendance, _, _ ->
+      resolve(fn open_attendance, _, _ ->
         {:ok, open_attendance}
-      end
+      end)
     end
   end
 
   object :lecturer_queries do
+    @desc """
+    Get lecturer current period.
+    """
+    field :lecturer_current_period, :lecturer_timetable do
+      middleware(AttendanceApi.Middleware.LecturerAuth)
+      resolve(&Resolvers.Lecturer.get_lecturer_current_period/2)
+    end
+
+    @desc """
+    Get lecturer daily period.
+    """
+    field :lecturer_daily_period, list_of(:lecturer_timetable) do
+      middleware(AttendanceApi.Middleware.LecturerAuth)
+      resolve(&Resolvers.Lecturer.get_lecturer_daily_period/2)
+    end
+
+    @desc """
+    Get lecturer next period.
+    """
+    field :lecturer_next_period, :lecturer_timetable do
+      middleware(AttendanceApi.Middleware.LecturerAuth)
+      resolve(&Resolvers.Lecturer.get_lecturer_next_period/2)
+    end
 
     @desc """
     Get list of lecturers.

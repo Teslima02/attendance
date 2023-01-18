@@ -137,11 +137,6 @@
   </tbody>
 </table>
 
-# TODO::make timetable to dimensional array
-# first array will be the array of the timetable
-# second array will house the period and each
-# period will contain all the subject for each week day
-# timetable = [ period = [8am = {monday = {COM111}}, {tuesday = {COM112}}, {wednesday = {COM113}}]]
 <h1>TimeTable</h1>
 <h1>Create Timetable</h1>
 <div style="margin-bottom: 20px">
@@ -150,21 +145,75 @@
 <table>
   <thead>
     <tr>
-      <th>Time</th>
-      <th>Monday</th>
-      <th>Tuesday</th>
-      <th>Wednesday</th>
-      <th>Thursday</th>
-      <th>Friday</th>
-      <th>Saturday</th>
+      <th>Days/Period</th>
+      <th>8:00 - 9:00AM</th>
+      <th>9:00 - 10:00AM</th>
+      <th>10:00 - 11:00AM</th>
+      <th>11:00 - 12:00PM</th>
+      <th>12:00 - 1:00PM</th>
+      <th>1:00 - 2:00PM</th>
+      <th>2:00 - 3:00PM</th>
+      <th>3:00 - 4:00PM</th>
+      <th>4:00 - 5:00PM</th>
+      <th>Action</th>
     </tr>
   </thead>
   <tbody id="timetable">
-    <%= for timetable <- @timetables do %>
-      <tr id={"timetables-#{timetable.id}"}>
-        <td><%= Time.to_string(timetable.start_time.start_time)%></td>
+  <%= for timetable <- @timetables do %>
+    <tr id={"timetables-#{timetable.id}"}>
+      <td><%= timetable.days_of_week.name%></td>
+      <%= if (Time.to_string(timetable.start_time.start_time) == "08:00:00") do %>
         <td><%= timetable.course.name %></td>
-      </tr>
-    <% end %>
+      <% end %>
+      <td>
+        <%= if (Time.to_string(timetable.start_time.start_time) == "09:00:00") do %>
+          <p><%= timetable.course.name %></p>
+        <% end %>
+      </td>
+      <td>
+        <%= if (Time.to_string(timetable.start_time.start_time) == "10:00:00") do %>
+          <p><%= timetable.course.name %></p>
+        <% end %>
+      </td>
+      <td>
+        <%= if (Time.to_string(timetable.start_time.start_time) == "11:00:00") do %>
+          <p><%= timetable.course.name %></p>
+        <% end %>
+      </td>
+      <td>
+        <%= if (Time.to_string(timetable.start_time.start_time) == "12:00:00") do %>
+          <p><%= timetable.course.name %></p>
+        <% end %>
+      </td>
+      <td>
+        <%= if (Time.to_string(timetable.start_time.start_time) == "13:00:00") do %>
+          <p><%= timetable.course.name %></p>
+        <% end %>
+      </td>
+      <td>
+        <%= if (Time.to_string(timetable.start_time.start_time) == "14:00:00") do %>
+          <p><%= timetable.course.name %></p>
+        <% end %>
+      </td>
+      <td>
+        <%= if (Time.to_string(timetable.start_time.start_time) == "15:00:00") do %>
+          <p><%= timetable.course.name %></p>
+        <% end %>
+      </td>
+      <td>
+        <%= if (Time.to_string(timetable.start_time.start_time) == "16:00:00") do %>
+          <p><%= timetable.course.name %></p>
+        <% end %>
+      </td>
+      <td>
+        <%= if (Time.to_string(timetable.start_time.start_time) == "17:00:00") do %>
+          <p><%= timetable.course.name %></p>
+        <% end %>
+      </td>
+      <td>
+        <span><%= live_patch "Edit", to: Routes.session_show_semester_path(@socket, :edit_timetable, @session, @program, @class, @semester, timetable) %></span>
+      </td>
+    </tr>
+  <% end %>
   </tbody>
 </table>

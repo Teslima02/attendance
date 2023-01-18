@@ -1,6 +1,7 @@
 defmodule AttendanceApi.Resolvers.Lecturer do
   alias AttendanceApi.Resolvers.Lecturer
   alias Attendance.Lecturers.Lecturer
+  alias Attendance.Timetables
   alias Attendance.Lecturers
   alias AttendanceApi.Topics.Topics
 
@@ -55,7 +56,6 @@ defmodule AttendanceApi.Resolvers.Lecturer do
              current_lecturer,
              input_params
            ) do
-
       Absinthe.Subscription.publish(AttendanceWeb.Endpoint, attendance,
         lecturer_open_attendance: "#{Topics.lecturer_open_attendance()}:#{attendance.class_id}"
       )
@@ -63,6 +63,45 @@ defmodule AttendanceApi.Resolvers.Lecturer do
       {:ok, attendance}
     else
       _ -> {:error, "Error initiating attendance"}
+    end
+  end
+
+  def get_lecturer_current_period(_args, %{
+        context: %{current_lecturer: current_lecturer}
+      }) do
+    with period <- Attendance.Timetables.lecturer_current_period(current_lecturer) |> IO.inspect do
+      {:ok, period}
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error,
+         message: "An error occurred while getting current period",
+         details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
+    end
+  end
+
+  def get_lecturer_daily_period(_args, %{
+        context: %{current_lecturer: current_lecturer}
+      }) do
+    with period <- Attendance.Timetables.lecturer_daily_period(current_lecturer) do
+      {:ok, period}
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error,
+         message: "An error occurred while getting current period",
+         details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
+    end
+  end
+
+  def get_lecturer_next_period(_args, %{
+        context: %{current_lecturer: current_lecturer}
+      }) do
+    with period <- Attendance.Timetables.lecturer_next_period(current_lecturer) do
+      {:ok, period}
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error,
+         message: "An error occurred while getting current period",
+         details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
     end
   end
 end
