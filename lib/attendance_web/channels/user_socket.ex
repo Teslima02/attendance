@@ -34,30 +34,30 @@ defmodule AttendanceWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   @impl true
-  # def connect(%{"authorization" => header_content}, socket, _connect_info) do
-  #   [[_, token]] = Regex.scan(~r/^Bearer (.*)/, header_content)
-  #   token = Base.url_decode64(token, padding: false)
-  #   student = Attendance.Students.get_student_by_session_token(elem(token, 1))
-  #   lecturer = Attendance.Lecturers.get_lecturer_by_session_token(elem(token, 1))
+  def connect(%{"authorization" => header_content}, socket, _connect_info) do
+    [[_, token]] = Regex.scan(~r/^Bearer (.*)/, header_content)
+    token = Base.url_decode64(token, padding: false)
+    student = Attendance.Students.get_student_by_session_token(elem(token, 1))
+    lecturer = Attendance.Lecturers.get_lecturer_by_session_token(elem(token, 1))
 
-  #   cond do
-  #     student != nil ->
-  #       current_u = current_user(student)
+    cond do
+      student != nil ->
+        current_u = current_user(student)
 
-  #       socket =
-  #         Absinthe.Phoenix.Socket.put_options(socket, context: %{current_student: current_u})
+        socket =
+          Absinthe.Phoenix.Socket.put_options(socket, context: %{current_student: current_u})
 
-  #       {:ok, socket}
+        {:ok, socket}
 
-  #     lecturer != nil ->
-  #       current_user = current_user(lecturer)
+      lecturer != nil ->
+        current_user = current_user(lecturer)
 
-  #       socket =
-  #         Absinthe.Phoenix.Socket.put_options(socket, context: %{current_lecturer: current_user})
+        socket =
+          Absinthe.Phoenix.Socket.put_options(socket, context: %{current_lecturer: current_user})
 
-  #       {:ok, socket}
-  #   end
-  # end
+        {:ok, socket}
+    end
+  end
 
   def connect(_params, _socket), do: :error
 

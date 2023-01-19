@@ -5,6 +5,23 @@ defmodule AttendanceApi.Types.Lecturer do
   alias AttendanceApi.Resolvers
   alias AttendanceApi.Topics.Topics
 
+  @desc "notification object"
+  object :notification do
+    field :id, :id
+    field :description, :string
+    field :class, :class
+    field :lecturer, :lecturer
+    field :course, :lecturer_courses
+    field :inserted_at, :datetime
+  end
+
+  @desc "notification input"
+  input_object :notification_input do
+    field :description, :string
+    field :class_id, :string
+    field :course_id, :string
+  end
+
   @desc "period object"
   object :period do
     field :id, :id
@@ -32,6 +49,11 @@ defmodule AttendanceApi.Types.Lecturer do
   @desc "Class input"
   input_object :class_input do
     field :class_id, :string
+  end
+
+  @desc "Course input"
+  input_object :course_input do
+    field :course_id, :string
   end
 
   @desc "attendance input"
@@ -119,6 +141,15 @@ defmodule AttendanceApi.Types.Lecturer do
       arg(:input, non_null(:lecturer_attendance_input))
       resolve(&Resolvers.Lecturer.create_lecturer_attendance/2)
     end
+
+    @desc """
+    Lecturer send notification.
+    """
+    field :send_notification, :notification do
+      middleware(AttendanceApi.Middleware.LecturerAuth)
+      arg(:input, non_null(:notification_input))
+      resolve(&Resolvers.Lecturer.create_notification/2)
+    end
   end
 
   object :lecturer_attendance_subscription do
@@ -127,10 +158,10 @@ defmodule AttendanceApi.Types.Lecturer do
     """
     field :lecturer_open_attendance, :lecturer_attendance do
       middleware(AttendanceApi.Middleware.LecturerAuth)
-      arg(:input, non_null(:class_input))
+      arg(:input, non_null(:course_input))
 
       config(fn %{input: input}, _info ->
-        {:ok, topic: "#{Topics.lecturer_open_attendance()}:#{input.class_id}"}
+        {:ok, topic: "#{Topics.lecturer_open_attendance()}:#{input.course_id}"}
       end)
 
       # trigger [:create_lecturer_attendance], topic: fn lecturer_open_attendance ->
@@ -142,6 +173,22 @@ defmodule AttendanceApi.Types.Lecturer do
 
       resolve(fn open_attendance, _, _ ->
         {:ok, open_attendance}
+      end)
+    end
+
+    @desc """
+    Lecturer send notification.
+    """
+    field :send_notification_message, :notification do
+      middleware(AttendanceApi.Middleware.LecturerAuth)
+      arg(:input, non_null(:class_input))
+
+      config(fn %{input: input}, _info ->
+        {:ok, topic: "#{Topics.lecturer_send_notification()}:#{input.class_id}"}
+      end)
+
+      resolve(fn notification, _, _ ->
+        {:ok, notification}
       end)
     end
   end
@@ -194,6 +241,22 @@ defmodule AttendanceApi.Types.Lecturer do
       arg(:input, :lecturer_courses_filter_input)
       middleware(AttendanceApi.Middleware.LecturerAuth)
       resolve(&Resolvers.Lecturer.get_lecturer_courses/2)
+    end
+
+    @desc """
+    Get list of notification.
+    """
+    field :list_notifications, list_of(:notification) do
+      middleware(AttendanceApi.Middleware.LecturerAuth)
+      # resolve(&Resolvers.Lecturer.list_lecturers/2)
+    end
+
+    @desc """
+    Get list of attendances.
+    """
+    field :list_attendance, list_of(:attendance) do
+      middleware(AttendanceApi.Middleware.LecturerAuth)
+      # resolve(&Resolvers.Lecturer.list_lecturers/2)
     end
   end
 end

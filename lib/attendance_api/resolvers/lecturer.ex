@@ -56,8 +56,12 @@ defmodule AttendanceApi.Resolvers.Lecturer do
              current_lecturer,
              input_params
            ) do
+      # Absinthe.Subscription.publish(AttendanceWeb.Endpoint, attendance,
+      #   send_notification_message: "*"
+      # )
+
       Absinthe.Subscription.publish(AttendanceWeb.Endpoint, attendance,
-        lecturer_open_attendance: "#{Topics.lecturer_open_attendance()}:#{attendance.class_id}"
+        lecturer_open_attendance: "#{Topics.lecturer_open_attendance()}:#{attendance.course_id}"
       )
 
       {:ok, attendance}
@@ -69,7 +73,7 @@ defmodule AttendanceApi.Resolvers.Lecturer do
   def get_lecturer_current_period(_args, %{
         context: %{current_lecturer: current_lecturer}
       }) do
-    with period <- Attendance.Timetables.lecturer_current_period(current_lecturer) |> IO.inspect do
+    with period <- Attendance.Timetables.lecturer_current_period(current_lecturer) do
       {:ok, period}
     else
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -101,6 +105,33 @@ defmodule AttendanceApi.Resolvers.Lecturer do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:error,
          message: "An error occurred while getting current period",
+         details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
+    end
+  end
+
+  def create_notification(%{input: input_params}, %{
+        context: %{current_lecturer: current_lecturer}
+      }) do
+    with course <- Attendance.Catalog.get_courses!(input_params.course_id),
+         class <- Attendance.Catalog.get_class!(input_params.class_id),
+         {:ok, notification} <-
+           Attendance.Notifications.create_notification(
+             course,
+             class,
+             current_lecturer,
+             input_params
+           ) do
+
+      Absinthe.Subscription.publish(AttendanceWeb.Endpoint, notification,
+        send_notification_message:
+          "#{Topics.lecturer_send_notification()}:#{notification.class.id}"
+      )
+
+      {:ok, notification}
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error,
+         message: "An error occurred while creating notification",
          details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
     end
   end
