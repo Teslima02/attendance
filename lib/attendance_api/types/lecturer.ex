@@ -56,6 +56,36 @@ defmodule AttendanceApi.Types.Lecturer do
     field :course_id, :string
   end
 
+  @desc "List attendance Object"
+  object :list_lecturer_attendances do
+    field :attendances, list_of(:lecturer_attendance)
+    field :page_number, :integer
+    field :page_size, :integer
+    field :total_pages, :integer
+    field :total_entries, :integer
+    field :distance, :integer
+    field :sort_field, :string
+    field :sort_direction, :string
+  end
+
+  @desc "attendance input"
+  input_object :lecturer_attendance_filter_input do
+    field :lecturer_id, :string
+    field :course_id, :string
+    field :semester_id, :string
+    field :class_id, :string
+    field :active, :boolean
+  end
+
+  @desc "get lecturer attendance input"
+  input_object :get_lecturer_attendance_input do
+    field :page, :integer, default_value: 1
+    field :page_size, :integer, default_value: 15
+    field :sort_field, :string, default_value: "inserted_at"
+    field :sort_direction, :string, default_value: "desc"
+    field :attendance, :lecturer_attendance_filter_input, default_value: %{}
+  end
+
   @desc "attendance input"
   input_object :lecturer_attendance_input do
     field :semester_id, :string
@@ -238,21 +268,22 @@ defmodule AttendanceApi.Types.Lecturer do
     Get lecturer courses
     """
     field :lecturer_courses, list_of(:lecturer_courses) do
-      arg(:input, :lecturer_courses_filter_input)
       middleware(AttendanceApi.Middleware.LecturerAuth)
+      arg(:input, :lecturer_courses_filter_input)
       resolve(&Resolvers.Lecturer.get_lecturer_courses/2)
     end
 
     @desc """
-    Get list of notification.
+    Get list of lecturer attendances.
     """
-    field :list_notifications, list_of(:notification) do
+    field :list_lecturer_attendances, :list_lecturer_attendances do
       middleware(AttendanceApi.Middleware.LecturerAuth)
-      # resolve(&Resolvers.Lecturer.list_lecturers/2)
+      arg(:input, :get_lecturer_attendance_input)
+      resolve(&Resolvers.Lecturer.get_lecturer_attendances/2)
     end
 
     @desc """
-    Get list of attendances.
+    Get list of notification.
     """
     field :list_attendance, list_of(:attendance) do
       middleware(AttendanceApi.Middleware.LecturerAuth)

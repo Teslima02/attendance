@@ -121,7 +121,6 @@ defmodule AttendanceApi.Resolvers.Lecturer do
              current_lecturer,
              input_params
            ) do
-
       Absinthe.Subscription.publish(AttendanceWeb.Endpoint, notification,
         send_notification_message:
           "#{Topics.lecturer_send_notification()}:#{notification.class.id}"
@@ -132,6 +131,19 @@ defmodule AttendanceApi.Resolvers.Lecturer do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:error,
          message: "An error occurred while creating notification",
+         details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
+    end
+  end
+
+  def get_lecturer_attendances(%{input: input_params}, %{
+        context: %{current_lecturer: _current_lecturer}
+      }) do
+    with {:ok, attendances} <- Attendance.Lecturer_attendances.paginate_attendance(input_params) |> IO.inspect do
+      {:ok, attendances}
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error,
+         message: "An error occurred while getting attendances",
          details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
     end
   end

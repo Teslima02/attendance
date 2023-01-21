@@ -4,7 +4,6 @@ defmodule Attendance.Students do
   """
   import Ecto.Query, warn: false
   alias Attendance.Lecturer_attendances.{Student_attendance, Lecturer_attendance}
-  alias Attendance.Catalog.LecturerCourses
   alias Attendance.Students.Student
   alias Attendance.Catalog.Course
   alias Attendance.Catalog
@@ -516,5 +515,55 @@ defmodule Attendance.Students do
             s.student_id == ^current_student.id
 
     Repo.one(query)
+  end
+
+  def paginate_attendance(params \\ %{}) do
+    params =
+      params
+      |> Map.put_new("sort_direction", "desc")
+      |> Map.put_new("sort_field", "inserted_at")
+
+    {:ok, sort_direction} = Map.fetch(params, "sort_direction")
+    {:ok, sort_field} = Map.fetch(params, "sort_field")
+
+    with {:ok, filter} <-
+           Filtrex.parse_params(
+            filter_config_student(:attendances),
+             stringify_map_key(params[:attendance]) || %{}
+           ),
+         %Scrivener.Page{} = page <- do_paginate_attendance(filter, params) do
+      {:ok,
+       %{
+         attendances: page.entries,
+         page_number: page.page_number,
+         page_size: page.page_size,
+         total_pages: page.total_pages,
+         total_entries: page.total_entries,
+         distance: @pagination_distance,
+         sort_field: sort_field,
+         sort_direction: sort_direction
+       }}
+    else
+      {:error, error} -> {:error, error}
+      error -> {:error, error}
+    end
+  end
+
+  defp do_paginate_attendance(filter, params) do
+    Student_attendance
+    |> Filtrex.query(filter)
+    |> order_by(^sort(params))
+    |> preload([:lecturer_attendance, :course, :student])
+    |> paginate(Repo, params, @pagination)
+  end
+
+  defp filter_config_student(:attendances) do
+    defconfig do
+      text(:lecturer_attendance_id)
+      text(:course_id)
+      text(:student_id)
+      datetime(:attendance_time)
+      boolean(:status)
+    end
   end
 end

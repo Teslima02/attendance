@@ -3,6 +3,36 @@ defmodule AttendanceApi.Types.Student do
 
   alias AttendanceApi.Resolvers
 
+  @desc "List student attendance Object"
+  object :list_student_attendances do
+    field :attendances, list_of(:student_attendance)
+    field :page_number, :integer
+    field :page_size, :integer
+    field :total_pages, :integer
+    field :total_entries, :integer
+    field :distance, :integer
+    field :sort_field, :string
+    field :sort_direction, :string
+  end
+
+  @desc "student attendance input"
+  input_object :student_attendance_filter_input do
+    field :attendance_time, :datetime
+    field :status, :boolean
+    field :course_id, :string
+    field :student_id, :string
+    field :lecturer_attendance_id, :string
+  end
+
+  @desc "get student attendance input"
+  input_object :get_student_attendance_input do
+    field :page, :integer, default_value: 1
+    field :page_size, :integer, default_value: 15
+    field :sort_field, :string, default_value: "inserted_at"
+    field :sort_direction, :string, default_value: "desc"
+    field :attendance, :student_attendance_filter_input, default_value: %{}
+  end
+
   @desc "Attendance object"
   object :attendance do
     field :id, :id
@@ -17,7 +47,7 @@ defmodule AttendanceApi.Types.Student do
   @desc "Program filter input Object"
   input_object :attendance_filter_input do
     field :class_id, non_null(:string)
-    field :active, :boolean, default_value: :true
+    field :active, :boolean, default_value: true
     field :program_id, non_null(:string)
   end
 
@@ -42,6 +72,9 @@ defmodule AttendanceApi.Types.Student do
     field :id, :id
     field :status, :boolean
     field :attendance_time, :datetime
+    field :course, :student_courses
+    field :student, :student
+    field :lecturer_attendance, :lecturer_attendance
   end
 
   @desc "course object"
@@ -116,6 +149,15 @@ defmodule AttendanceApi.Types.Student do
       middleware(AttendanceApi.Middleware.StudentAuth)
       arg(:input, non_null(:get_current_attendance_input))
       resolve(&Resolvers.Student.get_current_attendances/2)
+    end
+
+    @desc """
+    Get all attendances
+    """
+    field :list_student_attendances, :list_student_attendances do
+      middleware(AttendanceApi.Middleware.StudentAuth)
+      arg(:input, non_null(:get_student_attendance_input))
+      resolve(&Resolvers.Student.get_student_attendances/2)
     end
   end
 end

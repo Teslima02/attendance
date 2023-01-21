@@ -24,8 +24,8 @@ defmodule AttendanceWeb.Router do
   end
 
   pipeline :graphql do
-    plug AttendanceWeb.Plug.StudentContext
     plug AttendanceWeb.Plug.LecturerContext
+    plug AttendanceWeb.Plug.StudentContext
     # plug Corsica, origins: "*", allow_headers: :all
   end
 

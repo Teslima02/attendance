@@ -8,6 +8,62 @@ defmodule Attendance.Lecturer_attendances do
 
   alias Attendance.Lecturer_attendances.Lecturer_attendance
 
+  import Saas.Helpers, only: [sort: 1, paginate: 4, stringify_map_key: 1]
+  import Filtrex.Type.Config
+
+  @pagination [page_size: 15]
+  @pagination_distance 5
+
+  def paginate_attendance(params \\ %{}) do
+    params =
+      params
+      |> Map.put_new("sort_direction", "desc")
+      |> Map.put_new("sort_field", "inserted_at")
+
+    {:ok, sort_direction} = Map.fetch(params, "sort_direction")
+    {:ok, sort_field} = Map.fetch(params, "sort_field")
+
+    with {:ok, filter} <-
+           Filtrex.parse_params(
+             filter_config(:attendances),
+             stringify_map_key(params[:attendance]) || %{}
+           ),
+         %Scrivener.Page{} = page <- do_paginate_attendance(filter, params) do
+      {:ok,
+       %{
+         attendances: page.entries,
+         page_number: page.page_number,
+         page_size: page.page_size,
+         total_pages: page.total_pages,
+         total_entries: page.total_entries,
+         distance: @pagination_distance,
+         sort_field: sort_field,
+         sort_direction: sort_direction
+       }}
+    else
+      {:error, error} -> {:error, error}
+      error -> {:error, error}
+    end
+  end
+
+  defp do_paginate_attendance(filter, params) do
+    Lecturer_attendance
+    |> Filtrex.query(filter)
+    |> order_by(^sort(params))
+    |> preload([:lecturer, :course, :semester, :class])
+    |> paginate(Repo, params, @pagination)
+  end
+
+  defp filter_config(:attendances) do
+    defconfig do
+      text(:lecturer_id)
+      text(:course_id)
+      text(:semester_id)
+      text(:class_id)
+      boolean(:active)
+    end
+  end
+
   @doc """
   Returns the list of lecturer_attendances.
 
@@ -111,7 +167,8 @@ defmodule Attendance.Lecturer_attendances do
   def check_and_update_if_attendance_time_expire!(attendance_id) do
     attendee = get_lecturer_attendance!(attendance_id)
 
-    if attendee.active == true and attendee.end_date > DateTime.truncate(DateTime.utc_now(), :second) do
+    if attendee.active == true and
+         attendee.end_date > DateTime.truncate(DateTime.utc_now(), :second) do
       attendee
     else
       attendee

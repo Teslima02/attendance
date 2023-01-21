@@ -93,4 +93,18 @@ defmodule AttendanceApi.Resolvers.Student do
          details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
     end
   end
+
+  def get_student_attendances(%{input: input_params}, %{
+        context: %{current_student: _current_student}
+      }) do
+    with {:ok, attendances} <-
+           Attendance.Students.paginate_attendance(input_params) |> IO.inspect() do
+      {:ok, attendances}
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error,
+         message: "An error occurred while getting attendances",
+         details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
+    end
+  end
 end
