@@ -152,9 +152,9 @@ defmodule AttendanceApi.Types.Student do
     end
 
     @desc """
-    Get all attendances
+    Get all attendances history
     """
-    field :list_student_attendances, :list_student_attendances do
+    field :list_student_attendances_history, :list_student_attendances do
       middleware(AttendanceApi.Middleware.StudentAuth)
       arg(:input, non_null(:get_student_attendance_input))
       resolve(&Resolvers.Student.get_student_attendances/2)

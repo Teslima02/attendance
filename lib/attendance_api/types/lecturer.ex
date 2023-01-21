@@ -274,9 +274,9 @@ defmodule AttendanceApi.Types.Lecturer do
     end
 
     @desc """
-    Get list of lecturer attendances.
+    Get list of lecturer attendances history.
     """
-    field :list_lecturer_attendances, :list_lecturer_attendances do
+    field :list_lecturer_attendances_history, :list_lecturer_attendances do
       middleware(AttendanceApi.Middleware.LecturerAuth)
       arg(:input, :get_lecturer_attendance_input)
       resolve(&Resolvers.Lecturer.get_lecturer_attendances/2)
