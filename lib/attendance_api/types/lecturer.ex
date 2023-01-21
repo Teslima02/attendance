@@ -22,6 +22,35 @@ defmodule AttendanceApi.Types.Lecturer do
     field :course_id, :string
   end
 
+  @desc "List notification Object"
+  object :list_lecturer_notifications_history do
+    field :notifications, list_of(:notification)
+    field :page_number, :integer
+    field :page_size, :integer
+    field :total_pages, :integer
+    field :total_entries, :integer
+    field :distance, :integer
+    field :sort_field, :string
+    field :sort_direction, :string
+  end
+
+  @desc "notification input"
+  input_object :lecturer_notification_filter_input do
+    field :lecturer_id, :string
+    field :course_id, :string
+    field :class_id, :string
+    field :description, :string
+  end
+
+  @desc "get lecturer notification input"
+  input_object :get_lecturer_notification_input do
+    field :page, :integer, default_value: 1
+    field :page_size, :integer, default_value: 15
+    field :sort_field, :string, default_value: "inserted_at"
+    field :sort_direction, :string, default_value: "desc"
+    field :notification, :lecturer_notification_filter_input, default_value: %{}
+  end
+
   @desc "period object"
   object :period do
     field :id, :id
@@ -283,11 +312,12 @@ defmodule AttendanceApi.Types.Lecturer do
     end
 
     @desc """
-    Get list of notification.
+    Get list of lecturer notifications history.
     """
-    field :list_attendance, list_of(:attendance) do
+    field :list_lecturer_notification_history, :list_lecturer_notifications_history do
       middleware(AttendanceApi.Middleware.LecturerAuth)
-      # resolve(&Resolvers.Lecturer.list_lecturers/2)
+      arg(:input, :get_lecturer_notification_input)
+      resolve(&Resolvers.Lecturer.notification_history/2)
     end
   end
 end

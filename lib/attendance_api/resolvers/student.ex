@@ -107,4 +107,18 @@ defmodule AttendanceApi.Resolvers.Student do
          details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
     end
   end
+
+  def notification_history(%{input: input_params}, %{
+        context: %{current_student: _current_student}
+      }) do
+    with {:ok, notifications} <-
+           Attendance.Notifications.paginate_notification(input_params) do
+      {:ok, notifications}
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error,
+         message: "An error occurred while getting notifications",
+         details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
+    end
+  end
 end

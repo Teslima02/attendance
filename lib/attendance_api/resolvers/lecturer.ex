@@ -138,12 +138,27 @@ defmodule AttendanceApi.Resolvers.Lecturer do
   def get_lecturer_attendances(%{input: input_params}, %{
         context: %{current_lecturer: _current_lecturer}
       }) do
-    with {:ok, attendances} <- Attendance.Lecturer_attendances.paginate_attendance(input_params) |> IO.inspect do
+    with {:ok, attendances} <-
+           Attendance.Lecturer_attendances.paginate_attendance(input_params) do
       {:ok, attendances}
     else
       {:error, %Ecto.Changeset{} = changeset} ->
         {:error,
          message: "An error occurred while getting attendances",
+         details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
+    end
+  end
+
+  def notification_history(%{input: input_params}, %{
+        context: %{current_lecturer: _current_lecturer}
+      }) do
+    with {:ok, notifications} <-
+           Attendance.Notifications.paginate_notification(input_params) do
+      {:ok, notifications}
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error,
+         message: "An error occurred while getting notifications",
          details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
     end
   end
