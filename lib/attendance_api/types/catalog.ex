@@ -69,6 +69,34 @@ defmodule AttendanceApi.Types.Catalog do
     field :sort_direction, :string
   end
 
+  @desc "List class Object"
+  object :list_class do
+    field :classes, list_of(:class)
+    field :page_number, :integer
+    field :page_size, :integer
+    field :total_pages, :integer
+    field :total_entries, :integer
+    field :distance, :integer
+    field :sort_field, :string
+    field :sort_direction, :string
+  end
+
+  @desc "class input"
+  input_object :class_filter_input do
+    field :program_id, :string
+    field :session_id, :string
+    field :name, :string
+  end
+
+  @desc "get class input"
+  input_object :get_class_input do
+    field :page, :integer, default_value: 1
+    field :page_size, :integer, default_value: 15
+    field :sort_field, :string, default_value: "inserted_at"
+    field :sort_direction, :string, default_value: "desc"
+    field :class, :class_filter_input, default_value: %{}
+  end
+
   object :session_queries do
 
     @desc """
@@ -101,12 +129,13 @@ defmodule AttendanceApi.Types.Catalog do
       resolve(&Resolvers.Catalog.list_programs/2)
     end
 
-    # @desc """
-    # Get a program.
-    # """
-    # field :list_lecturers, list_of(:lecturer) do
-    #   middleware(AttendanceApi.Middleware.LecturerAuth)
-    #   resolve(&Resolvers.Catalog.list_programs/2)
-    # end
+    @desc """
+    Get list of classes.
+    """
+    field :list_classes, :list_class do
+      middleware(AttendanceApi.Middleware.LecturerAuth)
+      arg(:input, :get_class_input)
+      resolve(&Resolvers.Catalog.list_classes/2)
+    end
   end
 end

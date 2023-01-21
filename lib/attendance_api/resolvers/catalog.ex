@@ -35,4 +35,17 @@ defmodule AttendanceApi.Resolvers.Catalog do
         {:ok, semester}
     end
   end
+
+  def list_classes(%{input: input_params}, %{
+        context: %{current_lecturer: _current_lecturer}
+      }) do
+    with {:ok, class} <- Attendance.Catalog.paginate_classes(input_params) do
+      {:ok, class}
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error,
+         message: "An error occurred while getting programs",
+         details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
+    end
+  end
 end

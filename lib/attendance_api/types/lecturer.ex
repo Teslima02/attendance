@@ -298,7 +298,7 @@ defmodule AttendanceApi.Types.Lecturer do
     """
     field :lecturer_courses, list_of(:lecturer_courses) do
       middleware(AttendanceApi.Middleware.LecturerAuth)
-      arg(:input, :lecturer_courses_filter_input)
+      # arg(:input, :lecturer_courses_filter_input)
       resolve(&Resolvers.Lecturer.get_lecturer_courses/2)
     end
 

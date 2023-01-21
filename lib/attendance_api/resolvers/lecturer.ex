@@ -26,7 +26,7 @@ defmodule AttendanceApi.Resolvers.Lecturer do
     {:ok, current_lecturer}
   end
 
-  def get_lecturer_courses(%{input: _input_params}, %{
+  def get_lecturer_courses(_args, %{
         context: %{current_lecturer: current_lecturer}
       }) do
     with [courses] <- Attendance.Lecturers.lecturer_courses(current_lecturer) do
