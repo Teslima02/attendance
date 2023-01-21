@@ -123,9 +123,9 @@ defmodule AttendanceApi.Types.Catalog do
     @desc """
     Get list of programs.
     """
-    field :list_programs, list_of(:list_program) do
-      arg(:input, non_null(:get_program_input))
+    field :list_programs, :list_program do
       middleware(AttendanceApi.Middleware.LecturerAuth)
+      arg(:input, :get_program_input)
       resolve(&Resolvers.Catalog.list_programs/2)
     end
 
