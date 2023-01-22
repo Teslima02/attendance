@@ -30,7 +30,7 @@ defmodule AttendanceApi.Types.Catalog do
 
   @desc "Semester filter input Object"
   input_object :semester_filter_input do
-    field :program_type, :program_type
+    field :program_type, :string
   end
 
   @desc "Program filter input Object"
