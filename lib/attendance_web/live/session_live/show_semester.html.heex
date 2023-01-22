@@ -3,7 +3,7 @@
 <%= if @live_action in [:edit_semester] do %>
   <.modal return_to={Routes.session_show_semester_path(@socket, :show_semester, @session, @program, @class, @semester)}>
     <.live_component
-      module={AttendanceWeb.SemesterLive.FormComponent}
+      module={AttendanceWeb.SessionLive.SemesterFormComponent}
       id={@semester.id}
       title={@page_title}
       action={@live_action}
