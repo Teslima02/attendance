@@ -104,6 +104,8 @@ defmodule AttendanceApi.Types.Student do
     field :first_name, :string
     field :last_name, :string
     field :matric_number, :string
+    field :class, :class
+    field :account_type, :class
   end
 
   object :student_mutation do
