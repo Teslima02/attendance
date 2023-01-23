@@ -96,7 +96,7 @@ defmodule Attendance.Students do
   """
   def get_student_by_matric_number_and_password(matric_number, password)
       when is_binary(matric_number) and is_binary(password) do
-    student = Repo.get_by(Student, matric_number: matric_number)
+    student = Repo.get_by(Student, matric_number: matric_number) |> Repo.preload([:class])
     if Student.valid_password?(student, password), do: student
   end
 
