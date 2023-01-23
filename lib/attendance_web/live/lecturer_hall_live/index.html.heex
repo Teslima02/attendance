@@ -19,6 +19,8 @@
       <th>Hall number</th>
       <th>Building name</th>
       <th>Disabled</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
 
       <th></th>
     </tr>
@@ -29,6 +31,8 @@
         <td><%= lecturer_hall.hall_number %></td>
         <td><%= lecturer_hall.building_name %></td>
         <td><%= lecturer_hall.disabled %></td>
+        <td><%= lecturer_hall.latitude %></td>
+        <td><%= lecturer_hall.longitude %></td>
 
         <td>
           <span><%= live_redirect "Show", to: Routes.lecturer_hall_show_path(@socket, :show, lecturer_hall) %></span>

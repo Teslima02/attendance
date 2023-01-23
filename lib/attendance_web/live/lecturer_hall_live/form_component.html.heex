@@ -17,6 +17,14 @@
     <%= text_input f, :building_name %>
     <%= error_tag f, :building_name %>
 
+    <%= label f, :latitude %>
+    <%= text_input f, :latitude %>
+    <%= error_tag f, :latitude %>
+
+    <%= label f, :longitude %>
+    <%= text_input f, :longitude %>
+    <%= error_tag f, :longitude %>
+
     <div>
       <%= submit "Save", phx_disable_with: "Saving..." %>
     </div>

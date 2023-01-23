@@ -13,7 +13,9 @@ defmodule Attendance.Lecturer_hallsFixtures do
       |> Enum.into(%{
         building_name: "some building_name",
         disabled: true,
-        hall_number: "some hall_number"
+        hall_number: "some hall_number",
+        latitude: "0.0",
+        longitude: "0.0"
       })
       |> Attendance.Lecturer_halls.create_lecturer_hall()
 
