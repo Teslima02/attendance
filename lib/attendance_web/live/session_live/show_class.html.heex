@@ -113,7 +113,7 @@
         <td>
           <span><%= live_redirect "Show", to: Routes.session_show_student_path(@socket, :show_student, @session, @program, @class, student) %></span>
           <span><%= live_patch "Edit", to: Routes.session_show_student_path(@socket, :edit_student, @session, @program, @class, student) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: student.id, data: [confirm: "Are you sure?"] %></span>
+          <span><%= link "Delete", to: Routes.session_show_class_path(@socket, :show_class, @session, @program, @class), phx_click: "delete", phx_value_id: student.id, data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>
     <% end %>

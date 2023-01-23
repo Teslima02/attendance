@@ -97,6 +97,14 @@ defmodule AttendanceWeb.SessionLive.ShowClass do
     end
   end
 
+  @impl true
+  def handle_event("delete", %{"id" => id} = params, socket) do
+    student = Students.get_student!(id)
+    {:ok, _} = Students.delete_student(student)
+
+    {:noreply, assign(socket, :students, list_students(params))}
+  end
+
   defp page_title(:upload_student), do: "Upload Student"
   defp page_title(:new_semester), do: "New Semester"
   defp page_title(:show_class), do: "Show Class"
