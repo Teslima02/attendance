@@ -14,6 +14,7 @@ defmodule Attendance.Students.Student do
     field :account_type, :string, default: "student"
     belongs_to :admin, Attendance.Accounts.Admin
     belongs_to :class, Attendance.Catalog.Class
+    belongs_to :program, Attendance.Catalog.Program
     field :confirmed_at, :naive_datetime
 
     timestamps()

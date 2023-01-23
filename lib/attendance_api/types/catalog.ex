@@ -1,7 +1,6 @@
 defmodule AttendanceApi.Types.Catalog do
   use Absinthe.Schema.Notation
 
-  alias Hex.Resolver
   alias AttendanceApi.Resolvers
 
   @desc "Session object"

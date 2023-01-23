@@ -111,8 +111,10 @@ defmodule AttendanceWeb.SessionLive.UploadStudentFormComponent do
   end
 
   defp save_student(socket, :upload_student, students, _student_params) do
+    IO.inspect socket.assigns.program
+    IO.inspect "socket.assigns.program"
     Enum.each(students, fn row ->
-      case Students.register_student(socket.assigns.current_admin, socket.assigns.class, %{
+      case Students.register_student(socket.assigns.current_admin, socket.assigns.program, socket.assigns.class, %{
              email: row.email,
              password: row.password,
              first_name: row.first_name,

@@ -5,7 +5,9 @@ defmodule AttendanceWeb.StudentLive.Index do
   alias Attendance.Students.Student
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
+    IO.inspect params
+    IO.inspect "params"
     {:ok, assign(socket, :students, list_students())}
   end
 
@@ -40,7 +42,7 @@ defmodule AttendanceWeb.StudentLive.Index do
     {:noreply, assign(socket, :students, list_students())}
   end
 
-  defp list_students do
-    Students.list_students()
+  def list_students do
+    Students.list_students() |> Io.inspect
   end
 end

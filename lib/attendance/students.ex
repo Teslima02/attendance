@@ -96,7 +96,7 @@ defmodule Attendance.Students do
   """
   def get_student_by_matric_number_and_password(matric_number, password)
       when is_binary(matric_number) and is_binary(password) do
-    student = Repo.get_by(Student, matric_number: matric_number) |> Repo.preload([:class])
+    student = Repo.get_by(Student, matric_number: matric_number) |> Repo.preload([:class, :program])
     if Student.valid_password?(student, password), do: student
   end
 
@@ -130,11 +130,12 @@ defmodule Attendance.Students do
       {:error, %Ecto.Changeset{}}
 
   """
-  def register_student(admin, class, attrs) do
+  def register_student(admin, program, class, attrs) do
     %Student{}
     |> Student.registration_changeset(attrs)
     |> Ecto.Changeset.put_assoc(:admin, admin)
     |> Ecto.Changeset.put_assoc(:class, class)
+    |> Ecto.Changeset.put_assoc(:program, program)
     |> Repo.insert()
   end
 
@@ -436,7 +437,9 @@ defmodule Attendance.Students do
       [%Student{}, ...]
 
   """
-  def list_students(%{"class_id" => class_id} = _params) do
+  def list_students(%{"class_id" => class_id} = params) do
+    IO.inspect params
+    IO.inspect "class params"
     query = from s in Student, where: s.class_id == ^class_id
     Repo.all(query)
   end

@@ -111,8 +111,8 @@
         <td><%= student.matric_number %></td>
 
         <td>
-          <span><%= live_redirect "Show", to: Routes.student_show_path(@socket, :show, student) %></span>
-          <span><%= live_patch "Edit", to: Routes.student_index_path(@socket, :edit, student) %></span>
+          <span><%= live_redirect "Show", to: Routes.session_show_student_path(@socket, :show_student, @session, @program, @class, student) %></span>
+          <span><%= live_patch "Edit", to: Routes.session_show_student_path(@socket, :edit_student, @session, @program, @class, student) %></span>
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: student.id, data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>
