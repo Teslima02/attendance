@@ -437,9 +437,7 @@ defmodule Attendance.Students do
       [%Student{}, ...]
 
   """
-  def list_students(%{"class_id" => class_id} = params) do
-    IO.inspect params
-    IO.inspect "class params"
+  def list_students(%{"class_id" => class_id}) do
     query = from s in Student, where: s.class_id == ^class_id
     Repo.all(query)
   end

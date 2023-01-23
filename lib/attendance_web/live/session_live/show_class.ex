@@ -20,7 +20,7 @@ defmodule AttendanceWeb.SessionLive.ShowClass do
 
   def assign_semesters(socket, params) do
     socket
-    |> assign(semesters: list_semesters(params) |> IO.inspect)
+    |> assign(semesters: list_semesters(params))
   end
 
   def get_students(socket, params) do

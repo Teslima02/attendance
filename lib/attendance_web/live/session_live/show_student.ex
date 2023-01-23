@@ -11,7 +11,6 @@ defmodule AttendanceWeb.SessionLive.ShowStudent do
 
   @impl true
   def handle_params(params, _, socket) do
-    IO.inspect params
     {:noreply, socket |> apply_action(socket.assigns.live_action, params)}
   end
 
