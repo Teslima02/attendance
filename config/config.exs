@@ -7,11 +7,6 @@
 # General application configuration
 import Config
 
-config :attendance, Attendance.Guardian,
-  issuer: "attendance",
-  secret_key: "H/K0t/YaFlTOoeBhJc8GPkvHoI3i073vmju94QYeeN2zXypeWPWkFmLmcKXruafU",
-  ttl: {1, :days}
-
 config :attendance,
   ecto_repos: [Attendance.Repo]
 
