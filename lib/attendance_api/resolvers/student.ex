@@ -84,7 +84,8 @@ defmodule AttendanceApi.Resolvers.Student do
   def get_current_attendances(%{input: input_params}, %{
         context: %{current_student: _current_student}
       }) do
-    with attendance <- Students.paginate_current_attendance(input_params) do
+    with _ <- Lecturer_attendances.update_lecturer_attendances_list(),
+         attendance <- Students.paginate_current_attendance(input_params) do
       attendance
     else
       {:error, %Ecto.Changeset{} = changeset} ->

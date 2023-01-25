@@ -163,6 +163,11 @@ defmodule Attendance.Lecturer_attendances do
     Lecturer_attendance.changeset(lecturer_attendance, attrs)
   end
 
+  def update_lecturer_attendances_list do
+    list_lecturer_attendances()
+    |> Enum.map(fn x -> check_and_update_if_attendance_time_expire!(x.id) end)
+  end
+
   # This will return data if the end_time has not reach and turn active to false if the time has reach
   def check_and_update_if_attendance_time_expire!(attendance_id) do
     attendee = get_lecturer_attendance!(attendance_id)
