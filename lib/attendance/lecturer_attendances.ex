@@ -172,8 +172,16 @@ defmodule Attendance.Lecturer_attendances do
   def check_and_update_if_attendance_time_expire!(attendance_id) do
     attendee = get_lecturer_attendance!(attendance_id)
 
+    IO.inspect(DateTime.truncate(DateTime.utc_now(), :second))
+    IO.inspect("DateTime.truncate(DateTime.utc_now(), :second)")
+    IO.inspect(DateTime.utc_now())
+    IO.inspect("DateTime.utc_now()")
+    IO.inspect(attendee.end_date)
+    IO.inspect("attendee.end_date")
+    IO.inspect(DateTime.truncate(DateTime.utc_now(), :second) < attendee.end_date)
+
     if attendee.active == true and
-         attendee.end_date > DateTime.truncate(DateTime.utc_now(), :second) do
+            DateTime.truncate(DateTime.utc_now(), :second) < attendee.end_date do
       attendee
     else
       attendee
