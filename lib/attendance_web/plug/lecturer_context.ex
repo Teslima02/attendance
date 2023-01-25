@@ -18,7 +18,6 @@ defmodule AttendanceWeb.Plug.LecturerContext do
   defp build_context(conn) do
     with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
          tok <- Base.url_decode64(token, padding: false) do
-
       lecturer = Attendance.Lecturers.get_lecturer_by_session_token(elem(tok, 1))
       student = Attendance.Students.get_student_by_session_token(elem(tok, 1))
 
@@ -28,6 +27,9 @@ defmodule AttendanceWeb.Plug.LecturerContext do
 
         student != nil ->
           {:ok, %{current_student: student}}
+
+        true != nil ->
+          {:error, "Authentication failed"}
       end
     end
   end
