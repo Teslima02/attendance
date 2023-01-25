@@ -148,9 +148,9 @@ defmodule AttendanceApi.Types.Student do
     @desc """
     Get all current attendances
     """
-    field :current_attendances, list_of(:attendance) do
+    field :current_attendances, :list_lecturer_attendances do
       middleware(AttendanceApi.Middleware.StudentAuth)
-      arg(:input, non_null(:get_current_attendance_input))
+      arg(:input, non_null(:get_lecturer_attendance_input))
       resolve(&Resolvers.Student.get_current_attendances/2)
     end
 

@@ -53,6 +53,7 @@ defmodule Attendance.Students do
     Lecturer_attendance
     |> Filtrex.query(filter)
     |> order_by(^sort(params))
+    |> preload([:course])
     |> paginate(Repo, params, @pagination)
   end
 
@@ -60,7 +61,10 @@ defmodule Attendance.Students do
     defconfig do
       text(:program_id)
       text(:class_id)
+      text(:course_id)
+      text(:lecturer_id)
       boolean(:active)
+      datetime([:start_date, :end_date])
     end
   end
 
