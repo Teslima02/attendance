@@ -42,11 +42,11 @@ defmodule AttendanceApi.Resolvers.Student do
       }) do
     # TODO: decouple this later
     cond do
-      # Students.check_if_attendance_already_marked_for_the_student!(
-      #   current_student,
-      #   input_params.lecturer_attendance_id
-      # ) != nil ->
-      #   {:error, "You already mark attendance"}
+      Students.check_if_attendance_already_marked_for_the_student!(
+        current_student,
+        input_params.lecturer_attendance_id
+      ) != nil ->
+        {:error, "You already mark attendance"}
 
       Lecturer_attendances.check_and_update_if_attendance_time_expire!(
         input_params.lecturer_attendance_id
