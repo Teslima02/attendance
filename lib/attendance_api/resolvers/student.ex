@@ -44,7 +44,7 @@ defmodule AttendanceApi.Resolvers.Student do
     cond do
       Students.check_if_attendance_already_marked_for_the_student!(
         current_student,
-        input_params
+        input_params.lecturer_attendance_id
       ) != nil ->
         {:error, "You already mark attendance"}
 

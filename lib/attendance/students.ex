@@ -512,11 +512,11 @@ defmodule Attendance.Students do
     |> Repo.insert()
   end
 
-  def check_if_attendance_already_marked_for_the_student!(current_student, attrs) do
+  def check_if_attendance_already_marked_for_the_student!(current_student, lecturer_attendance_id) do
     query =
       from s in Student_attendance,
         where:
-          s.lecturer_attendance_id == ^attrs.lecturer_attendance_id and
+          s.lecturer_attendance_id == ^lecturer_attendance_id and
             s.student_id == ^current_student.id
 
     Repo.one(query)
