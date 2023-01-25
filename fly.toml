@@ -26,6 +26,11 @@ processes = []
   processes = ["app"]
   protocol = "tcp"
   script_checks = []
+
+  [[services.ports]]
+  handlers = ["pg_tls"]
+  port = 5432
+
   [services.concurrency]
     hard_limit = 25
     soft_limit = 20
