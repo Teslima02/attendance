@@ -1,4 +1,4 @@
-# fly.toml file generated for sams on 2022-11-05T15:11:05+01:00
+# fly.toml file generated for sams on 2023-01-25T20:16:01+01:00
 
 app = "sams"
 kill_signal = "SIGTERM"
@@ -26,15 +26,14 @@ processes = []
   processes = ["app"]
   protocol = "tcp"
   script_checks = []
-
-  [[services.ports]]
-  handlers = ["pg_tls"]
-  port = 5432
-
   [services.concurrency]
     hard_limit = 25
     soft_limit = 20
     type = "connections"
+
+  [[services.ports]]
+    handlers = ["pg_tls"]
+    port = 5432
 
   [[services.ports]]
     force_https = true

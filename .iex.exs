@@ -20,13 +20,13 @@ alias AttendanceApi.Resolvers.Catalog
 
 # flyctl proxy 15433 -a sams-db
 
-# Postgres cluster sams created
+# Postgres cluster sams-db created
 #   Username:    postgres
-#   Password:    pTCd7H6QNuVFDNd
-#   Hostname:    sams.internal
+#   Password:    1A4aSevug23YnnM
+#   Hostname:    sams-db.internal
 #   Proxy port:  5432
 #   Postgres port:  5433
-#   Connection string: postgres://postgres:pTCd7H6QNuVFDNd@sams.internal:5432
+#   Connection string: postgres://postgres:1A4aSevug23YnnM@sams-db.internal:5432
 
 # Save your credentials in a secure place -- you won't be able to see them again!
 
@@ -34,3 +34,7 @@ alias AttendanceApi.Resolvers.Catalog
 # Any app within the Teslim Abdulafeez organization can connect to this Postgres using the following connection string:
 
 # Now that you've set up Postgres, here's what you need to understand: https://fly.io/docs/postgres/getting-started/what-you-should-know/
+
+# Postgres cluster sams-db is now attached to sams
+# The following secret was added to sams:
+#   DATABASE_URL=postgres://sams:aGUodguNDWuWVIo@top2.nearest.of.sams-db.internal:5432/sams?sslmode=disable
