@@ -161,7 +161,8 @@ defmodule Attendance.Timetables do
       query =
         from t in Timetable,
           where:
-            t.start_time_id == ^period_query.id and t.days_of_week_id == ^week_day_query.id and
+            # t.start_time_id == ^period_query.id and t.days_of_week_id == ^week_day_query.id and
+            t.start_time_id <= ^period_query.id and t.end_time_id >= ^period_query.id and t.days_of_week_id == ^week_day_query.id and
               t.course_id in ^course_ids
 
       Repo.one(query)
@@ -232,6 +233,7 @@ defmodule Attendance.Timetables do
       query =
         from t in Timetable,
           where:
+          # TODO: rework this
             t.start_time_id == ^period_query.id and t.days_of_week_id == ^week_day_query.id and
               t.course_id in ^course_ids
 
