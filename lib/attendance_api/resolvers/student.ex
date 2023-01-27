@@ -99,7 +99,7 @@ defmodule AttendanceApi.Resolvers.Student do
         context: %{current_student: _current_student}
       }) do
     with {:ok, attendances} <-
-           Attendance.Students.paginate_attendance(input_params) |> IO.inspect() do
+           Attendance.Students.paginate_attendance(input_params) do
       {:ok, attendances}
     else
       {:error, %Ecto.Changeset{} = changeset} ->

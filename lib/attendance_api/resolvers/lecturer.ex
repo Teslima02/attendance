@@ -74,6 +74,20 @@ defmodule AttendanceApi.Resolvers.Lecturer do
     end
   end
 
+  def get_student_attendances_history(%{input: input_params}, %{
+        context: %{current_lecturer: _current_lecturer}
+      }) do
+    with {:ok, attendances} <-
+           Attendance.Students.paginate_attendance(input_params) do
+      {:ok, attendances}
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error,
+         message: "An error occurred while getting attendances",
+         details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
+    end
+  end
+
   def get_lecturer_current_period(_args, %{
         context: %{current_lecturer: current_lecturer}
       }) do

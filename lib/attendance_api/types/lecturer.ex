@@ -317,7 +317,7 @@ defmodule AttendanceApi.Types.Lecturer do
     field :get_student_attendances_history, :list_student_attendances do
       middleware(AttendanceApi.Middleware.LecturerAuth)
       arg(:input, non_null(:get_student_attendance_input))
-      resolve(&Resolvers.Student.get_student_attendances/2)
+      resolve(&Resolvers.Lecturer.get_student_attendances_history/2)
     end
 
     @desc """
