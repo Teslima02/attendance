@@ -312,6 +312,15 @@ defmodule AttendanceApi.Types.Lecturer do
     end
 
     @desc """
+    Get all attendances history
+    """
+    field :get_student_attendances_history, :list_student_attendances do
+      middleware(AttendanceApi.Middleware.LecturerAuth)
+      arg(:input, non_null(:get_student_attendance_input))
+      resolve(&Resolvers.Student.get_student_attendances/2)
+    end
+
+    @desc """
     Get list of lecturer notifications history.
     """
     field :list_lecturer_notification_history, :list_lecturer_notifications_history do

@@ -43,6 +43,10 @@ defmodule AttendanceApi.Resolvers.Lecturer do
         context: %{current_lecturer: current_lecturer}
       }) do
     # TODO: Check if is time for the attendance (start_date , end_date) and the period
+
+    # Get attendance for today by day name
+    # _current_period = Attendance.Timetables.lecturer_current_period(current_lecturer) |> IO.inspect
+
     with semester <- Attendance.Catalog.get_semester!(input_params.semester_id),
          class <- Attendance.Catalog.get_class!(input_params.class_id),
          program <- Attendance.Catalog.get_program!(input_params.program_id),
