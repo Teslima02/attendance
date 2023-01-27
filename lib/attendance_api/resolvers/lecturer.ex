@@ -29,7 +29,7 @@ defmodule AttendanceApi.Resolvers.Lecturer do
   def get_lecturer_courses(_args, %{
         context: %{current_lecturer: current_lecturer}
       }) do
-      courses = Attendance.Lecturers.lecturer_courses(current_lecturer)
+    courses = Attendance.Lecturers.lecturer_courses(current_lecturer)
 
     if courses != nil do
       {:ok, courses}
@@ -41,59 +41,58 @@ defmodule AttendanceApi.Resolvers.Lecturer do
   def create_lecturer_attendance(%{input: input_params}, %{
         context: %{current_lecturer: current_lecturer}
       }) do
-    # with semester <- Attendance.Catalog.get_semester!(input_params.semester_id),
-    #      class <- Attendance.Catalog.get_class!(input_params.class_id),
-    #      program <- Attendance.Catalog.get_program!(input_params.program_id),
-    #      course <- Attendance.Catalog.get_courses!(input_params.course_id),
-    #      {:ok, attendance} <-
-    #        Attendance.Lecturer_attendances.create_lecturer_attendance(
-    #          semester,
-    #          class,
-    #          program,
-    #          course,
-    #          current_lecturer,
-    #          input_params
-    #        ) do
+    with semester <- Attendance.Catalog.get_semester!(input_params.semester_id),
+         class <- Attendance.Catalog.get_class!(input_params.class_id),
+         program <- Attendance.Catalog.get_program!(input_params.program_id),
+         course <- Attendance.Catalog.get_courses!(input_params.course_id),
+         {:ok, attendance} <-
+           Attendance.Lecturer_attendances.create_lecturer_attendance(
+             semester,
+             class,
+             program,
+             course,
+             current_lecturer,
+             input_params
+           ) do
+      Absinthe.Subscription.publish(AttendanceWeb.Endpoint, attendance,
+        lecturer_open_attendance: "#{Topics.lecturer_open_attendance()}:#{attendance.course_id}"
+      )
 
-    #   Absinthe.Subscription.publish(AttendanceWeb.Endpoint, attendance,
-    #     lecturer_open_attendance: "#{Topics.lecturer_open_attendance()}:#{attendance.course_id}"
-    #   )
-
-    #   {:ok, attendance}
-    # else
-    #   _ -> {:error, "Error initiating attendance"}
-    # end
+      {:ok, attendance}
+    else
+      _ -> {:error, "Error initiating attendance"}
+    end
 
     # Get current attendance before opening attendance
-    current_period = Attendance.Timetables.lecturer_current_period(current_lecturer)
+    # current_period = Attendance.Timetables.lecturer_current_period(current_lecturer)
 
-    if current_period != nil and current_period.course_id == input_params.course_id do
-      with semester <- Attendance.Catalog.get_semester!(input_params.semester_id),
-           class <- Attendance.Catalog.get_class!(input_params.class_id),
-           program <- Attendance.Catalog.get_program!(input_params.program_id),
-           course <- Attendance.Catalog.get_courses!(input_params.course_id),
-           {:ok, attendance} <-
-             Attendance.Lecturer_attendances.create_lecturer_attendance(
-               semester,
-               class,
-               program,
-               course,
-               current_lecturer,
-               input_params
-             ) do
+    # if current_period != nil and current_period.course_id == input_params.course_id do
+    #   with semester <- Attendance.Catalog.get_semester!(input_params.semester_id),
+    #        class <- Attendance.Catalog.get_class!(input_params.class_id),
+    #        program <- Attendance.Catalog.get_program!(input_params.program_id),
+    #        course <- Attendance.Catalog.get_courses!(input_params.course_id),
+    #        {:ok, attendance} <-
+    #          Attendance.Lecturer_attendances.create_lecturer_attendance(
+    #            semester,
+    #            class,
+    #            program,
+    #            course,
+    #            current_lecturer,
+    #            input_params
+    #          ) do
 
-        Absinthe.Subscription.publish(AttendanceWeb.Endpoint, attendance,
-          lecturer_open_attendance: "#{Topics.lecturer_open_attendance()}:#{attendance.course_id}"
-        )
+    #     Absinthe.Subscription.publish(AttendanceWeb.Endpoint, attendance,
+    #       lecturer_open_attendance: "#{Topics.lecturer_open_attendance()}:#{attendance.course_id}"
+    #     )
 
-        {:ok, attendance}
-      else
-        _ -> {:error, "Error initiating attendance"}
-      end
-    else
-      {:error,
-       "You can not open attendance for #{current_period.course.name} at the moment wait for the period to begin"}
-    end
+    #     {:ok, attendance}
+    #   else
+    #     _ -> {:error, "Error initiating attendance"}
+    #   end
+    # else
+    #   {:error,
+    #    "You can not open attendance for #{current_period.course.name} at the moment wait for the period to begin"}
+    # end
   end
 
   def get_student_attendances_history(%{input: input_params}, %{
