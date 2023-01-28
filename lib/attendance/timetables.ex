@@ -154,8 +154,8 @@ defmodule Attendance.Timetables do
       Students.student_courses(current_student)
       |> Enum.map(fn x -> x.id end)
 
-    week_day_query = Repo.one(from d in Days_of_week, where: d.name == ^day_of_week)
-    # week_day_query = Repo.one(from d in Days_of_week, where: d.name == "friday")
+    # week_day_query = Repo.one(from d in Days_of_week, where: d.name == ^day_of_week)
+    week_day_query = Repo.one(from d in Days_of_week, where: d.name == "friday")
     period_query = Repo.one(from p in Period, where: p.start_time <= ^now and p.end_time >= ^now)
 
     # get timetable of the courses
