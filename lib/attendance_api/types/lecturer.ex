@@ -58,6 +58,16 @@ defmodule AttendanceApi.Types.Lecturer do
     field :end_time, :time
   end
 
+  @desc "lecture hall object"
+  object :lecture_hall do
+    field :id, :id
+    field :building_name, :string
+    field :disabled, :boolean
+    field :hall_number, :string
+    field :latitude, :string
+    field :longitude, :string
+  end
+
   @desc "Days of the week object"
   object :days_of_week do
     field :id, :id
@@ -71,7 +81,7 @@ defmodule AttendanceApi.Types.Lecturer do
     field :end_time, :period
     field :days_of_week, :days_of_week
     field :course, :lecturer_courses
-    field :lecture_hall, :string
+    field :lecture_hall, :lecture_hall
     field :semester, :semester
   end
 
