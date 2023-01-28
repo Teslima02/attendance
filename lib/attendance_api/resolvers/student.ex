@@ -122,4 +122,21 @@ defmodule AttendanceApi.Resolvers.Student do
          details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
     end
   end
+
+  def get_student_current_period(_args, %{
+        context: %{current_student: current_student}
+      }) do
+    with {:ok, period} <-
+           Attendance.Timetables.student_current_period(current_student) do
+      {:ok, period}
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error,
+         message: "An error occurred while getting notifications",
+         details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
+
+      {:error, error} ->
+        {:error, message: "No current period or today is weekend", details: error}
+    end
+  end
 end

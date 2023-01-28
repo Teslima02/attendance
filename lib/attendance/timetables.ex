@@ -9,6 +9,7 @@ defmodule Attendance.Timetables do
   alias Attendance.Timetables.Timetable
   alias Attendance.Catalog.{Period, Course, Days_of_week}
   alias Attendance.Lecturers
+  alias Attendance.Students
 
   @doc """
   Returns the list of timetables.
@@ -142,6 +143,45 @@ defmodule Attendance.Timetables do
   """
   def change_timetable(%Timetable{} = timetable, attrs \\ %{}) do
     Timetable.changeset(timetable, attrs)
+  end
+
+  def student_current_period(current_student) do
+    now = Time.utc_now()
+    day_of_week = Calendar.strftime(DateTime.utc_now(), "%A") |> String.downcase()
+
+    # get student courses and get it [ids]
+    course_ids =
+      Students.student_courses(current_student)
+      |> Enum.map(fn x -> x.id end)
+
+    week_day_query = Repo.one(from d in Days_of_week, where: d.name == ^day_of_week)
+    # week_day_query = Repo.one(from d in Days_of_week, where: d.name == "friday")
+    period_query = Repo.one(from p in Period, where: p.start_time <= ^now and p.end_time >= ^now)
+
+    # get timetable of the courses
+    if period_query != nil and week_day_query != nil do
+      query =
+        from t in Timetable,
+          where:
+            # t.start_time_id == ^period_query.id and t.days_of_week_id == ^week_day_query.id and
+            t.start_time_id <= ^period_query.id and t.end_time_id >= ^period_query.id and t.days_of_week_id == ^week_day_query.id and
+              t.course_id in ^course_ids
+
+      {:ok, Repo.one(query)
+      |> Repo.preload([
+        :start_time,
+        :end_time,
+        :course,
+        :lecture_hall,
+        :semester,
+        :days_of_week
+      ])
+      }
+
+      # Repo.all(query)
+    else
+      {:error, "No current period or today is weekend"}
+    end
   end
 
   def lecturer_current_period(current_lecturer) do

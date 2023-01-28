@@ -171,5 +171,13 @@ defmodule AttendanceApi.Types.Student do
       arg(:input, :get_lecturer_notification_input)
       resolve(&Resolvers.Student.notification_history/2)
     end
+
+    @desc """
+    Get student current period.
+    """
+    field :student_current_period, :lecturer_timetable do
+      middleware(AttendanceApi.Middleware.StudentAuth)
+      resolve(&Resolvers.Student.get_student_current_period/2)
+    end
   end
 end
