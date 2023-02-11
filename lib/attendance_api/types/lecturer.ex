@@ -226,7 +226,8 @@ defmodule AttendanceApi.Types.Lecturer do
     Lecturer open attendance.
     """
     field :lecturer_open_attendance, :lecturer_attendance do
-      middleware(AttendanceApi.Middleware.LecturerAuth)
+      # middleware(AttendanceApi.Middleware.LecturerAuth)
+      middleware(AttendanceApi.Middleware.StudentAuth)
       arg(:input, non_null(:course_input))
 
       config(fn %{input: input}, _info ->
@@ -249,7 +250,8 @@ defmodule AttendanceApi.Types.Lecturer do
     Lecturer send notification.
     """
     field :send_notification_message, :notification do
-      middleware(AttendanceApi.Middleware.LecturerAuth)
+      # middleware(AttendanceApi.Middleware.LecturerAuth)
+      middleware(AttendanceApi.Middleware.StudentAuth)
       arg(:input, non_null(:class_input))
 
       config(fn %{input: input}, _info ->
