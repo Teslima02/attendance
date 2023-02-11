@@ -21,7 +21,18 @@ defmodule AttendanceApi.Resolvers.Student do
   end
 
   def get_current_student(_arg, %{context: %{current_student: current_student}}) do
-    {:ok, current_student}
+    with student <-
+           Attendance.Students.current_student!(current_student.id) do
+      {:ok, student}
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error,
+         message: "An error occurred while getting current student details",
+         details: Attendance.Errors.GraphqlErrors.transform_errors(changeset)}
+
+      {:error, error} ->
+        {:error, message: "current student details not found", details: error}
+    end
   end
 
   def get_student_courses(_input_params, %{

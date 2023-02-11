@@ -120,6 +120,8 @@ defmodule Attendance.Students do
   """
   def get_student!(id), do: Repo.get!(Student, id)
 
+  def current_student!(id), do: Repo.get!(Student, id) |> Repo.preload([:class, :program])
+
   ## Student registration
 
   @doc """
