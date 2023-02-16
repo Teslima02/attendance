@@ -692,6 +692,10 @@ defmodule Attendance.Catalog do
     |> Repo.update()
   end
 
+  def delete_all_period() do
+    Repo.delete_all(Period)
+  end
+
   @doc """
   Deletes a period.
 
@@ -768,6 +772,10 @@ defmodule Attendance.Catalog do
     %Days_of_week{}
     |> Days_of_week.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def delete_all_days_of_week() do
+    Repo.delete_all(Days_of_week)
   end
 
   @doc """

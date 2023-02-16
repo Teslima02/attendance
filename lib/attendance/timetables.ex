@@ -116,6 +116,10 @@ defmodule Attendance.Timetables do
     |> Repo.update()
   end
 
+  def delete_all_timetable() do
+    Repo.delete_all(Timetable)
+  end
+
   @doc """
   Deletes a timetable.
 

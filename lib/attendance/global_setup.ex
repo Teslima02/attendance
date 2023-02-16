@@ -1,5 +1,6 @@
 defmodule Attendance.GlobalSetup do
   alias Attendance.Catalog
+  alias Attendance.Timetables
 
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
   def unique_user_id, do: "user#{System.unique_integer()}"
@@ -11,9 +12,17 @@ defmodule Attendance.GlobalSetup do
   end
 
   def create_period() do
-    Enum.each(1..12, fn row ->
-      {:ok, start_time} = Time.new(7 + row, 0, 0, 0)
-      {:ok, end_time} = Time.new(8 + row, 0, 0, 0)
+
+    # Delete all timetable record first
+    Timetables.delete_all_timetable()
+
+    # Delete all period record first
+    Catalog.delete_all_period()
+
+    # insert the seed files
+    Enum.each(1..22, fn row ->
+      {:ok, start_time} = Time.new(0 + row, 0, 0, 0)
+      {:ok, end_time} = Time.new(1 + row, 0, 0, 0)
 
       periods = %{
         start_time: start_time,
@@ -25,6 +34,9 @@ defmodule Attendance.GlobalSetup do
   end
 
   def create_days_of_week() do
+    # Delete all days_of_the_week record first
+    Catalog.delete_all_days_of_week()
+
     days = [
       %{
         name: "monday"
@@ -40,6 +52,12 @@ defmodule Attendance.GlobalSetup do
       },
       %{
         name: "friday"
+      },
+      %{
+        name: "saturday"
+      },
+      %{
+        name: "sunday"
       }
     ]
 
